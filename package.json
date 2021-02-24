@@ -1,0 +1,32 @@
+{
+  "name": "appdrop-api",
+  "version": "1.0.0",
+  "description": "Type definitions for client and server applications built with Appdrop",
+  "devDependencies": {
+    "typescript": "^3.8.0"
+  },
+  "dependencies": {
+    "@google-cloud/firestore": "^4.9.4"
+  },
+  "main": "src/index.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/appdrop-team/appdrop-api.git"
+  },
+  "keywords": [
+    "react",
+    "react-native",
+    "ios",
+    "android",
+    "firebase",
+    "aws",
+    "azure",
+    "no-code"
+  ],
+  "author": "Appdrop Inc.",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/appdrop-team/appdrop-api/issues"
+  },
+  "homepage": "https://github.com/appdrop-team/appdrop-api#readme"
+}
