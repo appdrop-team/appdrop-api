@@ -217,7 +217,9 @@ export interface Project extends CreateProjectParams, Identifiable {
 
 }
 
-
+/**
+ * Params to generate a project
+ */
 export interface CreateProjectParams extends UpdateProjectParams { 
     
     /**
@@ -234,6 +236,11 @@ export interface CreateProjectParams extends UpdateProjectParams {
      * The name of this Project. Example: My Cool App
      */
     name: string;
+
+    /**
+     * The id of the organization that owns this project.
+     */
+    organization_id: string;
     
     /**
      * Id of the Project template that this project is built on.
