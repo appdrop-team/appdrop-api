@@ -667,6 +667,7 @@ export interface APIRequestBody {
     CreateEntityParams|
     CreateProjectParams|
     CreateSubscriptionParams|
+    CreateSupportTicketParams|
     CreateUserParams|
     InitAppParams|
     UpdateSubscriptionParams|
