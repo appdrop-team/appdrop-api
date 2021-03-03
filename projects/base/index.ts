@@ -1,4 +1,4 @@
-import { CreateUserParams, RequestPasswordResetParams, RetrieveSecurityQuestionParams, UpdateUserParams, User } from '../../auth';
+import { AuthenticateUserParams, CreateUserParams, RequestUserPasswordResetParams, RetrieveUserSecurityQuestionParams, UpdateUserParams, User } from '../../auth';
 import { Identifiable } from '../../base';
 import { RemoteAsset } from '../../assets';
 import { CreateEntityParams, Entity, UpdateEntityParams } from '../../entities';
@@ -662,6 +662,7 @@ export interface APIRequestBody {
      * Request data.
      */
     data:
+    AuthenticateUserParams|
     CreateBankAccountParams|
     CreateCardParams|
     CreateEntityParams|
@@ -670,8 +671,8 @@ export interface APIRequestBody {
     CreateSupportTicketParams|
     CreateUserParams|
     InitAppParams|
-    RequestPasswordResetParams|
-    RetrieveSecurityQuestionParams|
+    RequestUserPasswordResetParams|
+    RetrieveUserSecurityQuestionParams|
     UpdateSubscriptionParams|
     UpdateEntityParams|
     UpdateUserParams;
@@ -790,6 +791,7 @@ export type APIRequestEndpoint =
 'v1/cards' |
 'v1/entities/:entityId' |
 'v1/entities' |
+'v1/initAppState' |
 'v1/orders/:orderId' |
 'v1/orders'|
 'v1/products/:productId' |
@@ -799,9 +801,13 @@ export type APIRequestEndpoint =
 'v1/projects/:projectId/apps' |
 'v1/projects/:projectId/apps/:appId' |
 'v1/projects/:projectId/apps/:appId/config' |
+'v1/projects/:projectId/requestUserPasswordReset' |
+'v1/projects/:projectId/retrieveUserSecurityQuestion' |
+'v1/projects/:projectId/signInUser' |
+'v1/projects/:projectId/signUpUser' |
 'v1/projects/:projectId/tickets' |
-'v1/projects/:projectId/users/:userId' |
 'v1/projects/:projectId/users' |
+'v1/projects/:projectId/users/:userId' |
 'v1/projectTemplates' |
 'v1/projectTemplates/:projectTemplateId' |
 'v1/subscriptions' |

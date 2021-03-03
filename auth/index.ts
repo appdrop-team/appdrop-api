@@ -144,13 +144,64 @@ export interface UpdateUserParams {
 }
 
 /**
+ * Params to authenticate a user.
+ */
+export interface AuthenticateUserParams {
+
+    /**
+     * Auth type
+     */
+    authentication_type: AuthenticationType;
+
+    /**
+     * Email address
+     */
+    email: string;
+
+    /**
+     * Raw password
+     */
+    password: string;
+
+}
+
+/**
+ * Auth operations
+ */
+export type AuthenticationType = 'sign_in'|'sign_up';
+
+/**
+ * Params to sign up a user.
+ */
+export interface SignUpUserParams extends AuthenticateUserParams {
+
+    /**
+     * Auth operation
+     */
+    authentication_type: 'sign_up';
+
+}
+
+/**
+ * Params to sign in a user.
+ */
+export interface SignInUserParams extends AuthenticateUserParams {
+
+    /**
+     * Auth operation
+     */
+    authentication_type: 'sign_in';
+
+}
+
+/**
  * Params to exchange an email address for a User object which includes 
  * the `security_question` and `security_answer_hash` property to display 
  * to the resetting user. If either of these properties is an 
  * empty string, then the user skipped this security section step and must contact support 
  * who can set a temporary answer to the security question for the user.
  */
-export interface RetrieveSecurityQuestionParams {
+export interface RetrieveUserSecurityQuestionParams {
 
     /**
      * The user's email address.
@@ -162,7 +213,7 @@ export interface RetrieveSecurityQuestionParams {
 /**
  * Params to exchange a security answer for authentication
  */
-export interface RequestPasswordResetParams {
+export interface RequestUserPasswordResetParams {
 
     /**
      * Security answer for password resets or an empty string.
