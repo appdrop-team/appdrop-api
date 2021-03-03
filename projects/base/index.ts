@@ -801,13 +801,13 @@ export type APIRequestEndpoint =
 'v1/projects/:projectId/apps' |
 'v1/projects/:projectId/apps/:appId' |
 'v1/projects/:projectId/apps/:appId/config' |
-'v1/projects/:projectId/requestUserPasswordReset' |
 'v1/projects/:projectId/retrieveUserSecurityQuestion' |
 'v1/projects/:projectId/signInUser' |
 'v1/projects/:projectId/signUpUser' |
 'v1/projects/:projectId/tickets' |
 'v1/projects/:projectId/users' |
 'v1/projects/:projectId/users/:userId' |
+'v1/projects/:projectId/users/:userId/requestUserPasswordReset' |
 'v1/projectTemplates' |
 'v1/projectTemplates/:projectTemplateId' |
 'v1/subscriptions' |
