@@ -80,7 +80,6 @@ export interface UpdateECommerceProjectUserParams extends UpdateProjectUserParam
      */
     append_order_ids?: string[];
 
-
     /**
      * Ids of the user's favorited products.
      */

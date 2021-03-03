@@ -762,6 +762,8 @@ export interface CreateAPIRequest {
 
 }
 
+export const APIRequestBase = 'https://api.appdrop.com/';
+
 /**
  * Identifies which endpoint this request targeted.
  */
