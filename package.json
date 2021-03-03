@@ -1,6 +1,6 @@
 {
   "name": "appdrop-api",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "description": "Type definitions for client and server applications built on Appdrop",
   "devDependencies": {
     "typescript": "^3.8.0"

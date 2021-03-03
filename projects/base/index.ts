@@ -775,10 +775,7 @@ export const APIRequestBase = 'https://api.appdrop.com';
 /**
  * Identifies which endpoint this request targeted.
  */
-export type APIRequestEndpoint = 
-'v1/apps/:appId' |
-'v1/apps/:appId/config' |
-'v1/apps' |
+export type APIRequestEndpoint =
 'v1/bank-accounts' |
 'v1/cards' |
 'v1/entities/:entityId' |
@@ -787,8 +784,11 @@ export type APIRequestEndpoint =
 'v1/orders'|
 'v1/products/:productId' |
 'v1/products' |
-'v1/projects/:projectId' |
 'v1/projects' |
+'v1/projects/:projectId' |
+'v1/projects/:projectId/apps' |
+'v1/projects/:projectId/apps/:appId' |
+'v1/projects/:projectId/apps/:appId/config' |
 'v1/projects/:projectId/users/:userId' |
 'v1/projects/:projectId/users' |
 'v1/subscriptions' |
