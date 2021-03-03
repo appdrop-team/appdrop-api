@@ -2,7 +2,7 @@
 
 # Appdrop API
 
-This package contains the type definitions for server and client applications build with Appdrop.
+This package contains the type definitions for server and client applications built on Appdrop.
 
 For more information about creating apps with Appdrop, visit our website at appdrop.com today.
 
