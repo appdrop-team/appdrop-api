@@ -636,7 +636,7 @@ export const DEFAULT_APP_CONFIG: AppConfig = {
 /**
  * An API request to an Appdrop endpoint called by a client app.
  */
-export interface APIRequestBody extends InternalAPIRequestBody {
+export interface APIRequestBody {
     
     /**
      * App Config object. Should remain constant across all the 
@@ -644,16 +644,6 @@ export interface APIRequestBody extends InternalAPIRequestBody {
      */
     app_config: AppConfig;
     
-}
-
-/**
- * An API request to an Appdrop endpoint called by an Appdrop internal app e.g.
- * `cloud.appdrop.com` or `admin.appdrop.com`
- */
-export interface InternalAPIRequestBody {
-
-    
-
     /**
      * Request data.
      */
@@ -668,7 +658,7 @@ export interface InternalAPIRequestBody {
     UpdateSubscriptionParams|
     UpdateEntityParams|
     UpdateUserParams;
-
+    
 }
 
 /**
