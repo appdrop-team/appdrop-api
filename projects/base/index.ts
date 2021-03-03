@@ -791,6 +791,8 @@ export type APIRequestEndpoint =
 'v1/projects/:projectId/apps/:appId/config' |
 'v1/projects/:projectId/users/:userId' |
 'v1/projects/:projectId/users' |
+'v1/projectTemplates' |
+'v1/projectTemplates/:projectTemplateId' |
 'v1/subscriptions' |
 'v1/subscriptions/:subscriptionId';
 
