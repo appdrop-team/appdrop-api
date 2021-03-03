@@ -136,10 +136,12 @@ export const DEFAULT_ECOMMERCE_USER: ECommerceProjectUser = {
     name: '',
     object: 'user',
     order_ids: [],
+    password: '',
     password_hash: '',
     phone: '',
     project_id: '',
     security_question: '',
+    security_answer: '',
     security_answer_hash: ''
 };
 

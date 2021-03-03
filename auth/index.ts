@@ -10,16 +10,6 @@ export interface User extends CreateUserParams, Identifiable {
      */
     object: 'user';
 
-    /**
-     * The user's password encrypted via MD5 hash.
-     */
-    password_hash: string;
-
-    /**
-     * Security answer for password resets encrypted via MD5 hash or an empty string.
-     */
-    security_answer_hash: string;
-
 }
 
 export const SECURITY_QUESTIONS_ARR = [
@@ -81,10 +71,35 @@ export interface CreateUserParams extends UpdateUserParams {
     name: string;
 
     /**
+     * The user's password or an empty string. Encrypted before storage.
+     */
+    password: string;
+
+    /**
+     * The user's password encrypted or an empty string.
+     */
+    password_hash: string;
+
+    /**
      * The user's phone number.
      */
     phone: string;
 
+    /**
+     * Security answer for password resets encrypted or an empty string.
+     */
+    security_answer_hash: string;
+
+    /**
+     * Security answer for password resets or an empty string. Encrypted before storage.
+     */
+    security_answer: string;
+    
+    /**
+     * Security question for password resets or an empty string.
+     */
+    security_question: string;
+    
 }
 
 /**
@@ -127,19 +142,29 @@ export interface UpdateUserParams {
     password?: string;
 
     /**
+     * The user's password encrypted or an empty string.
+     */
+    password_hash?: string;
+
+    /**
      * The user's phone number.
      */
     phone?: string;
 
     /**
+     * Security answer for password resets or an empty string. Encrypted before storage.
+     */
+    security_answer?: string;
+
+    /**
+     * Security answer for password resets encrypted or an empty string.
+     */
+    security_answer_hash?: string;
+    
+    /**
      * Security question for password resets or an empty string.
      */
     security_question?: string;
-    
-    /**
-     * Security answer for password resets. Encrypted before storage.
-     */
-    security_answer?: string;
 
 }
 
