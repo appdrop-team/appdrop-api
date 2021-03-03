@@ -542,7 +542,14 @@ export interface UpdateAppWebParams extends UpdateAppParams {
 /**
  * A Customer Support Ticket for an Appdrop Project.
  */
-export interface SupportTicket extends CreateSupportTicketParams, Identifiable {}
+export interface SupportTicket extends CreateSupportTicketParams, Identifiable {
+
+    /**
+     * Object name
+     */
+    object: 'ticket';
+
+}
 
 /**
  * Params to create a Customer Support Ticket
@@ -789,6 +796,7 @@ export type APIRequestEndpoint =
 'v1/projects/:projectId/apps' |
 'v1/projects/:projectId/apps/:appId' |
 'v1/projects/:projectId/apps/:appId/config' |
+'v1/projects/:projectId/tickets' |
 'v1/projects/:projectId/users/:userId' |
 'v1/projects/:projectId/users' |
 'v1/projectTemplates' |
