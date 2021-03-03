@@ -215,6 +215,11 @@ export interface CreateOrderParams {
      */
     recipient: CreateOrderRecipientParams;
 
+    /**
+     * Id of the stripe charge. Used for refunds.
+     */
+    stripe_charge_id: string;
+
 }
 
 /**
@@ -363,6 +368,11 @@ export interface UpdateOrderParams extends AttachOrderId {
      * Order Recipient
      */
     recipient?: CreateOrderRecipientParams;
+
+    /**
+     * Id of the stripe charge. Used for refunds.
+     */
+    stripe_charge_id?: string;
 
 }
 
