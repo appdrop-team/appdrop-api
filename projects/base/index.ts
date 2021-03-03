@@ -1,4 +1,4 @@
-import { CreateUserParams, UpdateUserParams, User } from '../../auth';
+import { CreateUserParams, RequestPasswordResetParams, RetrieveSecurityQuestionParams, UpdateUserParams, User } from '../../auth';
 import { Identifiable } from '../../base';
 import { RemoteAsset } from '../../assets';
 import { CreateEntityParams, Entity, UpdateEntityParams } from '../../entities';
@@ -670,6 +670,8 @@ export interface APIRequestBody {
     CreateSupportTicketParams|
     CreateUserParams|
     InitAppParams|
+    RequestPasswordResetParams|
+    RetrieveSecurityQuestionParams|
     UpdateSubscriptionParams|
     UpdateEntityParams|
     UpdateUserParams;

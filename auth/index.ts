@@ -10,6 +10,16 @@ export interface User extends CreateUserParams, Identifiable {
      */
     object: 'user';
 
+    /**
+     * The user's password encrypted via MD5 hash.
+     */
+    password_hash: string;
+
+    /**
+     * Security answer for password resets encrypted via MD5 hash or an empty string.
+     */
+    security_answer_hash: string;
+
 }
 
 export const SECURITY_QUESTIONS_ARR = [
@@ -55,13 +65,6 @@ export interface CreateUserParams extends UpdateUserParams {
     id: string;
 
     /**
-     * Marks the user as live or test mode.
-     * 
-     * Defaults to true and is not changeable after being set.
-     */
-    livemode: boolean;
-
-    /**
      * Set of [key-value pairs] that you can attach to an object. 
      * This can be useful for storing additional information about the 
      * object in a structured format.
@@ -78,24 +81,9 @@ export interface CreateUserParams extends UpdateUserParams {
     name: string;
 
     /**
-     * The user's password encrypted via MD5 hash.
-     */
-    password_hash: string;
-
-    /**
      * The user's phone number.
      */
     phone: string;
-
-    /**
-     * Security question for password resets or an empty string.
-     */
-    security_question: string;
-    
-    /**
-     * Security answer for password resets encrypted via MD5 hash or an empty string.
-     */
-    security_answer_hash: string;
 
 }
 
@@ -134,9 +122,9 @@ export interface UpdateUserParams {
     name?: string;
 
     /**
-     * The user's password hash.
+     * The user's password. Encrypted before storage.
      */
-    password_hash?: string;
+    password?: string;
 
     /**
      * The user's phone number.
@@ -149,8 +137,36 @@ export interface UpdateUserParams {
     security_question?: string;
     
     /**
-     * Security answer for password resets encrypted via MD5 hash or an empty string.
+     * Security answer for password resets. Encrypted before storage.
      */
-    security_answer_hash?: string;
+    security_answer?: string;
+
+}
+
+/**
+ * Params to exchange an email address for a User object which includes 
+ * the `security_question` and `security_answer_hash` property to display 
+ * to the resetting user. If either of these properties is an 
+ * empty string, then the user skipped this security section step and must contact support 
+ * who can set a temporary answer to the security question for the user.
+ */
+export interface RetrieveSecurityQuestionParams {
+
+    /**
+     * The user's email address.
+     */
+    email: string;
+
+}
+
+/**
+ * Params to exchange a security answer for authentication
+ */
+export interface RequestPasswordResetParams {
+
+    /**
+     * Security answer for password resets or an empty string.
+     */
+    security_answer: string;
 
 }
