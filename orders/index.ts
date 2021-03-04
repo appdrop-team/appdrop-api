@@ -20,6 +20,11 @@ export interface Order extends Identifiable, CreateOrderParams, OrderResultBase 
      * Object name
      */
     object: 'order';
+
+    /**
+     * Id of the Appdrop project
+     */
+    project_id: string;
     
     /**
      * Unix Timestamp in seconds of last order update.
@@ -215,11 +220,6 @@ export interface CreateOrderParams {
      */
     recipient: CreateOrderRecipientParams;
 
-    /**
-     * Id of the stripe charge. Used for refunds.
-     */
-    stripe_charge_id: string;
-
 }
 
 /**
@@ -369,11 +369,6 @@ export interface UpdateOrderParams extends AttachOrderId {
      */
     recipient?: CreateOrderRecipientParams;
 
-    /**
-     * Id of the stripe charge. Used for refunds.
-     */
-    stripe_charge_id?: string;
-
 }
 
 /**
@@ -383,7 +378,14 @@ export interface UpdateOrderParams extends AttachOrderId {
  * 
  * POST https://api.printful.com/orders/{id}/confirm
  */
-export interface ConfirmOrderParams extends AttachOrderId {}
+export interface ConfirmOrderParams extends AttachOrderId {
+
+    /**
+     * Id of the stripe charge. Used for refunds.
+     */
+    stripe_charge_id: string;
+
+}
 
 /**
  * Params to cancel an order that has status `pending` or `draft`. 

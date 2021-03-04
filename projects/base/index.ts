@@ -2,7 +2,7 @@ import { AuthenticateUserParams, CreateUserParams, RequestUserPasswordResetParam
 import { Identifiable } from '../../base';
 import { RemoteAsset } from '../../assets';
 import { CreateEntityParams, Entity, UpdateEntityParams } from '../../entities';
-import { BankAccount, Card, CreateBankAccountParams, CreateCardParams, CreateSubscriptionParams, Subscription, UpdateSubscriptionParams } from '../../billing';
+import { BankAccount, Card, CreateBankAccountParams, CreateCardParams, CreateRefundParams, CreateSubscriptionParams, Subscription, UpdateSubscriptionParams } from '../../billing';
 
 /**
  * React Native Project Template
@@ -667,16 +667,30 @@ export interface APIRequestBody {
     CreateCardParams|
     CreateEntityParams|
     CreateProjectParams|
+    CreateRefundParams|
     CreateSubscriptionParams|
     CreateSupportTicketParams|
     CreateUserParams|
     InitAppParams|
     RequestUserPasswordResetParams|
     RetrieveUserSecurityQuestionParams|
+    SyncPrintfulProductsParams|
     UpdateSubscriptionParams|
     UpdateEntityParams|
     UpdateUserParams;
     
+}
+
+/**
+ * Params to sync a Printful products to an ECommerce Project.
+ */
+export interface SyncPrintfulProductsParams {
+
+    /**
+     * Printful API Key
+     */
+    printful_api_key: string;
+
 }
 
 /**
@@ -790,7 +804,11 @@ export type APIRequestEndpoint =
 'v1/customers/:customerId/bankAccounts' |
 'v1/customers/:customerId/verifyBankAccount' |
 'v1/customers/:customerId/cards' |
+'v1/customers/:customerId/orders/:orderId/refunds' |
+'v1/customers/:customerId/subscriptions' |
+'v1/customers/:customerId/subscriptions/:subscriptionId'|
 'v1/entities/:entityId' |
+'v1/entities/:entityId/syncProducts' |
 'v1/entities' |
 'v1/initAppState' |
 'v1/orders/:orderId' |
@@ -805,14 +823,13 @@ export type APIRequestEndpoint =
 'v1/projects/:projectId/retrieveUserSecurityQuestion' |
 'v1/projects/:projectId/signInUser' |
 'v1/projects/:projectId/signUpUser' |
+'v1/projects/:projectId/syncPrintfulProducts' |
 'v1/projects/:projectId/tickets' |
 'v1/projects/:projectId/users' |
 'v1/projects/:projectId/users/:userId' |
 'v1/projects/:projectId/users/:userId/requestUserPasswordReset' |
 'v1/projectTemplates' |
-'v1/projectTemplates/:projectTemplateId' |
-'v1/subscriptions' |
-'v1/subscriptions/:subscriptionId';
+'v1/projectTemplates/:projectTemplateId';
 
 /**
  * Identifies the HTTP method this request used.

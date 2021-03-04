@@ -32,6 +32,13 @@ export interface Product extends Identifiable, ProductBase {
      * A string representation of the rrice of the lowe
      */
     price_range: string;
+
+    /**
+     * Id of the ECommerce Project that this Product belongs to.
+     * 
+     * Used to query the `products` collection for Store owners and end-customers
+     */
+    project_id: string;
     
     /**
      * Map of all the product's sync variants
