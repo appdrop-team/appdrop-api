@@ -137,6 +137,7 @@ export const DEFAULT_ENTERPRISE: Enterprise = {
     financial_details: {
         add_ons: {},
         bank_account: null,
+        bank_account_source_token: '',
         billing_interval: 'annually',
         billing_method: 'bank_account',
         card: null,
@@ -247,6 +248,7 @@ export const DEFAULT_ORGANIZATION: Organization = {
     financial_details: {
         add_ons: {},
         bank_account: null,
+        bank_account_source_token: '',
         billing_interval: 'annually',
         billing_method: 'bank_account',
         card: null,

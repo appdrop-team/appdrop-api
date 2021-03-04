@@ -8,7 +8,7 @@ export interface FinancialDetails extends CreateFinancialDetailsParams {}
 /**
  * Params to create financial details.
  */
-export interface CreateFinancialDetailsParams extends AttachCustomerParams, UpdateFinancialDetailsParams {
+export interface CreateFinancialDetailsParams extends UpdateFinancialDetailsParams {
 
     /**
      * The entity's credit card on file.
@@ -20,13 +20,6 @@ export interface CreateFinancialDetailsParams extends AttachCustomerParams, Upda
      */
     currency: CurrencyCode;
 
-}
-
-/**
- * Params for Stripe Calls attached to customers.
- */
-export interface AttachCustomerParams {
-    
     /**
      * The customer id in Stripe's billing system. Enables billing across 
      * different Appdrop projects. Syntax is: `${project_id}_${user_id}`
@@ -102,6 +95,11 @@ export interface CreateEntityFinancialDetailsParams extends CreateFinancialDetai
      * The entity's ACH Checking Account on File.
      */
     bank_account: BankAccount|null;
+
+    /**
+     * The token created when this bank account was added as a customer source.
+     */
+    bank_account_source_token: string;
 
     /**
      * Invoice renewal interval.
@@ -186,6 +184,11 @@ export interface UpdateEntityFinancialDetailsParams extends UpdateFinancialDetai
      * The entity's ACH Checking Account on File.
      */
     bank_account?: BankAccount|null;
+
+    /**
+     * The token created when this bank account was added as a customer source
+     */
+    bank_account_source_token?: string;
 
     /**
      * Invoice renewal interval.
@@ -581,7 +584,7 @@ export interface CreateTokenResponseBody {
     /**
      * Unique id for the token.
      * 
-     * @Important This ID is passed with as the Customer Source!
+     * @Important This ID is passed as the Customer Source!
      */
     id: string;
 
@@ -664,12 +667,7 @@ export type BankAccountStatus = 'errored'|'new'|'validated'|'verified'|'verifica
 /**
  * Params to verify a bank account source.
  */
-export interface CreateBankAccountVerificationParams extends AttachCustomerParams {
-    
-    /**
-     * Bank Account source token ID.
-     */
-    token_id: string;
+export interface CreateBankAccountVerificationParams {
     
     /**
      * Two microdeposits in cents
@@ -811,10 +809,10 @@ export type CardFundingType = 'credit'|'debit'|'prepaid'|'unknown';
 /**
  * Params to create a Bank Account or Card Source and attach it to a Customer.
  */
-export interface CreateCustomerSourceParams extends AttachCustomerParams {
+export interface CreateCustomerSourceParams {
 
     /**
-     * Id of the Bank Account Token object or Card Source Token object.
+     * Id of the Bank Account Source Token object or Card Source Token object.
      */
     source: string;
 

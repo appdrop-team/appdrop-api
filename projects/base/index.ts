@@ -2,7 +2,7 @@ import { AuthenticateUserParams, CreateUserParams, RequestUserPasswordResetParam
 import { Identifiable } from '../../base';
 import { RemoteAsset } from '../../assets';
 import { CreateEntityParams, Entity, UpdateEntityParams } from '../../entities';
-import { BankAccount, Card, CreateBankAccountParams, CreateCardParams, CreateRefundParams, CreateSubscriptionParams, Subscription, UpdateSubscriptionParams } from '../../billing';
+import { BankAccount, Card, CreateBankAccountParams, CreateBankAccountVerificationParams, CreateCardParams, CreateRefundParams, CreateSubscriptionParams, Subscription, UpdateSubscriptionParams } from '../../billing';
 
 /**
  * React Native Project Template
@@ -663,6 +663,7 @@ export interface APIRequestBody {
      */
     data:
     AuthenticateUserParams|
+    CreateBankAccountVerificationParams|
     CreateBankAccountParams|
     CreateCardParams|
     CreateEntityParams|
