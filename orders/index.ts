@@ -1,5 +1,5 @@
 import { Timestamp } from '@google-cloud/firestore';
-import { Address, CountryCode, Identifiable, StateCodeUSA } from '../base';
+import { Address, Identifiable } from '../base';
 
 /**
  * Customer Order
