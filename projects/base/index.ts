@@ -649,6 +649,18 @@ export const DEFAULT_APP_CONFIG: AppConfig = {
     version_id: ''
 };
 
+export function ValidConfig(app_config: AppConfig) {
+    return (
+        app_config !== undefined &&
+        app_config.api_key !== undefined &&
+        typeof app_config.api_key === 'string' &&
+        app_config.app_id !== undefined &&
+        typeof app_config.app_id === 'string' &&
+        app_config.project_id !== undefined &&
+        typeof app_config.project_id === 'string'
+    );
+}
+
 
 /**
  * An API request to an Appdrop endpoint called by a client app.
@@ -795,6 +807,61 @@ export type ErrorType =
 'rate-limit-surpassed'|
 'unknown-error'|
 'user-id-invalid';
+
+export const ERROR_RESPONSES: {
+    [key in ErrorType]: APIRequestError;
+} = {
+    "app-config-error": {
+        error_type: 'app-config-error',
+        message: 'The request did not include a valid app config object',
+        status_code: 401
+    },
+    "app-id-error": {
+        error_type: 'app-id-error',
+        message: 'The app id included in this request is not associated with your API key',
+        status_code: 401
+    },
+    "api-key-invalid": {
+        error_type: 'api-key-invalid',
+        message: 'The included API key is not associated with an active Appdrop account',
+        status_code: 403
+    },
+    "api-key-missing": {
+        error_type: 'api-key-missing',
+        message: 'The request did not include an API key',
+        status_code: 401
+    },
+    "api-key-revoked": {
+        error_type: 'api-key-revoked',
+        message: 'The included API key has been revoked',
+        status_code: 403
+    },
+    "internal-server-error": {
+        error_type: 'internal-server-error',
+        message: 'Our server encountered a run-time error when processing your request',
+        status_code: 500
+    },
+    "invalid-data-property": {
+        error_type: 'invalid-data-property',
+        message: 'Your data property was undefined or formatted incorrectly. Please refer to our docs to correct this issue.',
+        status_code: 400
+    },
+    "rate-limit-surpassed": {
+        error_type: 'rate-limit-surpassed',
+        message: 'You have reached the rate limit for the API',
+        status_code: 429
+    },
+    "unknown-error": {
+        error_type: 'unknown-error',
+        message: 'Our server encountered an unknown error when processing your request',
+        status_code: 400
+    },
+    "user-id-invalid": {
+        error_type: 'user-id-invalid',
+        message: 'There is no user in your project with this id.',
+        status_code: 400
+    }
+};
 
 /**
  * 
