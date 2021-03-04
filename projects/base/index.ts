@@ -751,6 +751,9 @@ export interface APIRequest extends CreateAPIRequest, Identifiable {
     Subscription |
     User |
     {
+        products: Product[]
+    }|
+    {
         error: APIRequestError
     };
 
@@ -812,6 +815,7 @@ export type ErrorType =
 'api-key-revoked'|
 'internal-server-error'|
 'invalid-data-property'|
+'invalid-endpoint'|
 'rate-limit-surpassed'|
 'unknown-error'|
 'user-id-invalid';
@@ -857,6 +861,11 @@ export const ERROR_RESPONSES: {
         message: 'Your data property was undefined or formatted incorrectly. Please refer to our docs to correct this issue.',
         status_code: 400
     },
+    "invalid-endpoint": {
+        error_type: 'invalid-endpoint',
+        message: 'Your endpoint was not formed properly.',
+        status_code: 400
+    },
     "rate-limit-surpassed": {
         error_type: 'rate-limit-surpassed',
         message: 'You have reached the rate limit for the API',
@@ -874,6 +883,51 @@ export const ERROR_RESPONSES: {
     }
 };
 
+/**
+ * API response and logging for success cases.
+ */
+export async function handleSuccess(
+    admin: any,
+    db: any,
+    endpoint: APIRequestEndpoint,
+    method: APIRequestMethod,
+    response_body: any,
+    req: any,
+    res: any
+) {
+    try {
+        res.header('Content-Type','application/json');
+        res.status(200).send(JSON.stringify(response_body));
+        const api_request_id = randString();
+        const ip_address_obj = req.headers['x-forwarded-for'] || req.connection.remoteAddress || '';
+        const ip_address = typeof ip_address_obj === 'string' ? ip_address_obj : ip_address_obj[0];
+        const request_body = (
+            typeof req.body === 'string' ?
+                JSON.parse(req.body) : req.body
+        ) as unknown as APIRequestBody;
+        const api_request: APIRequest = {
+            created_at: admin.firestore.Timestamp.fromDate(new Date()),
+            livemode: true,
+            endpoint: endpoint,
+            id: api_request_id,
+            ip_address: ip_address,
+            method: method,
+            object: 'api_request',
+            request_body: request_body,
+            response_body: response_body,
+            status_code: 200
+        };
+        await db.collection('api_requests').doc(api_request_id).set(api_request);
+        console.log(`${method} ${endpoint} success`);
+    }
+    catch (error) {
+        console.error('handleSuccessError');
+    }
+}
+
+/**
+ * API response and logging for error cases.
+ */
 export async function handleError(
     admin: any,
     db: any,
