@@ -740,22 +740,7 @@ export interface APIRequest extends CreateAPIRequest, Identifiable {
     /**
      * The response object sent back to the client.
      */
-    response_body:
-    BankAccount |
-    Card |
-    Charge |
-    Order |
-    Entity |
-    InitAppResponseBody|
-    Product |
-    Subscription |
-    User |
-    {
-        products: Product[]
-    }|
-    {
-        error: APIRequestError
-    };
+    response_body: APIResponseBodyType;
 
     /**
      * The HTTP status code.
@@ -763,6 +748,25 @@ export interface APIRequest extends CreateAPIRequest, Identifiable {
     status_code: 200|ErrorStatusCode;
 
 }
+
+/**
+ * The response object sent back to the client.
+ */
+export type APIResponseBodyType = BankAccount |
+Card |
+Charge |
+Order |
+Entity |
+InitAppResponseBody|
+Product |
+Subscription |
+User |
+{
+    products: Product[]
+}|
+{
+    error: APIRequestError
+};
 
 /**
  * An object with information about why an API Call failed.
@@ -891,7 +895,7 @@ export async function handleSuccess(
     db: any,
     endpoint: APIRequestEndpoint,
     method: APIRequestMethod,
-    response_body: any,
+    response_body: APIResponseBodyType,
     req: any,
     res: any
 ) {
