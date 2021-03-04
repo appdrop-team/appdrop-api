@@ -3,7 +3,7 @@ import { Identifiable } from '../../base';
 import { RemoteAsset } from '../../assets';
 import { CreateEntityParams, Entity, UpdateEntityParams } from '../../entities';
 import { BankAccount, Card, Charge, CreateBankAccountParams, CreateBankAccountVerificationParams, CreateCardParams, CreateChargeParams, CreateRefundParams, CreateSubscriptionParams, Subscription, UpdateSubscriptionParams } from '../../billing';
-import { Order } from '../../orders';
+import { ConfirmOrderParams, CreateOrderParams, Order, UpdateOrderParams } from '../../orders';
 import { Product } from '../../products';
 
 /**
@@ -665,11 +665,13 @@ export interface APIRequestBody {
      */
     data:
     AuthenticateUserParams|
+    ConfirmOrderParams|
     CreateBankAccountVerificationParams|
     CreateBankAccountParams|
     CreateCardParams|
     CreateChargeParams|
     CreateEntityParams|
+    CreateOrderParams|
     CreateProjectParams|
     CreateRefundParams|
     CreateSubscriptionParams|
@@ -679,6 +681,7 @@ export interface APIRequestBody {
     RequestUserPasswordResetParams|
     RetrieveUserSecurityQuestionParams|
     SyncPrintfulProductsParams|
+    UpdateOrderParams|
     UpdateSubscriptionParams|
     UpdateEntityParams|
     UpdateUserParams;
@@ -816,7 +819,6 @@ export type APIRequestEndpoint =
 'v1/customers/:customerId/subscriptions' |
 'v1/customers/:customerId/subscriptions/:subscriptionId'|
 'v1/entities/:entityId' |
-'v1/entities/:entityId/syncProducts' |
 'v1/entities' |
 'v1/initAppState' |
 'v1/projects' |
@@ -834,6 +836,8 @@ export type APIRequestEndpoint =
 'v1/projects/:projectId/users/:userId/requestUserPasswordReset' |
 'v1/projects/:projectId/users/:userId/orders' |
 'v1/projects/:projectId/users/:userId/orders/:orderId' |
+'v1/projects/:projectId/users/:userId/orders/:orderId/cancel' |
+'v1/projects/:projectId/users/:userId/orders/:orderId/confirm' |
 'v1/projectTemplates' |
 'v1/projectTemplates/:projectTemplateId';
 

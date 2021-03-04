@@ -357,7 +357,7 @@ export interface CreateOrderRecipientParams extends Address {
  * 
  * PUT https://api.printful.com/orders/{id} 
  */
-export interface UpdateOrderParams extends AttachOrderId {
+export interface UpdateOrderParams {
 
     /**
      * Order items
@@ -378,32 +378,12 @@ export interface UpdateOrderParams extends AttachOrderId {
  * 
  * POST https://api.printful.com/orders/{id}/confirm
  */
-export interface ConfirmOrderParams extends AttachOrderId {
+export interface ConfirmOrderParams {
 
     /**
      * Id of the stripe charge. Used for refunds.
      */
     stripe_charge_id: string;
-
-}
-
-/**
- * Params to cancel an order that has status `pending` or `draft`. 
- * Charged amount is returned to the store owner's credit card.
- * 
- * DELETE https://api.printful.com/orders/{id}
- */
-export interface CancelOrderParams extends AttachOrderId {}
-
-/**
- * Common Params for Order operations
- */
-export interface AttachOrderId {
-
-    /**
-     * Id of the order being operated on.
-     */
-    order_id: string;
 
 }
 
