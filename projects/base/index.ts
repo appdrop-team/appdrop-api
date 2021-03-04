@@ -2,7 +2,9 @@ import { AuthenticateUserParams, CreateUserParams, RequestUserPasswordResetParam
 import { Identifiable } from '../../base';
 import { RemoteAsset } from '../../assets';
 import { CreateEntityParams, Entity, UpdateEntityParams } from '../../entities';
-import { BankAccount, Card, CreateBankAccountParams, CreateBankAccountVerificationParams, CreateCardParams, CreateRefundParams, CreateSubscriptionParams, Subscription, UpdateSubscriptionParams } from '../../billing';
+import { BankAccount, Card, Charge, CreateBankAccountParams, CreateBankAccountVerificationParams, CreateCardParams, CreateChargeParams, CreateRefundParams, CreateSubscriptionParams, Subscription, UpdateSubscriptionParams } from '../../billing';
+import { Order } from '../../orders';
+import { Product } from '../../products';
 
 /**
  * React Native Project Template
@@ -666,6 +668,7 @@ export interface APIRequestBody {
     CreateBankAccountVerificationParams|
     CreateBankAccountParams|
     CreateCardParams|
+    CreateChargeParams|
     CreateEntityParams|
     CreateProjectParams|
     CreateRefundParams|
@@ -716,8 +719,11 @@ export interface APIRequest extends CreateAPIRequest, Identifiable {
     response_body:
     BankAccount |
     Card |
+    Charge |
+    Order |
     Entity |
     InitAppResponseBody|
+    Product |
     Subscription |
     User |
     {
@@ -805,6 +811,7 @@ export type APIRequestEndpoint =
 'v1/customers/:customerId/bankAccounts' |
 'v1/customers/:customerId/verifyBankAccount' |
 'v1/customers/:customerId/cards' |
+'v1/customers/:customerId/charges' |
 'v1/customers/:customerId/orders/:orderId/refunds' |
 'v1/customers/:customerId/subscriptions' |
 'v1/customers/:customerId/subscriptions/:subscriptionId'|
@@ -812,10 +819,6 @@ export type APIRequestEndpoint =
 'v1/entities/:entityId/syncProducts' |
 'v1/entities' |
 'v1/initAppState' |
-'v1/orders/:orderId' |
-'v1/orders'|
-'v1/products/:productId' |
-'v1/products' |
 'v1/projects' |
 'v1/projects/:projectId' |
 'v1/projects/:projectId/apps' |
@@ -829,6 +832,8 @@ export type APIRequestEndpoint =
 'v1/projects/:projectId/users' |
 'v1/projects/:projectId/users/:userId' |
 'v1/projects/:projectId/users/:userId/requestUserPasswordReset' |
+'v1/projects/:projectId/users/:userId/orders' |
+'v1/projects/:projectId/users/:userId/orders/:orderId' |
 'v1/projectTemplates' |
 'v1/projectTemplates/:projectTemplateId';
 
