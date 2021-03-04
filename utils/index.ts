@@ -1,4 +1,7 @@
-export function RandString(l = -1) {
+/**
+ * Random string generator. Safe for minting ids.
+ */
+export function randString(l = -1) {
     let result = "";
     const alphanumeric_characters = "012345789abcdefghijklmnopqrstvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     const r = l > 0 ? l : (Math.floor(Math.random() * 20) + 20);
@@ -9,7 +12,11 @@ export function RandString(l = -1) {
     }
     return result;
 }
-export const month_map = (n: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11, long: boolean) => {
+
+/**
+ * Maps month index to its name 
+ */
+export const monthMap = (n: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11, long: boolean) => {
 	switch (n) {
 		case 0:
 			return long ? 'January' : 'Jan';
@@ -39,11 +46,15 @@ export const month_map = (n: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11, lo
 			throw new Error('invalid month number passed to month_map');
 	}
 };
-export const validString = (s: string|null|undefined, l: boolean) => {
+
+/**
+ * Returns true if the `s` param is a valid string
+ */
+export const validString = (s: string|null|undefined, requires_letters: boolean) => {
     return (
         s !== null &&
         s !== undefined &&
         typeof s === 'string' &&
-        (!l || s.length > 0)
+        (!requires_letters || s.length > 0)
     );
 };

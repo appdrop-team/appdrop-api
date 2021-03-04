@@ -638,6 +638,9 @@ export interface AppConfigBase {
 
 }
 
+/**
+ * Empty config
+ */
 export const DEFAULT_APP_CONFIG: AppConfig = {
     api_key: '',
     app_name: '',
@@ -649,7 +652,11 @@ export const DEFAULT_APP_CONFIG: AppConfig = {
     version_id: ''
 };
 
-export function ValidConfig(app_config: AppConfig) {
+/**
+ * Returns true if the `app_config` has the minimum properties
+ * to be considered valid
+ */
+export function validConfig(app_config: AppConfig) {
     return (
         app_config !== undefined &&
         app_config.api_key !== undefined &&
@@ -808,6 +815,9 @@ export type ErrorType =
 'unknown-error'|
 'user-id-invalid';
 
+/**
+ * Error response map
+ */
 export const ERROR_RESPONSES: {
     [key in ErrorType]: APIRequestError;
 } = {
