@@ -5,6 +5,7 @@ import { CreateEntityParams, Entity, UpdateEntityParams } from '../../entities';
 import { BankAccount, Card, Charge, CreateBankAccountParams, CreateBankAccountVerificationParams, CreateCardParams, CreateChargeParams, CreateRefundParams, CreateSubscriptionParams, Subscription, UpdateSubscriptionParams } from '../../billing';
 import { ConfirmOrderParams, CreateOrderParams, Order, UpdateOrderParams } from '../../orders';
 import { Product } from '../../products';
+import { Timestamp } from '@google-cloud/firestore';
 
 /**
  * React Native Project Template
@@ -755,10 +756,22 @@ export interface APIRequestError {
      */
     message: string;
 
+    /**
+     * The HTTP status codes for the Error
+     */
+    status_code: ErrorStatusCode;
+
 }
 
 /**
  * The HTTP status codes for Errors
+ * 
+ * `400`: BAD_REQUEST
+ * `401`: UNAUTHORIZED
+ * `403`: FORBIDDEN
+ * `429`: TOO_MANY_REQUESTS
+ * `500`: INTERNAL_SERVER_ERROR
+ * `503`: SERVICE_UNAVAILABLE
  */
 export type ErrorStatusCode = 
 400 |
@@ -771,9 +784,9 @@ export type ErrorStatusCode =
 /**
  * Type of error.
  */
-export type ErrorType = 'app-config-error'|
+export type ErrorType = 
+'app-config-error'|
 'app-id-error'|
-'api-key-expired'|
 'api-key-invalid'|
 'api-key-missing'|
 'api-key-revoked'|

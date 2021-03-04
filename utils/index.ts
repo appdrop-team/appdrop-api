@@ -1,115 +1,63 @@
 import * as Projects from '../projects';
-export const NUM_FREE_INVOCATIONS = 50000;
-export interface ERROR_STATUS_CODE_KEYS {
-    BAD_REQUEST: any;
-    UNAUTHORIZED: any;
-    FORBIDDEN: any;
-    TOO_MANY_REQUESTS: any;
-    INTERNAL_SERVER_ERROR: any;
-    SERVICE_UNAVAILABLE: any;
-}
-export const ERROR_STATUS_CODES: {
-    [key in keyof ERROR_STATUS_CODE_KEYS]:
-    400 |
-    401 |
-    403 |
-    429 |
-    500 |
-    503
-} = Object.freeze({
-    BAD_REQUEST: 400,
-    UNAUTHORIZED: 401,
-    FORBIDDEN: 403,
-    TOO_MANY_REQUESTS: 429,
-    INTERNAL_SERVER_ERROR: 500,
-    SERVICE_UNAVAILABLE: 503,
-});
-export interface ERROR_RESPONSE_KEYS {
-    APP_CONFIG_ERROR: any;
-    APP_ID_ERROR: any;
-    API_KEY_EXPIRED: any;
-    API_KEY_INVALID: any;
-    API_KEY_MISSING: any;
-    API_KEY_REVOKED: any;
-    INTERNAL_SERVER_ERROR: any;
-    INVALID_DATA_PROPERTY: any;
-    RATE_LIMIT_SURPASSED: any;
-    UNKNOWN_ERROR: any;
-    USER_ID_INVALID: any;
-}
+import { ErrorType } from '../projects/base';
+
 export const ERROR_RESPONSES: {
-    [key in keyof ERROR_RESPONSE_KEYS]: Projects.Base.APIRequestError;
-} = Object.freeze({
-    APP_CONFIG_ERROR: {
-        created: null,
+    [key in ErrorType]: Projects.Base.APIRequestError;
+} = {
+    "app-config-error": {
         error_type: 'app-config-error',
         message: 'The request did not include a valid app config object',
-        status_code: ERROR_STATUS_CODES.UNAUTHORIZED,
+        status_code: 401
     },
-    APP_ID_ERROR: {
-        created: null,
+    "app-id-error": {
         error_type: 'app-id-error',
         message: 'The app id included in this request is not associated with your API key',
-        status_code: ERROR_STATUS_CODES.UNAUTHORIZED,
+        status_code: 401
     },
-    API_KEY_EXPIRED: {
-        created: null,
-        error_type: 'api-key-expired',
-        message: 'The included API key is expired',
-        status_code: ERROR_STATUS_CODES.FORBIDDEN,
-    },
-    API_KEY_INVALID: {
-        created: null,
+    "api-key-invalid": {
         error_type: 'api-key-invalid',
         message: 'The included API key is not associated with an active Appdrop account',
-        status_code: ERROR_STATUS_CODES.FORBIDDEN,
+        status_code: 403
     },
-    API_KEY_MISSING: {
-        created: null,
+    "api-key-missing": {
         error_type: 'api-key-missing',
         message: 'The request did not include an API key',
-        status_code: ERROR_STATUS_CODES.UNAUTHORIZED,
+        status_code: 401
     },
-    API_KEY_REVOKED: {
-        created: null,
+    "api-key-revoked": {
         error_type: 'api-key-revoked',
         message: 'The included API key has been revoked',
-        status_code: ERROR_STATUS_CODES.FORBIDDEN,
+        status_code: 403
     },
-    INTERNAL_SERVER_ERROR: {
-        created: null,
+    "internal-server-error": {
         error_type: 'internal-server-error',
         message: 'Our server encountered a run-time error when processing your request',
-        status_code: ERROR_STATUS_CODES.INTERNAL_SERVER_ERROR,
+        status_code: 500
     },
-    INVALID_DATA_PROPERTY: {
-        created: null,
+    "invalid-data-property": {
         error_type: 'invalid-data-property',
         message: 'Your data property was undefined or formatted incorrectly. Please refer to our docs to correct this issue.',
-        status_code: ERROR_STATUS_CODES.BAD_REQUEST,
+        status_code: 400
     },
-    RATE_LIMIT_SURPASSED: {
-        created: null,
+    "rate-limit-surpassed": {
         error_type: 'rate-limit-surpassed',
-        message: 'You have reached the daily rate limit for the Starter Plan. Activate billing at https://appdrop.com/pricing',
-        status_code: ERROR_STATUS_CODES.TOO_MANY_REQUESTS,
+        message: 'You have reached the rate limit for the API',
+        status_code: 429
     },
-    UNKNOWN_ERROR: {
-        created: null,
+    "unknown-error": {
         error_type: 'unknown-error',
         message: 'Our server encountered an unknown error when processing your request',
-        status_code: ERROR_STATUS_CODES.BAD_REQUEST,
+        status_code: 400
     },
-    USER_ID_INVALID: {
-        created: null,
+    "user-id-invalid": {
         error_type: 'user-id-invalid',
         message: 'There is no user in your project with this id.',
-        status_code: ERROR_STATUS_CODES.BAD_REQUEST,
+        status_code: 400
     },
-});
+};
 export function RandString(l = -1) {
     let result = "";
-    const alphanumeric_characters = "012345789abcdefghijklmnopqrstvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_";
+    const alphanumeric_characters = "012345789abcdefghijklmnopqrstvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     const r = l > 0 ? l : (Math.floor(Math.random() * 20) + 20);
     for (let i = 0; i < r; i++) {
         result += alphanumeric_characters.charAt(
