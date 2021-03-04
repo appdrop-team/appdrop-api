@@ -898,7 +898,7 @@ export async function handleSuccess(
     response_body: APIResponseBodyType,
     req: any,
     res: any
-) {
+): Promise<void> {
     try {
         res.header('Content-Type','application/json');
         res.status(200).send(JSON.stringify(response_body));
@@ -923,9 +923,11 @@ export async function handleSuccess(
         };
         await db.collection('api_requests').doc(api_request_id).set(api_request);
         console.log(`${method} ${endpoint} success`);
+        return;
     }
     catch (error) {
         console.error('handleSuccessError');
+        return;
     }
 }
 
@@ -940,7 +942,7 @@ export async function handleError(
     method: APIRequestMethod,
     req: any,
     res: any
-) {
+): Promise<void> {
     try {
         console.error(`${method} ${endpoint} error`, error);
         const error_type = (!!error && typeof error === 'string') ?
@@ -974,10 +976,12 @@ export async function handleError(
                 status_code: error_response.status_code,
             };
             await db.collection('api_requests').doc(api_request_id).set(api_request);
+            return;
         }
     }
     catch (error) {
         console.error('handleError error', error);
+        return;
     }
 }
 
