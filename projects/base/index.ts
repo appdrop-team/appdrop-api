@@ -1,11 +1,12 @@
+import atob = require('atob');
 import { AuthenticateUserParams, CreateUserParams, RequestUserPasswordResetParams, RetrieveUserSecurityQuestionParams, UpdateUserParams, User } from '../../auth';
-import { Identifiable } from '../../base';
-import { RemoteAsset } from '../../assets';
-import { CreateEntityParams, Entity, UpdateEntityParams } from '../../entities';
 import { BankAccount, Card, Charge, CreateBankAccountParams, CreateBankAccountVerificationParams, CreateCardParams, CreateChargeParams, CreateRefundParams, CreateSubscriptionParams, Subscription, UpdateSubscriptionParams } from '../../billing';
 import { ConfirmOrderParams, CreateOrderParams, Order, UpdateOrderParams } from '../../orders';
+import { CreateEntityParams, Entity, UpdateEntityParams } from '../../entities';
+import { Identifiable } from '../../base';
 import { Product } from '../../products';
-import { Timestamp } from '@google-cloud/firestore';
+import { RemoteAsset } from '../../assets';
+import { randString, validString } from '../../utils';
 
 /**
  * React Native Project Template
@@ -872,6 +873,64 @@ export const ERROR_RESPONSES: {
         status_code: 400
     }
 };
+
+export async function handleError(
+    admin: any,
+    db: any,
+    endpoint: APIRequestEndpoint,
+    error: ErrorType,
+    method: APIRequestMethod,
+    req: any,
+    res: any
+) {
+    try {
+        console.error(`${method} ${endpoint} error`, error);
+        const error_type = (!!error && typeof error === 'string') ?
+            error as ErrorType : 'unknown-error';
+        const error_response = ERROR_RESPONSES[error_type] ?
+            ERROR_RESPONSES[error_type] :
+            ERROR_RESPONSES['unknown-error'];
+        const error_response_body = {
+            error: error_response
+        };
+        res.header("Content-Type", 'application/json');
+        res.status(error_response.status_code).send(JSON.stringify(error_response_body));
+        if (error !== 'app-config-error') {
+            const request_body = (
+                typeof req.body === 'string' ?
+                    JSON.parse(req.body) : req.body
+            ) as unknown as APIRequestBody;
+            const api_request_id = randString();
+            const ip_address_obj = req.headers['x-forwarded-for'] || req.connection.remoteAddress || '';
+            const ip_address = typeof ip_address_obj === 'string' ? ip_address_obj : ip_address_obj[0];
+            const api_request: APIRequest = {
+                created_at: admin.firestore.Timestamp.fromDate(new Date()),
+                livemode: true,
+                endpoint: endpoint,
+                id: api_request_id,
+                ip_address: ip_address,
+                method: method,
+                object: 'api_request',
+                request_body: request_body,
+                response_body: error_response_body,
+                status_code: error_response.status_code,
+            };
+            await db.collection('api_requests').doc(api_request_id).set(api_request);
+        }
+    }
+    catch (error) {
+        console.error('handleError error', error);
+    }
+}
+
+export function getDecodedAuthHeader(req: any) {
+    if (validString(req.header('Authorization'), true)) {
+        if ((req.header('Authorization') as string).startsWith('Basic ')) {
+            return atob((req.header('Authorization') as string).split('Basic ')[1]);
+        }
+    }
+    return '';
+}
 
 /**
  * 
