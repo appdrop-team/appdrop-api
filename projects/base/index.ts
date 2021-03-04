@@ -787,8 +787,9 @@ export const APIRequestBase = 'https://api.appdrop.com';
  * Identifies which endpoint this request targeted.
  */
 export type APIRequestEndpoint =
-'v1/bank-accounts' |
-'v1/cards' |
+'v1/customers/:customerId/bankAccounts' |
+'v1/customers/:customerId/verifyBankAccount' |
+'v1/customers/:customerId/cards' |
 'v1/entities/:entityId' |
 'v1/entities' |
 'v1/initAppState' |

@@ -809,7 +809,7 @@ export type CVCCheckType = 'pass'|'fail'|'unavailable'|'unchecked';
 export type CardFundingType = 'credit'|'debit'|'prepaid'|'unknown';
 
 /**
- * Params to create a Bank Account Source and attach it to a Customer.
+ * Params to create a Bank Account or Card Source and attach it to a Customer.
  */
 export interface CreateCustomerSourceParams extends AttachCustomerParams {
 
