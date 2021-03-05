@@ -1512,6 +1512,11 @@ export interface CreateRefundParams {
     charge: string;
 
     /**
+     * Id of the ECommerce project this order belongs to.
+     */
+    project_id: string;
+
+    /**
      * Reason for the refund.
      */
     reason: RefundReason;
