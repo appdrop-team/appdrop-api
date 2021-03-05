@@ -478,11 +478,6 @@ export interface CreateFinancialDetailsParams extends UpdateFinancialDetailsPara
      */
     card: Card|null;
 
-    /**
-     * Three-letter ISO 4217 code in all lowercase
-     */
-    currency: CurrencyCode;
-
 }
 
 /**
@@ -494,11 +489,6 @@ export interface UpdateFinancialDetailsParams {
      * The entity's credit card on file.
      */
     card?: Card|null;
-
-    /**
-     * Three-letter ISO 4217 code in all lowercase
-     */
-    currency?: CurrencyCode;
 }
 
 /**
@@ -546,21 +536,6 @@ export interface CreateEntityFinancialDetailsParams extends CreateFinancialDetai
     };
 
     /**
-     * Invoice renewal interval.
-     */
-    billing_interval: BillingInterval;
-
-    /**
-     * Invoice payment medthod.
-     */
-    billing_method: BillingMethod;
-
-    /**
-     * Timestamp of most recent cancellation.
-     */
-    canceled_at: Timestamped;
-
-    /**
      * The active Coupon objects applied to this entity's account. Coupons
      * are applied either by the converting team during onboarding (for instance after reading
      * about a promotional on our Twitter page) or applied by an Appdrop sales rep
@@ -574,11 +549,6 @@ export interface CreateEntityFinancialDetailsParams extends CreateFinancialDetai
         [key:string]: Coupon;
 
     };
-
-    /**
-     * Timestamp of conversion to most recent plan.
-     */
-    converted_at: Timestamped;
 
     /**
      * Net Sales that the Organization has accumulated during the current 
@@ -622,21 +592,6 @@ export interface UpdateEntityFinancialDetailsParams extends UpdateFinancialDetai
     };
 
     /**
-     * Invoice renewal interval.
-     */
-    billing_interval?: BillingInterval;
-
-    /**
-     * Invoice payment medthod.
-     */
-    billing_method?: BillingMethod;
-
-    /**
-     * Timestamp of most recent cancellation.
-     */
-    canceled_at?: Timestamped;
-
-    /**
      * The active Coupon objects applied to this entity's account. Coupons
      * are applied either by the converting team during onboarding (for instance after reading
      * about a promotional on our Twitter page) or applied by an Appdrop sales rep
@@ -650,11 +605,6 @@ export interface UpdateEntityFinancialDetailsParams extends UpdateFinancialDetai
         [key:string]: Coupon;
         
     };
-
-    /**
-     * Timestamp of conversion to most recent plan.
-     */
-    converted_at?: Timestamped;
 
     /**
      * Net Sales that the Organization has accumulated during the current 
@@ -1715,13 +1665,8 @@ export const DEFAULT_ENTERPRISE: Enterprise = {
     entity_type: 'enterprise',
     financial_details: {
         add_ons: {},
-        billing_interval: 'annually',
-        billing_method: 'card',
         card: null,
-        canceled_at: null,
-        converted_at: null,
         coupons: {},
-        currency: 'usd',
         payout_balance: 0,
         stripe_subscription: null,
         tier: 'small'
@@ -1828,13 +1773,8 @@ export const DEFAULT_ORGANIZATION: Organization = {
     entity_type: 'organization',
     financial_details: {
         add_ons: {},
-        billing_interval: 'annually',
-        billing_method: 'card',
         card: null,
-        canceled_at: null,
-        converted_at: null,
         coupons: {},
-        currency: 'usd',
         payout_balance: 0,
         stripe_subscription: null,
         tier: 'starter'
@@ -4071,8 +4011,7 @@ export const DEFAULT_ECOMMERCE_USER: ECommerceProjectUser = {
     email: '',
     favorite_product_ids: [],
     financial_details: {
-        card: null,
-        currency: 'usd'
+        card: null
     },
     id: '',
     livemode: true,
