@@ -145,6 +145,11 @@ export interface CreateUserParams extends UpdateUserParams {
      * The user's password encrypted or an empty string.
      */
     password_hash: string;
+    
+    /**
+     * The user's password salt or an empty string.
+     */
+    password_salt: string;
 
     /**
      * The user's phone number.
@@ -4225,6 +4230,7 @@ export const DEFAULT_ECOMMERCE_USER: ECommerceProjectUser = {
     order_ids: [],
     password: '',
     password_hash: '',
+    password_salt: '',
     phone: '',
     project_id: '',
     security_question: '',
