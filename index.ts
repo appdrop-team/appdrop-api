@@ -483,19 +483,10 @@ export interface CreateFinancialDetailsParams extends UpdateFinancialDetailsPara
      */
     currency: CurrencyCode;
 
-    /**
-     * The customer id in Stripe's billing system. Enables billing across 
-     * different Appdrop projects.
-     */
-    stripe_customer_id: string;
-
 }
 
 /**
  * Params to update a nested field in financial details.
- * 
- * Note that `stripe_customer_id` is missing as this value does not
- * change once set.
  */
 export interface UpdateFinancialDetailsParams {
     
@@ -625,9 +616,6 @@ export interface CreateEntityFinancialDetailsParams extends CreateFinancialDetai
 
 /**
  * Params to update a nested field in an entity's finacial details.
- * 
- * Note that `stripe_customer_id` is missing as this value does not
- * change once set.
  */
 export interface UpdateEntityFinancialDetailsParams extends UpdateFinancialDetailsParams {
 
@@ -1903,7 +1891,6 @@ export const DEFAULT_ENTERPRISE: Enterprise = {
         coupons: {},
         currency: 'usd',
         payout_balance: 0,
-        stripe_customer_id: '',
         stripe_subscription: null,
         tier: 'small'
     },
@@ -2019,7 +2006,6 @@ export const DEFAULT_ORGANIZATION: Organization = {
         coupons: {},
         currency: 'usd',
         payout_balance: 0,
-        stripe_customer_id: '',
         stripe_subscription: null,
         tier: 'starter'
     },
@@ -4069,13 +4055,6 @@ export const APIRequestBase = 'https://api.appdrop.com';
  * Identifies which endpoint this request targeted.
  */
 export type APIRequestEndpoint =
-'v1/customers/:customerId/bankAccounts' |
-'v1/customers/:customerId/verifyBankAccount' |
-'v1/customers/:customerId/cards' |
-'v1/customers/:customerId/charges' |
-'v1/customers/:customerId/orders/:orderId/refunds' |
-'v1/customers/:customerId/subscriptions' |
-'v1/customers/:customerId/subscriptions/:subscriptionId'|
 'v1/entities/:entityId' |
 'v1/entities' |
 'v1/initAppState' |
@@ -4089,12 +4068,19 @@ export type APIRequestEndpoint =
 'v1/projects/:projectId/tickets' |
 'v1/projects/:projectId/users' |
 'v1/projects/:projectId/users/:userId' |
+'v1/projects/:projectId/users/:userId/bankAccounts' |
+'v1/projects/:projectId/users/:userId/cards' |
+'v1/projects/:projectId/users/:userId/charges' |
 'v1/projects/:projectId/users/:userId/requestUserPasswordReset' |
 'v1/projects/:projectId/users/:userId/authenticateUser' |
 'v1/projects/:projectId/users/:userId/orders' |
 'v1/projects/:projectId/users/:userId/orders/:orderId' |
 'v1/projects/:projectId/users/:userId/orders/:orderId/cancel' |
 'v1/projects/:projectId/users/:userId/orders/:orderId/confirm' |
+'v1/projects/:projectId/users/:userId/orders/:orderId/refunds' |
+'v1/projects/:projectId/users/:userId/subscriptions' |
+'v1/projects/:projectId/users/:userId/subscriptions/:subscriptionId'|
+'v1/projects/:projectId/users/:userId/verifyBankAccount' |
 'v1/projectTemplates' |
 'v1/projectTemplates/:projectTemplateId';
 
@@ -4256,8 +4242,7 @@ export const DEFAULT_ECOMMERCE_USER: ECommerceProjectUser = {
     favorite_product_ids: [],
     financial_details: {
         card: null,
-        currency: 'usd',
-        stripe_customer_id: ''
+        currency: 'usd'
     },
     id: '',
     livemode: true,
