@@ -1,15 +1,22 @@
 {
   "name": "appdrop-api",
-  "version": "3.1.0",
+  "version": "3.1.2",
   "description": "Type definitions for client and server applications built on Appdrop",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "devDependencies": {
     "typescript": "^3.8.0"
   },
   "dependencies": {
     "@google-cloud/firestore": "^4.9.4",
+    "@types/atob": "^2.1.2",
     "atob": "^2.1.2"
   },
-  "main": "src/index.ts",
+  "author": "Appdrop Inc.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/appdrop-team/appdrop-api.git"
@@ -24,7 +31,6 @@
     "azure",
     "no-code"
   ],
-  "author": "Appdrop Inc.",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/appdrop-team/appdrop-api/issues"
