@@ -1986,6 +1986,11 @@ export interface UpdateEnterpriseParams extends UpdateEntityParams {
 export interface Organization extends CreateOrganizationParams, Entity {
 
     /**
+     * The minted API Key this Organization uses to authenticate its projects.
+     */
+    api_key: string;
+
+    /**
      * Type of entity
      */
     entity_type: 'organization';
@@ -2044,11 +2049,6 @@ export const DEFAULT_ORGANIZATION: Organization = {
  * Params to create an organization
  */
 export interface CreateOrganizationParams extends CreateEntityParams {
-
-    /**
-     * This array includes the id of each API Key that this Organization owns.
-     */
-    api_key: string;
 
     /**
      * This array includes the id of each Project that this Organization owns.
@@ -3935,6 +3935,24 @@ export async function handleSuccess(
     }
 }
 
+export async function queryOrganizationByAPIKey(db: any, decodedAPIKey: string) {
+    try {
+        const organization_query_snapshot = await db
+        .collection('entities')
+        .where('api_key', '==', decodedAPIKey)
+        .get();
+        if (organization_query_snapshot.empty) {
+            throw 'organization_query_snapshot.empty';
+        }
+        const organization = organization_query_snapshot.docs[0].data();
+        return organization as Organization;
+    }
+    catch (error) {
+        console.error('matchOrganization error', error);
+        return null;
+    }
+}
+
 /**
  * API response and logging for error cases.
  */
@@ -4043,12 +4061,12 @@ export type APIRequestEndpoint =
 'v1/projects/:projectId/apps/:appId/config' |
 'v1/projects/:projectId/retrieveUserSecurityQuestion' |
 'v1/projects/:projectId/signInUser' |
-'v1/projects/:projectId/signUpUser' |
 'v1/projects/:projectId/syncPrintfulProducts' |
 'v1/projects/:projectId/tickets' |
 'v1/projects/:projectId/users' |
 'v1/projects/:projectId/users/:userId' |
 'v1/projects/:projectId/users/:userId/requestUserPasswordReset' |
+'v1/projects/:projectId/users/:userId/signUpUser' |
 'v1/projects/:projectId/users/:userId/orders' |
 'v1/projects/:projectId/users/:userId/orders/:orderId' |
 'v1/projects/:projectId/users/:userId/orders/:orderId/cancel' |
