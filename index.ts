@@ -1,4 +1,5 @@
 import FirebaseFirestore from '@google-cloud/firestore';
+import atob from 'atob';
 
 /**
  * 
@@ -474,7 +475,7 @@ export interface CreateFinancialDetailsParams extends UpdateFinancialDetailsPara
 
     /**
      * The customer id in Stripe's billing system. Enables billing across 
-     * different Appdrop projects. Syntax is: `${project_id}_${user_id}`
+     * different Appdrop projects.
      */
     stripe_customer_id: string;
 
