@@ -4055,6 +4055,13 @@ export const APIRequestBase = 'https://api.appdrop.com';
  * Identifies which endpoint this request targeted.
  */
 export type APIRequestEndpoint =
+'v1/customers/:stripeCustomerId/bankAccounts/:stripeCustomerType' |
+'v1/customers/:stripeCustomerId/cards/:stripeCustomerType' |
+'v1/customers/:stripeCustomerId/charges/:stripeCustomerType' |
+'v1/customers/:stripeCustomerId/orders/:orderId/refunds' |
+'v1/customers/:stripeCustomerId/subscriptions/:stripeCustomerType' |
+'v1/customers/:stripeCustomerId/subscriptions/:subscriptionId/:stripeCustomerType'|
+'v1/customers/:stripeCustomerId/verifyBankAccount/:stripeCustomerType' |
 'v1/entities/:entityId' |
 'v1/entities' |
 'v1/initAppState' |
@@ -4068,21 +4075,16 @@ export type APIRequestEndpoint =
 'v1/projects/:projectId/tickets' |
 'v1/projects/:projectId/users' |
 'v1/projects/:projectId/users/:userId' |
-'v1/projects/:projectId/users/:userId/bankAccounts' |
-'v1/projects/:projectId/users/:userId/cards' |
-'v1/projects/:projectId/users/:userId/charges' |
 'v1/projects/:projectId/users/:userId/requestUserPasswordReset' |
 'v1/projects/:projectId/users/:userId/authenticateUser' |
 'v1/projects/:projectId/users/:userId/orders' |
 'v1/projects/:projectId/users/:userId/orders/:orderId' |
 'v1/projects/:projectId/users/:userId/orders/:orderId/cancel' |
 'v1/projects/:projectId/users/:userId/orders/:orderId/confirm' |
-'v1/projects/:projectId/users/:userId/orders/:orderId/refunds' |
-'v1/projects/:projectId/users/:userId/subscriptions' |
-'v1/projects/:projectId/users/:userId/subscriptions/:subscriptionId'|
-'v1/projects/:projectId/users/:userId/verifyBankAccount' |
 'v1/projectTemplates' |
 'v1/projectTemplates/:projectTemplateId';
+
+export type StripeCustomerType = 'entities'|'users';
 
 /**
  * Identifies the HTTP method this request used.
