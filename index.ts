@@ -1526,7 +1526,7 @@ export interface CreateRefundParams {
 /**
  * Reason for the refund.
  */
-export type RefundReason = 'duplicate' | 'fraudulent' | 'requested_by_customer' | 'expired_uncaptured_charge';
+export type RefundReason = 'duplicate' | 'fraudulent' | 'requested_by_customer';
  
  /**
  * 
@@ -1840,7 +1840,7 @@ export interface UpdateOrganizationParams extends UpdateEntityParams {
  /**
  * Customer Order
  */
-export interface Order extends Identifiable, CreateOrderParams, OrderResultBase {
+export interface Order extends Identifiable, CreateOrderParams, ConfirmOrderParams, OrderResultBase {
 
     /**
      * Id in external system
