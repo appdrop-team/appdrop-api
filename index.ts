@@ -261,30 +261,6 @@ export interface AuthenticateUserParams {
 export type AuthenticationType = 'sign_in'|'sign_up';
 
 /**
- * Params to sign up a user.
- */
-export interface SignUpUserParams extends AuthenticateUserParams {
-
-    /**
-     * Auth operation
-     */
-    authentication_type: 'sign_up';
-
-}
-
-/**
- * Params to sign in a user.
- */
-export interface SignInUserParams extends AuthenticateUserParams {
-
-    /**
-     * Auth operation
-     */
-    authentication_type: 'sign_in';
-
-}
-
-/**
  * Params to exchange an email address for a User object which includes 
  * the `security_question` and `security_answer_hash` property to display 
  * to the resetting user. If either of these properties is an 
@@ -3821,6 +3797,7 @@ export type ErrorType =
 'api-key-invalid'|
 'api-key-missing'|
 'api-key-revoked'|
+'incorrect-auth-credentials'|
 'internal-server-error'|
 'invalid-data-property'|
 'invalid-endpoint'|
@@ -3858,6 +3835,11 @@ export const ERROR_RESPONSES: {
         error_type: 'api-key-revoked',
         message: 'The included API key has been revoked',
         status_code: 403
+    },
+    "incorrect-auth-credentials": {
+        error_type: 'incorrect-auth-credentials',
+        message: 'The credentials provided are invalid.',
+        status_code: 400
     },
     "internal-server-error": {
         error_type: 'internal-server-error',
@@ -4060,13 +4042,12 @@ export type APIRequestEndpoint =
 'v1/projects/:projectId/apps/:appId' |
 'v1/projects/:projectId/apps/:appId/config' |
 'v1/projects/:projectId/retrieveUserSecurityQuestion' |
-'v1/projects/:projectId/signInUser' |
 'v1/projects/:projectId/syncPrintfulProducts' |
 'v1/projects/:projectId/tickets' |
 'v1/projects/:projectId/users' |
 'v1/projects/:projectId/users/:userId' |
 'v1/projects/:projectId/users/:userId/requestUserPasswordReset' |
-'v1/projects/:projectId/users/:userId/signUpUser' |
+'v1/projects/:projectId/users/:userId/authenticateUser' |
 'v1/projects/:projectId/users/:userId/orders' |
 'v1/projects/:projectId/users/:userId/orders/:orderId' |
 'v1/projects/:projectId/users/:userId/orders/:orderId/cancel' |
