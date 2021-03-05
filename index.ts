@@ -1156,12 +1156,12 @@ export interface CreateCardParams {
     /**
      * Expiration Month
      */
-    exp_month: number;
+    exp_month: string;
     
     /**
      * Expiration Year
      */
-    exp_year: number;
+    exp_year: string;
     
     /**
      * Card number
