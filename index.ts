@@ -546,16 +546,6 @@ export interface CreateEntityFinancialDetailsParams extends CreateFinancialDetai
     };
 
     /**
-     * The entity's ACH Checking Account on File.
-     */
-    bank_account: BankAccount|null;
-
-    /**
-     * The token created when this bank account was added as a customer source.
-     */
-    bank_account_source_token: string;
-
-    /**
      * Invoice renewal interval.
      */
     billing_interval: BillingInterval;
@@ -630,16 +620,6 @@ export interface UpdateEntityFinancialDetailsParams extends UpdateFinancialDetai
         [key:string]: AddOn;
 
     };
-
-    /**
-     * The entity's ACH Checking Account on File.
-     */
-    bank_account?: BankAccount|null;
-
-    /**
-     * The token created when this bank account was added as a customer source
-     */
-    bank_account_source_token?: string;
 
     /**
      * Invoice renewal interval.
@@ -736,9 +716,9 @@ export type BillingInterval = 'quarterly'|'annually';
  * Invoice payment method.
  * 
  * Note: Enterprises and Organizations paying for Appdrop plans using a credit
- * card incur an additional 5% processing fee. There is no processing fee for ACH.
+ * card incur an additional 5% processing fee.
  */
-export type BillingMethod = 'bank_account'|'card';
+export type BillingMethod = 'card';
 
 /**
  * A discount toward an Appdrop plan.
@@ -887,7 +867,7 @@ export interface Customer extends CreateCustomerParams {
         /**
          * Source data
          */
-        data: (BankAccount|Card)[];
+        data: Card[];
   
     }
 
@@ -944,82 +924,6 @@ export interface UpdateCustomerParams {
 
 }
 
-/**
- * Params to create a Bank Account Token
- */
-export interface CreateBankAccountTokenParams {
-
-    /**
-     * Bank Account data
-     */
-    bank_account: CreateBankAccountParams;
-
-}
-
-/**
- * Params to generate a Stripe Bank Account
- */
-export interface CreateBankAccountParams {
-
-    /**
-     * The name of the person or business that owns the bank account.
-     */
-    account_holder_name: string;
-
-    /**
-     * Account number for the bank account.
-     */
-    account_number: string;
-
-    /**
-     * The type of entity that holds the account. This can be either `individual` or `company`.
-     */
-    account_holder_type: BankAccountHolderType;
-
-    /**
-     * Two-letter ISO code representing the country the bank account is located in.
-     */
-    country: CountryCode;
-
-    /**
-     * Three-letter [ISO code for the currency](https://stripe.com/docs/payouts) paid out to the bank account.
-     */
-    currency: CurrencyCode;
-
-    /**
-     * The ID of the customer that the bank account is associated with.
-     */
-    customer: string;
-    
-    /**
-     * The routing transit number for the bank account.
-     */
-    routing_number: string;
-
-}
-
-/**
- * Type of Bank Account. Required.
- */
-export type BankAccountHolderType = 'company'|'individual';
-
-/**
- * Bank Account Source Token returned from Stripe
- */
-export interface CreateBankAccountTokenResponseBody extends CreateTokenResponseBody {
-    
-    /**
-     * Bank Account object
-     */
-    bank_account: BankAccount;
-    
-    /**
-     * Token type
-     */
-    type: 'bank_account';
-
-}
-
 export interface CreateTokenResponseBody {
     
     /**
@@ -1052,78 +956,13 @@ export interface CreateTokenResponseBody {
     /**
      * Token type
      */
-    type: 'card'|'bank_account';
+    type: 'card';
 
     /**
      * Flag denoting whether the token's been used before.
      */
     used: boolean;
 
-}
-
-/**
- * Bank Account. Requires microdeposit verification before charges can be
- * processed.
- */
-export interface BankAccount extends CreateBankAccountParams {
-
-    /**
-     * Name of the bank associated with the routing number (e.g., `WELLS FARGO`).
-     */
-    bank_name: string;
-    
-    /**
-     * Uniquely identifies this particular bank account. You can use this attribute to check whether two bank accounts are the same.
-     */
-    fingerprint: string;
-
-    /**
-     * Unique identifier for the object.
-     */
-    id: string;
-    
-    /**
-     * The last four digits of the bank account number.
-     */
-    last4: string;
-    
-    /**
-     * Object name.
-     */
-    object: 'bank_account';
-    
-    /**
-     * For bank accounts, possible values are `new`, `validated`, `verified`, `verification_failed`, or `errored`.
-     * 
-     * A bank account that hasn't had any activity or validation performed is `new`. If Stripe can determine that the bank account exists,
-     * its status will be `validated`. Note that there often isn't enough information to know (e.g., for smaller credit unions), and the validation
-     * is not always run. If customer bank account verification has succeeded, the bank account status will be `verified`. If the verification
-     * failed for any reason, such as microdeposit failure, the status will be `verification_failed`. If a transfer sent to this bank account
-     * fails, we'll set the status to `errored` and will not continue to send transfers until the bank details are updated.
-     *
-     * For external accounts, possible values are `new` and `errored`. Validations aren't run against external accounts because they're
-     * only used for payouts. This means the other statuses don't apply. If a transfer fails, the status is set to `errored`
-     * and transfers are stopped until account details are updated.
-     *
-     */
-    status: BankAccountStatus|null;
-
-}
-
-/**
- * Status of Bank Account.
- */
-export type BankAccountStatus = 'errored'|'new'|'validated'|'verified'|'verification_failed';
-
-/**
- * Params to verify a bank account source.
- */
-export interface CreateBankAccountVerificationParams {
-    
-    /**
-     * Two microdeposits in cents
-     */
-    amounts: number[];
 }
 
 /**
@@ -1258,12 +1097,12 @@ export type CVCCheckType = 'pass'|'fail'|'unavailable'|'unchecked';
 export type CardFundingType = 'credit'|'debit'|'prepaid'|'unknown';
 
 /**
- * Params to create a Bank Account or Card Source and attach it to a Customer.
+ * Params to create a Card Source and attach it to a Customer.
  */
 export interface CreateCustomerSourceParams {
 
     /**
-     * Id of the Bank Account Source Token object or Card Source Token object.
+     * Id of the Card Source Token object.
      */
     source: string;
 
@@ -1484,11 +1323,6 @@ export type ChargeStatus = 'succeeded'|'pending'|'failed';
  * Details of payment method for charge
  */
 export interface PaymentMethodDetails {
-
-    /**
-     * ACH Debit use to process charge.
-     */
-    ach_debit?: BankAccount;
 
     /**
      * Card use to process charge.
@@ -1881,10 +1715,8 @@ export const DEFAULT_ENTERPRISE: Enterprise = {
     entity_type: 'enterprise',
     financial_details: {
         add_ons: {},
-        bank_account: null,
-        bank_account_source_token: '',
         billing_interval: 'annually',
-        billing_method: 'bank_account',
+        billing_method: 'card',
         card: null,
         canceled_at: null,
         converted_at: null,
@@ -1996,10 +1828,8 @@ export const DEFAULT_ORGANIZATION: Organization = {
     entity_type: 'organization',
     financial_details: {
         add_ons: {},
-        bank_account: null,
-        bank_account_source_token: '',
         billing_interval: 'annually',
-        billing_method: 'bank_account',
+        billing_method: 'card',
         card: null,
         canceled_at: null,
         converted_at: null,
@@ -3664,8 +3494,6 @@ export interface APIRequestBody {
     data:
     AuthenticateUserParams|
     ConfirmOrderParams|
-    CreateBankAccountVerificationParams|
-    CreateBankAccountParams|
     CreateCardParams|
     CreateChargeParams|
     CreateEntityParams|
@@ -3729,7 +3557,7 @@ export interface APIRequest extends CreateAPIRequest, Identifiable {
 /**
  * The response object sent back to the client.
  */
-export type APIResponseBodyType = BankAccount |
+export type APIResponseBodyType =
 Card |
 Charge |
 Order |
