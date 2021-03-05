@@ -3509,6 +3509,7 @@ Order |
 Entity |
 InitAppResponseBody|
 Product |
+Refund |
 Subscription |
 User |
 {
