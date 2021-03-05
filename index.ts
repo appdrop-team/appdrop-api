@@ -157,14 +157,19 @@ export interface CreateUserParams extends UpdateUserParams {
     phone: string;
 
     /**
-     * Security answer for password resets encrypted or an empty string.
-     */
-    security_answer_hash: string;
-
-    /**
      * Security answer for password resets or an empty string. Encrypted before storage.
      */
     security_answer: string;
+
+    /**
+     * Security answer encrypted for password resets encrypted or an empty string.
+     */
+    security_answer_hash: string;
+    
+    /**
+     * Security answer salt for password resets or an empty string.
+     */
+    security_answer_salt: string;
     
     /**
      * Security question for password resets or an empty string.
@@ -3901,6 +3906,38 @@ export async function handleSuccess(
             typeof req.body === 'string' ?
                 JSON.parse(req.body) : req.body
         ) as unknown as APIRequestBody;
+        const cleansed_request_body: APIRequestBody = {} as unknown as APIRequestBody;
+        Object.assign(cleansed_request_body, request_body);
+        //@ts-ignore
+        if (validString(cleansed_request_body['password'], true)) {
+            //@ts-ignore
+            cleansed_request_body['password'] = '*******';
+        }
+        //@ts-ignore
+        if (validString(cleansed_request_body['account_number'], true)) {
+            //@ts-ignore
+            cleansed_request_body['account_number'] = '*******';
+        }
+        //@ts-ignore
+        if (validString(cleansed_request_body['routing_number'], true)) {
+            //@ts-ignore
+            cleansed_request_body['routing_number'] = '*******';
+        }
+        //@ts-ignore
+        if (validString(cleansed_request_body['cvc'], true)) {
+            //@ts-ignore
+            cleansed_request_body['cvc'] = '*******';
+        }
+        //@ts-ignore
+        if (validString(cleansed_request_body['number'], true)) {
+            //@ts-ignore
+            cleansed_request_body['number'] = '*******';
+        }
+            //@ts-ignore
+        if (validString(cleansed_request_body['security_answer'], true)) {
+            //@ts-ignore
+            cleansed_request_body['security_answer'] = '*******';
+        }
         const api_request: APIRequest = {
             created_at: admin.firestore.Timestamp.fromDate(new Date()),
             livemode: true,
@@ -3909,7 +3946,7 @@ export async function handleSuccess(
             ip_address: ip_address,
             method: method,
             object: 'api_request',
-            request_body: request_body,
+            request_body: cleansed_request_body,
             response_body: response_body,
             status_code: 200
         };
@@ -4235,7 +4272,8 @@ export const DEFAULT_ECOMMERCE_USER: ECommerceProjectUser = {
     project_id: '',
     security_question: '',
     security_answer: '',
-    security_answer_hash: ''
+    security_answer_salt: '',
+    security_answer_hash: '',
 };
 
 /**
