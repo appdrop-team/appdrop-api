@@ -2916,6 +2916,36 @@ export interface CreateProjectUserParams extends CreateUserParams {
     
 }
 
+export const DEFAULT_CLOUD_PROJECT_USER: ProjectUser = {
+    address: {
+        address1: '',
+        address2: '',
+        city: '',
+        country_code: 'US',
+        zip: '',
+        state_code: ''
+    },
+    created_at: {
+        _nanoseconds: 0,
+        _seconds: 0
+    },
+    email: '',
+    id: '',
+    livemode: true,
+    metadata: {},
+    name: '',
+    object: 'user',
+    password: '',
+    password_hash: '',
+    password_salt: '',
+    phone: '',
+    project_id: '',
+    security_question: '',
+    security_answer: '',
+    security_answer_salt: '',
+    security_answer_hash: '',
+};
+
 /**
  * Params to update an end-user registered to an Appdrop Project.
  * 
