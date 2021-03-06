@@ -2939,21 +2939,10 @@ export interface App extends CreateAppParams, Identifiable, VersionHistory {
      */
     object: 'app';
 
-    /**
-     * Released versions
-     * 
-     * Key is version ID.
-     */
-    version_history: {
-
-        [key: string]: Version;
-    
-    };
-
 }
 
 
-export interface CreateAppParams extends CreateVersionHistoryParams, UpdateAppParams {
+export interface CreateAppParams extends UpdateAppParams {
 
     /**
      * The name of this App. Example: MyCoolApp iOS or MyCoolApp Web
@@ -2970,20 +2959,9 @@ export interface CreateAppParams extends CreateVersionHistoryParams, UpdateAppPa
      */
     project_id: string;
 
-    /**
-     * Released versions
-     * 
-     * Key is version ID.
-     */
-    version_history: {
-
-        [key: string]: CreateVersionParams;
-    
-    };
-
 }
 
-export interface UpdateAppParams extends UpdateVersionHistoryParams {
+export interface UpdateAppParams {
     
     /**
      * The name of this App. Example: MyCoolApp iOS or MyCoolApp Web
