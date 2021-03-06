@@ -3312,6 +3312,7 @@ export interface APIRequest extends CreateAPIRequest, Identifiable {
  * The response object sent back to the client.
  */
 export type APIResponseBodyType =
+App |
 Card |
 Charge |
 Order |
