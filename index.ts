@@ -3722,14 +3722,7 @@ export interface InitAppParams {
 /**
  * Server response body for App Initialization
  */
-export interface InitAppResponseBody {
-
-    /**
-     * The authenticated or guest user for this app session.
-     */
-    project_user: ProjectUser;
-
-}
+export interface InitAppResponseBody {}
 
 /**
  * Request Data for for Cloud App Initialization
@@ -3773,6 +3766,12 @@ export interface InitCloudAppResponseBody extends InitAppResponseBody {
         [key: string]: App;
 
     };
+
+    /**
+     * The id of the authenticated or guest user for
+     * this app session minted by the server
+     */
+    current_user_id: string;
 
     /**
      * Map of all Entities
