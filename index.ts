@@ -1579,17 +1579,10 @@ export interface CreateEntityParams extends UpdateEntityParams {
     owner_id: string;
 
     /**
-     * This object contains each User with read and write access
+     * This array contains the ids of each User with read and write access
      * to the Enterprise.
      */
-    team_members: {
-
-        /**
-         * key is the team member's id.
-         */
-        [key: string]: CreateUserParams;
-
-    };
+    team_member_ids?: string[];
 
 }
 
@@ -1602,6 +1595,11 @@ export type EntityType = 'enterprise'|'organization';
  * Params to update an entity.
  */
 export interface UpdateEntityParams {
+
+    /**
+     * This array contains the ids to append to the `team_member_ids` array.
+     */
+    append_team_member_ids?: string[];
 
     /**
      * Financial details for this Appdrop Entity
@@ -1619,17 +1617,15 @@ export interface UpdateEntityParams {
     owner_id?: string;
 
     /**
-     * This object contains each User with read and write access
+     * This array contains the ids to remove from the `team_member_ids` array.
+     */
+    remove_team_member_ids?: string[];
+
+    /**
+     * This array contains the ids of each User with read and write access
      * to the Enterprise.
      */
-    team_members?: {
-
-        /**
-         * key is the team member's id.
-         */
-        [key: string]: UpdateUserParams;
-
-    };
+    team_member_ids?: string[];
 
 }
 
@@ -1648,14 +1644,7 @@ export interface Enterprise extends CreateEnterpriseParams, Entity {
      * This object contains each User with read and write access
      * to the Enterprise.
      */
-    team_members: {
-
-        /**
-         * key is the team member's id.
-         */
-        [key: string]: User;
-
-    };
+    team_member_ids: string[];
 
 }
 
@@ -1682,7 +1671,7 @@ export const DEFAULT_ENTERPRISE: Enterprise = {
     object: 'entity',
     organization_ids: [],
     owner_id: '',
-    team_members: {},
+    team_member_ids: [],
     workspace_email_suffix: ''
 };
 
@@ -1755,14 +1744,7 @@ export interface Organization extends CreateOrganizationParams, Entity {
      * This object contains each User with read and write access
      * to the Enterprise.
      */
-    team_members: {
-
-        /**
-         * key is the team member's id.
-         */
-        [key: string]: User;
-
-    };
+    team_member_ids: string[];
 
 }
 
@@ -1790,7 +1772,7 @@ export const DEFAULT_ORGANIZATION: Organization = {
     object: 'entity',
     owner_id: '',
     project_ids: [],
-    team_members: {},
+    team_member_ids: []
 };
 
 /**
@@ -3507,7 +3489,7 @@ Card |
 Charge |
 Order |
 Entity |
-InitAppResponseBody|
+InitAppResponseBody |
 Product |
 Refund |
 Subscription |
@@ -3837,8 +3819,8 @@ export type APIRequestEndpoint =
 'v1/customers/:stripeCustomerId/subscriptions/:subscriptionId/:stripeCustomerType'|
 'v1/customers/:stripeCustomerId/verifyBankAccount/:stripeCustomerType' |
 'v1/entities/:entityId' |
-'v1/entities' |
-'v1/initAppState' |
+'v1/initAppState/ecommerce' |
+'v1/initAppState/cloud' |
 'v1/projects' |
 'v1/projects/:projectId' |
 'v1/projects/:projectId/apps' |
@@ -3890,6 +3872,95 @@ export interface InitAppResponseBody {
      * The authenticated or guest user for this app session.
      */
     project_user: ProjectUser;
+
+}
+
+/**
+ * Request Data for for Cloud App Initialization
+ */
+export interface InitCloudAppParams extends InitAppParams  {
+
+    /**
+     * Type of entity
+     */
+    entity_type: EntityType;
+
+}
+
+export interface InitEnterpriseCloudAppResponseBody extends InitCloudAppResponseBody {}
+
+export interface InitOrganizationCloudAppResponseBody extends InitCloudAppResponseBody {
+
+    /**
+     * Map of all the Appdrop project users for projects owned by the Organization.
+     * 
+     * Key is the id.
+     */
+    project_users: {
+
+        [key: string]: ProjectTemplate;
+
+    };
+    
+}
+
+/**
+ * Server response body for Cloud App Initialization
+ */
+export interface InitCloudAppResponseBody extends InitAppResponseBody {
+    
+    /**
+     * Map of all Apps
+     */
+    apps: {
+
+        [key: string]: App;
+
+    };
+
+    /**
+     * Map of all Entities
+     */
+    entities: {
+
+        [key: string]: Entity;
+
+    };
+
+    /**
+     * If Enterprise:
+     * 
+     * Map of the projects owned by the Organizations in the workspace
+     * 
+     * If Organization:
+     * 
+     * Map of this projects owned by this Organizations
+     */
+    projects: {
+    
+        [key: string]: Project;
+    
+    };
+    
+    /**
+     * Map of all the Appdrop project templates. Key is the id.
+     */
+    project_templates: {
+
+        [key: string]: ProjectTemplate;
+
+    };
+
+    /**
+     * Map of all the minted team members for this Entity. Key is the id.
+     * 
+     * @Important These Project Users belong to the Appdrop Cloud project
+     */
+    team_members: {
+        
+        [key: string]: ProjectUser;
+    
+    };
 
 }
 
@@ -4064,6 +4135,7 @@ export interface InitEcommerceAppResponseBody extends InitAppResponseBody {
      * Minted project user.
      */
     project_user: ECommerceProjectUser;
+
 }
  
  /**
