@@ -3736,23 +3736,6 @@ export interface InitCloudAppParams extends InitAppParams  {
 
 }
 
-export interface InitEnterpriseCloudAppResponseBody extends InitCloudAppResponseBody {}
-
-export interface InitOrganizationCloudAppResponseBody extends InitCloudAppResponseBody {
-
-    /**
-     * Map of all the Appdrop project users for projects owned by the Organization.
-     * 
-     * Key is the id.
-     */
-    project_users: {
-
-        [key: string]: ProjectTemplate;
-
-    };
-    
-}
-
 /**
  * Server response body for Cloud App Initialization
  */
@@ -3766,12 +3749,6 @@ export interface InitCloudAppResponseBody extends InitAppResponseBody {
         [key: string]: App;
 
     };
-
-    /**
-     * The id of the authenticated or guest user for
-     * this app session minted by the server
-     */
-    current_user_id: string;
 
     /**
      * Map of all Entities
@@ -3807,11 +3784,18 @@ export interface InitCloudAppResponseBody extends InitAppResponseBody {
     };
 
     /**
-     * Map of all the minted team members for this Entity. Key is the id.
-     * 
-     * @Important These Project Users belong to the Appdrop Cloud project
+     * The id of the authenticated or guest user for
+     * this app session minted by the server
      */
-    team_members: {
+    project_user_id: string;
+
+    /**
+     * Map of all the minted project users in the scope of this Entity. Key is the id.
+     * 
+     * @Important These Project Users are the team members of this user or 
+     * end-users of the Projects created by this user's Entit(y/ies).
+     */
+    project_users: {
         
         [key: string]: ProjectUser;
     
