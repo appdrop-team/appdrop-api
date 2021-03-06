@@ -2999,17 +2999,6 @@ export interface AppAndroid extends App, CreateAppAndroidParams {
      */
     platform: 'android';
 
-    /**
-     * Released versions
-     * 
-     * Key is version ID.
-     */
-    version_history: {
-
-        [key: string]: Version;
-    
-    };
-
 }
 
 export interface CreateAppAndroidParams extends CreateAppParams {
@@ -3043,17 +3032,6 @@ export interface AppIOS extends App, CreateAppIOSParams {
      * The platform where this app is published – `ios`
      */
     platform: 'ios';
-
-    /**
-     * Released versions
-     * 
-     * Key is version ID.
-     */
-    version_history: {
-
-        [key: string]: Version;
-    
-    };
 
 }
 
@@ -3102,17 +3080,6 @@ export interface AppWeb extends App, CreateAppWebParams {
      * The platform where this app is published – `web`
      */
     platform: 'web';
-
-    /**
-     * Released versions
-     * 
-     * Key is version ID.
-     */
-    version_history: {
-
-        [key: string]: Version;
-    
-    };
 
 }
 export interface CreateAppWebParams extends CreateAppParams {
@@ -3230,7 +3197,6 @@ export interface AppConfigBase {
      * Id of the Project.
     */
     project_id: string;
-
 
 }
 
