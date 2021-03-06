@@ -1505,11 +1505,6 @@ export interface UpdateEntityParams {
     owner_id?: string;
 
     /**
-     * Email addresses of pending team members.
-     */
-    pending_team_member_emails?: string[];
-
-    /**
      * This array contains the ids to remove from the `pending_team_member_emails` array.
      */
     remove_pending_team_member_emails?: string[];
@@ -1518,12 +1513,6 @@ export interface UpdateEntityParams {
      * This array contains the ids to remove from the `team_member_ids` array.
      */
     remove_team_member_ids?: string[];
-
-    /**
-     * This array contains the ids of each User with read and write access
-     * to the Enterprise.
-     */
-    team_member_ids?: string[];
 
 }
 
@@ -1599,11 +1588,6 @@ export interface UpdateEnterpriseParams extends UpdateEntityParams {
      * Ids to append to the `organization_ids` array
      */
     append_organization_ids?: string[];
-
-    /**
-     * Id of each Organization that this Enterprise owns
-     */
-    organization_ids?: string[];
 
     /**
      * Ids to remove from the `organization_ids` array
@@ -2889,11 +2873,6 @@ export interface UpdateProjectParams {
     append_app_ids?: string[];
     
     /**
-     * This array includes the id of each App that this Project contains.
-     */
-    app_ids?: string[];
-    
-    /**
      * The Id of the Project logo Asset.
      */
     logo_asset?: RemoteAsset;
@@ -3935,21 +3914,11 @@ export interface UpdateECommerceProjectUserParams extends UpdateProjectUserParam
      * Ids of Orders to append to the `order_ids` array
      */
     append_order_ids?: string[];
-
-    /**
-     * Ids of the user's favorited products.
-     */
-    favorite_product_ids?: string[];
     
     /**
      * User's Financial details.
      */
     financial_details?: UpdateFinancialDetailsParams;
-    
-    /**
-     * Ids of the user's orders.
-     */
-    order_ids?: string[];
 
     /**
      * Ids of Favorite Products to remove from the `favorite_product_ids` array
