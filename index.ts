@@ -1462,10 +1462,15 @@ export interface CreateEntityParams extends UpdateEntityParams {
     owner_id: string;
 
     /**
+     * Email addresses of pending team members.
+     */
+    pending_team_member_emails: string[];
+
+    /**
      * This array contains the ids of each User with read and write access
      * to the Enterprise.
      */
-    team_member_ids?: string[];
+    team_member_ids: string[];
 
 }
 
@@ -1478,6 +1483,11 @@ export type EntityType = 'enterprise'|'organization';
  * Params to update an entity.
  */
 export interface UpdateEntityParams {
+
+    /**
+     * This array contains the ids to append to the `pending_team_member_emails` array.
+     */
+    append_pending_team_member_emails?: string[];
 
     /**
      * This array contains the ids to append to the `team_member_ids` array.
@@ -1493,6 +1503,16 @@ export interface UpdateEntityParams {
      * The id of the User that owns the Enterprise.
      */
     owner_id?: string;
+
+    /**
+     * Email addresses of pending team members.
+     */
+    pending_team_member_emails?: string[];
+
+    /**
+     * This array contains the ids to remove from the `pending_team_member_emails` array.
+     */
+    remove_pending_team_member_emails?: string[];
 
     /**
      * This array contains the ids to remove from the `team_member_ids` array.
@@ -1546,6 +1566,7 @@ export const DEFAULT_ENTERPRISE: Enterprise = {
     object: 'entity',
     organization_ids: [],
     owner_id: '',
+    pending_team_member_emails: [],
     team_member_ids: [],
     workspace_email_suffix: ''
 };
@@ -1643,6 +1664,7 @@ export const DEFAULT_ORGANIZATION: Organization = {
     name: '',
     object: 'entity',
     owner_id: '',
+    pending_team_member_emails: [],
     project_ids: [],
     team_member_ids: []
 };
