@@ -1527,12 +1527,6 @@ export interface Enterprise extends CreateEnterpriseParams, Entity {
      */
     entity_type: 'enterprise';
 
-    /**
-     * This object contains each User with read and write access
-     * to the Enterprise.
-     */
-    team_member_ids: string[];
-
 }
 
 /**
@@ -1619,12 +1613,6 @@ export interface Organization extends CreateOrganizationParams, Entity {
      * Type of entity
      */
     entity_type: 'organization';
-
-    /**
-     * This object contains each User with read and write access
-     * to the Enterprise.
-     */
-    team_member_ids: string[];
 
 }
 
@@ -3654,6 +3642,30 @@ export function getDecodedAuthHeader(req: any) {
         }
     }
     return '';
+}
+
+export function handleArrayUpdates(admin: any, docUpdates: any, fields: string[], updateParams: any, updateObj: any) {                
+    Object.assign(docUpdates, updateParams);
+    for (const array_field of fields) {
+        const append_field = `append_${array_field}`;
+        const remove_field = `remove_${array_field}`;
+        delete docUpdates[append_field];
+        delete docUpdates[remove_field];
+        docUpdates[array_field] = admin.firestore.FieldValue.arrayUnion(
+            updateParams[append_field]
+        );
+        docUpdates[array_field] = admin.firestore.FieldValue.arrayRemove(
+            updateParams[remove_field]
+        );
+        const result_arr = [...updateObj[array_field]
+        .filter((_r: string) => !updateParams[remove_field].includes(_r))];
+        for (const _a of updateParams[append_field]) {
+            if (!result_arr.includes(_a)) {
+                result_arr.push(_a);
+            }
+        }
+        updateObj[array_field] = result_arr;
+    }
 }
 
 /**
