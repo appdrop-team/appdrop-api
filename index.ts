@@ -2772,7 +2772,7 @@ export interface UpdateVersionHistoryParams {
      */
     version_history?: {
 
-        [key: string]: UpdateVersionParams;
+        [key: string]: CreateVersionParams;
     
     };
 
