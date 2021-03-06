@@ -3705,7 +3705,7 @@ export const APIRequestBase = 'https://api.appdrop.com';
 export type APIRequestEndpoint =
 'v1/customers/:stripeCustomerId/bankAccounts/:stripeCustomerType' |
 'v1/customers/:stripeCustomerId/cards/:stripeCustomerType' |
-'v1/customers/:stripeCustomerId/charges/:stripeCustomerType' |
+'v1/customers/:stripeCustomerId/orders/:orderId/charges/:stripeCustomerType' |
 'v1/customers/:stripeCustomerId/orders/:orderId/refunds' |
 'v1/customers/:stripeCustomerId/subscriptions/:stripeCustomerType' |
 'v1/customers/:stripeCustomerId/subscriptions/:subscriptionId/:stripeCustomerType'|
