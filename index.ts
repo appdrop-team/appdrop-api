@@ -2927,7 +2927,7 @@ export interface UpdateProjectUserParams extends UpdateUserParams {}
 /**
  * Native app or web app contained in a project
  */
-export interface App extends CreateAppParams, Identifiable, VersionHistory {
+export interface App extends CreateAppParams, Identifiable {
 
     /**
      * Download url for the app_config json file
