@@ -1,6 +1,6 @@
 {
   "name": "appdrop-api",
-  "version": "3.41.0",
+  "version": "3.42.0",
   "description": "Type definitions for client and server applications built on Appdrop",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

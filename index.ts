@@ -2852,6 +2852,11 @@ export interface CreateProjectParams extends UpdateProjectParams {
      * The id of the organization that owns this project.
      */
     organization_id: string;
+
+    /**
+     * Email displayed to end users for Support requests.
+     */
+    support_email: string;
     
     /**
      * Id of the Project template that this project is built on.
@@ -2881,6 +2886,11 @@ export interface UpdateProjectParams {
      * Ids of Apps to remove from the `app_ids` array
      */
     remove_app_ids?: string[];
+
+    /**
+     * Email displayed to end users for Support requests.
+     */
+    support_email?: string;
     
     /**
      * Id of the Project template that this project is built on.
@@ -2918,6 +2928,11 @@ export interface UpdateProjectUserParams extends UpdateUserParams {}
  * Native app or web app contained in a project
  */
 export interface App extends CreateAppParams, Identifiable, VersionHistory {
+
+    /**
+     * Download url for the app_config json file
+     */
+    config_url: string;
 
     /**
      * Object name.
@@ -3359,6 +3374,8 @@ Order |
 Entity |
 InitAppResponseBody |
 Product |
+Project |
+ProjectTemplate |
 Refund |
 Subscription |
 User |
