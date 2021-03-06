@@ -2072,6 +2072,13 @@ export interface ConfirmOrderParams {
 }
 
 /**
+ * Cancels pending order or draft. Charged amount is returned to the store owner's credit card.
+ * 
+ * DELETE https://api.printful.com/orders/{id}
+ */
+export interface CancelOrderParams {}
+
+/**
  * Customer order for a product.
  */
 export interface PrintfulOrderResponseBody {
