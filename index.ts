@@ -524,33 +524,6 @@ export interface EntityFinancialDetails extends CreateEntityFinancialDetailsPara
 export interface CreateEntityFinancialDetailsParams extends CreateFinancialDetailsParams {
 
     /**
-     * The active Add Ons for this Entity.
-     */
-    add_ons: {
-
-        /**
-        * key is AddOn Id
-        */
-        [key:string]: AddOn;
-
-    };
-
-    /**
-     * The active Coupon objects applied to this entity's account. Coupons
-     * are applied either by the converting team during onboarding (for instance after reading
-     * about a promotional on our Twitter page) or applied by an Appdrop sales rep
-     * during an App Strategy Session.
-     */
-    coupons: {
-
-        /**
-        * key is Coupon id.
-        */
-        [key:string]: Coupon;
-
-    };
-
-    /**
      * Net Sales that the Organization has accumulated during the current 
      * payout period scheduled to be remitted by Appdrop on the first day of the 
      * month. The unit is the smallest unit of the Organization's currency.
@@ -567,44 +540,12 @@ export interface CreateEntityFinancialDetailsParams extends CreateFinancialDetai
      */
     stripe_subscription: Subscription|null;
 
-    /**
-     * Entity tier
-     */
-    tier: EnterpriseTier|OrganizationTier;
-
 }
 
 /**
  * Params to update a nested field in an entity's finacial details.
  */
 export interface UpdateEntityFinancialDetailsParams extends UpdateFinancialDetailsParams {
-
-    /**
-     * The active Add Ons for this Entity.
-     */
-    add_ons?: {
-
-        /**
-        * key is AddOn Id
-        */
-        [key:string]: AddOn;
-
-    };
-
-    /**
-     * The active Coupon objects applied to this entity's account. Coupons
-     * are applied either by the converting team during onboarding (for instance after reading
-     * about a promotional on our Twitter page) or applied by an Appdrop sales rep
-     * during an App Strategy Session.
-     */
-    coupons?: {
-        
-        /**
-         * key is Stripe Coupon id
-         */
-        [key:string]: Coupon;
-        
-    };
 
     /**
      * Net Sales that the Organization has accumulated during the current 
@@ -623,38 +564,6 @@ export interface UpdateEntityFinancialDetailsParams extends UpdateFinancialDetai
      */
     stripe_subscription?: Subscription|null;
 
-    /**
-     * Entity tier
-     */
-    tier?: EnterpriseTier|OrganizationTier;
-
-}
-
-/**
- * An Add-On to an Appdrop plan.
- */
-export interface AddOn extends Identifiable {
-
-    /**
-     * The Code used to redeem this Coupon.
-     * 
-     * Example: fast_track_submission
-     */
-    code: string;
-
-    /**
-     * Brief description of the add-on and its pricing.
-     * 
-     * Example: Appdroppers will publish the app for you. $200 / Mo
-     * Example: Custom UI work. Fixed Rate – $1,000
-     */
-    description: string;
-    
-    /**
-     * Cost of the add-on.
-     */
-    price: number;
-
 }
 
 /**
@@ -669,32 +578,6 @@ export type BillingInterval = 'quarterly'|'annually';
  * card incur an additional 5% processing fee.
  */
 export type BillingMethod = 'card';
-
-/**
- * A discount toward an Appdrop plan.
- */
-export interface Coupon extends Identifiable {
-
-    /**
-     * The Code used to redeem this Coupon.
-     * 
-     * Example: HOYAS21
-     */
-    code: string;
-
-    /**
-     * Description of the discount.
-     * 
-     * Example: FREE first month of Appdrop Pro
-     */
-    description: string;
-
-    /**
-     * Timestamp that the Coupon expires.
-     */
-    expires: Timestamped;
-
-}
 
 /**
  * Enterprise tier.
@@ -1602,11 +1485,6 @@ export interface UpdateEntityParams {
     append_team_member_ids?: string[];
 
     /**
-     * Financial details for this Appdrop Entity
-     */
-    financial_details?: UpdateEntityFinancialDetailsParams;
-
-    /**
      * The legal name of this Entity.
      */
     name?: string;
@@ -1658,12 +1536,9 @@ export const DEFAULT_ENTERPRISE: Enterprise = {
     },
     entity_type: 'enterprise',
     financial_details: {
-        add_ons: {},
         card: null,
-        coupons: {},
         payout_balance: 0,
         stripe_subscription: null,
-        tier: 'small'
     },
     id: '',
     livemode: true,
@@ -1759,12 +1634,9 @@ export const DEFAULT_ORGANIZATION: Organization = {
     },
     entity_type: 'organization',
     financial_details: {
-        add_ons: {},
         card: null,
-        coupons: {},
         payout_balance: 0,
         stripe_subscription: null,
-        tier: 'starter'
     },
     id: '',
     livemode: true,
