@@ -3562,7 +3562,7 @@ export async function handleSuccess(
         return;
     }
     catch (error) {
-        console.error('handleSuccessError');
+        console.log('handleSuccessError');
         return;
     }
 }
@@ -3580,7 +3580,7 @@ export async function queryOrganizationByAPIKey(db: any, decodedAPIKey: string) 
         return organization as Organization;
     }
     catch (error) {
-        console.error('matchOrganization error', error);
+        console.log('matchOrganization error', error);
         return null;
     }
 }
@@ -3598,7 +3598,7 @@ export async function handleError(
     res: any
 ): Promise<void> {
     try {
-        console.error(`${method} ${endpoint} error`, error);
+        console.log(`${method} ${endpoint} error`, error);
         const error_type = (!!error && typeof error === 'string') ?
             error as ErrorType : 'unknown-error';
         const error_response = ERROR_RESPONSES[error_type] ?
@@ -3634,7 +3634,7 @@ export async function handleError(
         }
     }
     catch (error) {
-        console.error('handleError error', error);
+        console.log('handleError error', error);
         return;
     }
 }
