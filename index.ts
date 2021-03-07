@@ -1711,6 +1711,11 @@ export interface Order extends Identifiable, CreateOrderParams, ConfirmOrderPara
     project_id: string;
     
     /**
+     * Id of the Appdrop project user who initiated the order
+     */
+    project_user_id: string;
+    
+    /**
      * Unix Timestamp in seconds of last order update.
      */
     updated_at: Timestamped;
