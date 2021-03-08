@@ -4016,6 +4016,12 @@ export interface InitEcommerceAppParams extends InitAppParams  {}
  * Server response body for ECommerce App Initialization
  */
 export interface InitEcommerceAppResponseBody extends InitAppResponseBody {
+
+    /**
+     * App information. Critical for constructing the share url and review url 
+     * from the app id / package name.
+     */
+    app: App;
     
     /**
      * Orders owned by this project user.
