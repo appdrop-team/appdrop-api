@@ -3273,6 +3273,11 @@ export interface OrderItem extends CreateOrderItemParams {
 export interface CartItem {
     
     /**
+     * External variant id used for orders.
+     */
+    external_variant_id: string;
+
+    /**
      * `id` of the product.
      */
     product_id: string;
