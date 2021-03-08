@@ -3046,6 +3046,18 @@ export interface AppAndroid extends App, CreateAppAndroidParams {
 
 }
 
+export const DEFAULT_ANDROID_APP: AppAndroid = {
+    android_package_name: '',
+    config_url: '',
+    created_at: null,
+    id: '',
+    livemode: true,
+    name: 'MyApp for Android',
+    object: 'app',
+    platform: 'android',
+    project_id: ''
+};
+
 export interface CreateAppAndroidParams extends CreateAppParams {
     
     /**
@@ -3056,6 +3068,7 @@ export interface CreateAppAndroidParams extends CreateAppParams {
     android_package_name: string;
     
 }
+
 
 export interface UpdateAppAndroidParams extends UpdateAppParams {
     
@@ -3079,6 +3092,19 @@ export interface AppIOS extends App, CreateAppIOSParams {
     platform: 'ios';
 
 }
+
+export const DEFAULT_ANDROID_IOS: AppIOS = {
+    config_url: '',
+    created_at: null,
+    id: '',
+    ios_app_id: '',
+    ios_bundle_id: '',
+    livemode: true,
+    name: 'MyApp for Android',
+    object: 'app',
+    platform: 'ios',
+    project_id: ''
+};
 
 export interface CreateAppIOSParams extends CreateAppParams {
     
