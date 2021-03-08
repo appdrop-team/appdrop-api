@@ -3292,17 +3292,22 @@ export interface CartItem {
 /**
  * Params to create an Order item
  */
-export interface CreateOrderItemParams {
-    
+export interface CreateOrderItemParams extends UpdateOrderItemParams {}
+
+/**
+ * Params to update an Order Item.
+ */
+export interface UpdateOrderItemParams {
+
     /**
      * External variant Id of selected sync variant.
      */
-    external_variant_id: string;
+     external_variant_id: string;
 
-    /**
-     * Number of items.
-     */
-    quantity: number;
+     /**
+      * Number of items.
+      */
+     quantity: number;
 
 }
 
@@ -3338,7 +3343,7 @@ export interface UpdateOrderParams {
     /**
      * Order items
      */
-    items?: OrderItem[];
+    items?: CreateOrderItemParams[];
 
     /**
      * Order Recipient
