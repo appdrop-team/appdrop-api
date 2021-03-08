@@ -3273,9 +3273,9 @@ export interface OrderItem extends CreateOrderItemParams {
 export interface CartItem {
     
     /**
-     * `id` field of the product variant.
+     * `id` of the product.
      */
-    variant_id: string;
+    product_id: string;
 	
     /**
      * Number of items.
