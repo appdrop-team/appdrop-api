@@ -3093,7 +3093,7 @@ export interface AppIOS extends App, CreateAppIOSParams {
 
 }
 
-export const DEFAULT_ANDROID_IOS: AppIOS = {
+export const DEFAULT_IOS_APP: AppIOS = {
     config_url: '',
     created_at: null,
     id: '',
