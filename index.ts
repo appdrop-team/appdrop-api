@@ -3268,28 +3268,6 @@ export interface OrderItem extends CreateOrderItemParams {
 }
 
 /**
- * Shopping Cart Item
- */
-export interface CartItem {
-    
-    /**
-     * External variant id used for orders.
-     */
-    external_variant_id: string;
-
-    /**
-     * `id` of the product.
-     */
-    product_id: string;
-	
-    /**
-     * Number of items.
-     */
-    quantity: number;
-
-}
-
-/**
  * Params to create an Order item
  */
 export interface CreateOrderItemParams extends UpdateOrderItemParams {}
