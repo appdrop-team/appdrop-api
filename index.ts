@@ -2947,9 +2947,9 @@ export interface UpdateOrganizationParams extends UpdateEntityParams {
  * **************
  * Orders
  * **************
- * 
+ *
  */
- 
+
  /**
  * Customer Order
  */
@@ -2986,6 +2986,57 @@ export interface Order extends Identifiable, CreateOrderParams, ConfirmOrderPara
     updated_at: Timestamped;
 
 }
+
+/**
+ * Default order
+ */
+export const DEFAULT_ECOMMERCE_ORDER: Order = {
+    costs: {
+        additional_fee: '0.00',
+        digitization: '0.00',
+        fulfillment_fee: '0.00',
+        currency: 'USD',
+        discount: '',
+        shipping: '1.00',
+        subtotal: '1.00',
+        tax: '1.00',
+        total: '2.00',
+        vat: '0.00'
+    },
+    created_at: null,
+    external_id: '',
+    has_discontinued_items: false,
+    id: '',
+    items: [],
+    livemode: true,
+    object: 'order',
+    project_id: '',
+    project_user_id: '',
+    recipient: {
+        address1: '200 Continental Drive',
+        address2: 'STE 401',
+        city: 'Newark',
+        country_code: 'US',
+        email: 'support@appdrop.com',
+        name: 'Guest',
+        state_code: 'DE',
+        zip: '19713'
+    },
+    retail_costs: {
+        currency: 'USD',
+        discount: null,
+        shipping: null,
+        subtotal: null,
+        tax: null,
+        total: null,
+        vat: null
+    },
+    shipping: 'STANDARD',
+    status: 'draft',
+    store: 0,
+    stripe_charge_id: '',
+    updated_at: null
+};
 
 /**
  * Shared Order API
