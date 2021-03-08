@@ -33,6 +33,11 @@ export interface RemoteAsset extends Identifiable {
      * Width in px.
      */
     native_asset_width: number;
+
+    /**
+     * Object name
+     */
+    object: 'remote_asset';
 	
     /**
      * Asset download url
@@ -2825,7 +2830,7 @@ export interface UpdateVersionParams {
  * settings.
  */
 export interface Project extends CreateProjectParams, Identifiable {
-
+    
     /**
      * Object name.
      */
@@ -2842,6 +2847,11 @@ export interface CreateProjectParams extends UpdateProjectParams {
      * This array includes the id of each App that this Project contains.
      */
     app_ids: string[];
+
+    /**
+     * Public name displayed to Users. Defaults to the name of the Organization that published the template.
+     */
+     copyright: string;
     
     /**
      * The Id of the Project logo Asset.
@@ -3844,6 +3854,32 @@ export interface InitCloudAppResponseBody extends InitAppResponseBody {
  */
 export interface ECommerceProject extends CreateECommerceProjectParams, Project {}
 
+export const DEFAULT_ECOMMERCE_PROJECT: ECommerceProject = {
+    app_ids: [],
+    copyright: '',
+    created_at: null,
+    fulfillment_method: 'printful',
+    id: '',
+    livemode: true,
+    object: 'project',
+    printful_api_key: '',
+    logo_asset: {
+        asset_type: 'image',
+        created_at: null,
+        id: '',
+        livemode: true,
+        native_asset_height: 0,
+        native_asset_width: 0,
+        object: 'remote_asset',
+        remote_url: '',
+        updated_at: null
+    },
+    name: '',
+    template_id: '',
+    organization_id: '',
+    support_email: '',
+};
+
 /**
  * Params to create an ECommerce Project.
  */
@@ -3996,9 +4032,22 @@ export interface InitEcommerceAppResponseBody extends InitAppResponseBody {
     };
 
     /**
-     * Minted project user.
+     * Project information. Critical for copyright and support email.
      */
-    project_user: ECommerceProjectUser;
+    project: ECommerceProject;
+
+    /**
+     * Minted of the new or returning project user
+     */
+    project_user_id: string;
+    
+    /**
+     * Minted project users. Key is ID
+     */
+    project_users: {
+        [key: string]: ECommerceProjectUser
+    };
+
 
 }
  
