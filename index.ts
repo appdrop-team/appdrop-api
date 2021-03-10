@@ -381,16 +381,16 @@ export const STATE_CODE_USA_MAP: {
  * ISO 3166-1 alpha-2 country code
  */
 export type CountryCode = 
-'AC' | 'AD' | 'AE' | 'AF' | 'AG' | 'AI' | 'AL' | 'AM' | 'AN' |
-'AO' | 'AQ' | 'AR' | 'AS' | 'AT' | 'AU' | 'AW' | 'AZ' | 'BA' |
+'AD' | 'AE' | 'AF' | 'AG' | 'AI' | 'AL' | 'AM' |
+'AO' | 'AR' | 'AS' | 'AT' | 'AU' | 'AW' | 'AZ' | 'BA' |
 'BB' | 'BD' | 'BE' | 'BF' | 'BG' | 'BH' | 'BI' | 'BJ' | 'BL' |
 'BM' | 'BN' | 'BO' | 'BR' | 'BS' | 'BT' | 'BW' | 'BY' | 'BZ' |
 'CA' | 'CC' | 'CD' | 'CF' | 'CG' | 'CH' | 'CI' | 'CK' | 'CL' |
 'CM' | 'CN' | 'CO' | 'CR' | 'CU' | 'CV' | 'CW' | 'CX' | 'CY' |
 'CZ' | 'DE' | 'DJ' | 'DK' | 'DM' | 'DO' | 'DZ' | 'EC' | 'EE' |
-'EG' | 'EH' | 'ER' | 'ES' | 'ET' | 'FI' | 'FJ' | 'FK' | 'FM' |
+'EG' | 'ER' | 'ES' | 'ET' | 'FI' | 'FJ' | 'FK' | 'FM' |
 'FO' | 'FR' | 'GA' | 'GB' | 'GD' | 'GE' | 'GF' | 'GG' | 'GH' |
-'GI' | 'GL' | 'GM' | 'GN' | 'GP' | 'GQ' | 'GR' | 'GS' | 'GT' |
+'GI' | 'GL' | 'GM' | 'GN' | 'GP' | 'GQ' | 'GR' | 'GT' |
 'GU' | 'GW' | 'GY' | 'HK' | 'HN' | 'HR' | 'HT' | 'HU' | 'ID' |
 'IE' | 'IL' | 'IM' | 'IN' | 'IO' | 'IQ' | 'IR' | 'IS' | 'IT' |
 'JE' | 'JM' | 'JO' | 'JP' | 'KE' | 'KG' | 'KH' | 'KI' | 'KM' |
@@ -400,15 +400,48 @@ export type CountryCode =
 'MN' | 'MO' | 'MP' | 'MQ' | 'MR' | 'MS' | 'MT' | 'MU' | 'MV' |
 'MW' | 'MX' | 'MY' | 'MZ' | 'NA' | 'NC' | 'NE' | 'NF' | 'NG' |
 'NI' | 'NL' | 'NO' | 'NP' | 'NR' | 'NU' | 'NZ' | 'OM' | 'PA' |
-'PE' | 'PF' | 'PG' | 'PH' | 'PK' | 'PL' | 'PM' | 'PN' | 'PR' |
+'PE' | 'PF' | 'PG' | 'PH' | 'PK' | 'PL' | 'PM' | 'PR' |
 'PS' | 'PT' | 'PW' | 'PY' | 'QA' | 'RE' | 'RO' | 'RS' | 'RU' |
 'RW' | 'SA' | 'SB' | 'SC' | 'SD' | 'SE' | 'SG' | 'SH' | 'SI' |
 'SJ' | 'SK' | 'SL' | 'SM' | 'SN' | 'SO' | 'SR' | 'SS' | 'ST' |
-'SV' | 'SX' | 'SY' | 'SZ' | 'TC' | 'TD' | 'TF' | 'TG' | 'TH' |
+'SV' | 'SX' | 'SY' | 'SZ' | 'TC' | 'TD' | 'TG' | 'TH' |
 'TJ' | 'TK' | 'TL' | 'TM' | 'TN' | 'TO' | 'TR' | 'TT' | 'TV' |
-'TW' | 'TZ' | 'UA' | 'UG' | 'UM' | 'US' | 'UY' | 'UZ' | 'VA' |
+'TW' | 'TZ' | 'UA' | 'UG' | 'US' | 'UY' | 'UZ' | 'VA' |
 'VC' | 'VE' | 'VG' | 'VI' | 'VN' | 'VU' | 'WF' | 'WS' | 'XK' |
 'YE' | 'YT' | 'ZA' | 'ZM' | 'ZW';
+
+/**
+ * Array of Countries
+ */
+export const COUNTRY_CODES_ARR = [
+'AD', 'AE', 'AF', 'AG', 'AI', 'AL', 'AM',
+'AO', 'AR', 'AS', 'AT', 'AU', 'AW', 'AZ', 'BA',
+'BB', 'BD', 'BE', 'BF', 'BG', 'BH', 'BI', 'BJ', 'BL',
+'BM', 'BN', 'BO', 'BR', 'BS', 'BT', 'BW', 'BY', 'BZ',
+'CA', 'CC', 'CD', 'CF', 'CG', 'CH', 'CI', 'CK', 'CL',
+'CM', 'CN', 'CO', 'CR', 'CU', 'CV', 'CW', 'CX', 'CY',
+'CZ', 'DE', 'DJ', 'DK', 'DM', 'DO', 'DZ', 'EC', 'EE',
+'EG', 'ER', 'ES', 'ET', 'FI', 'FJ', 'FK', 'FM',
+'FO', 'FR', 'GA', 'GB', 'GD', 'GE', 'GF', 'GG', 'GH',
+'GI', 'GL', 'GM', 'GN', 'GP', 'GQ', 'GR', 'GT',
+'GU', 'GW', 'GY', 'HK', 'HN', 'HR', 'HT', 'HU', 'ID',
+'IE', 'IL', 'IM', 'IN', 'IO', 'IQ', 'IR', 'IS', 'IT',
+'JE', 'JM', 'JO', 'JP', 'KE', 'KG', 'KH', 'KI', 'KM',
+'KN', 'KP', 'KR', 'KW', 'KY', 'KZ', 'LA', 'LB', 'LC',
+'LI', 'LK', 'LR', 'LS', 'LT', 'LU', 'LV', 'LY', 'MA',
+'MC', 'MD', 'ME', 'MF', 'MG', 'MH', 'MK', 'ML', 'MM',
+'MN', 'MO', 'MP', 'MQ', 'MR', 'MS', 'MT', 'MU', 'MV',
+'MW', 'MX', 'MY', 'MZ', 'NA', 'NC', 'NE', 'NF', 'NG',
+'NI', 'NL', 'NO', 'NP', 'NR', 'NU', 'NZ', 'OM', 'PA',
+'PE', 'PF', 'PG', 'PH', 'PK', 'PL', 'PM', 'PR',
+'PS', 'PT', 'PW', 'PY', 'QA', 'RE', 'RO', 'RS', 'RU',
+'RW', 'SA', 'SB', 'SC', 'SD', 'SE', 'SG', 'SH', 'SI',
+'SJ', 'SK', 'SL', 'SM', 'SN', 'SO', 'SR', 'SS', 'ST',
+'SV', 'SX', 'SY', 'SZ', 'TC', 'TD', 'TG', 'TH',
+'TJ', 'TK', 'TL', 'TM', 'TN', 'TO', 'TR', 'TT', 'TV',
+'TW', 'TZ', 'UA', 'UG', 'US', 'UY', 'UZ', 'VA',
+'VC', 'VE', 'VG', 'VI', 'VN', 'VU', 'WF', 'WS', 'XK',
+'YE', 'YT', 'ZA', 'ZM', 'ZW'];
 
 /**
  * Map of Countries
@@ -420,47 +453,6 @@ export const COUNTRIES: {
         dialCode: string;
     };
 } = {
-    // Fix this.
-    AC: {
-        label: "",
-        id: "AC",
-        dialCode: "+1"
-    },
-    AN: {
-        label: "",
-        id: "AN",
-        dialCode: "+1"
-    },
-    AQ: {
-        label: "",
-        id: "AQ",
-        dialCode: "+1"
-    },
-    EH: {
-        label: "",
-        id: "EH",
-        dialCode: "+1"
-    }, 
-    GS: {
-        label: "",
-        id: "GS",
-        dialCode: "+1"
-    },
-    PN: {
-        label: "",
-        id: "PN",
-        dialCode: "+1"
-    },
-    TF: {
-        label: "",
-        id: "TF",
-        dialCode: "+1"
-    },
-    UM: {
-        label: "",
-        id: "UM",
-        dialCode: "+1"
-    },
     AF: {
         label: "Afghanistan",
         id: "AF",
