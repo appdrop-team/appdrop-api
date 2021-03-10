@@ -5009,12 +5009,12 @@ export function handleArrayUpdates(admin: any, docUpdates: any, fields: string[]
         delete docUpdates[remove_field];
         if (updateParams[append_field] !== undefined) {
             docUpdates[array_field] = admin.firestore.FieldValue.arrayUnion(
-                [...updateParams[append_field]]
+                ...[...updateParams[append_field]]
             );
         }
         if (updateParams[remove_field] !== undefined) {
             docUpdates[array_field] = admin.firestore.FieldValue.arrayRemove(
-                [...updateParams[remove_field]]
+                ...[...updateParams[remove_field]]
             );
         } 
         const result_arr = [...updateObj[array_field]
