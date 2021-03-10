@@ -5285,11 +5285,6 @@ export interface CreateECommerceProjectUserParams extends CreateProjectUserParam
      * User's Financial details.
      */
     financial_details: FinancialDetails;
-    
-    /**
-     * Ids of the user's orders.
-     */
-    order_ids: string[];
 
 }
 
@@ -5301,11 +5296,6 @@ export interface UpdateECommerceProjectUserParams extends UpdateProjectUserParam
     append_favorite_product_ids?: string[];
     
     /**
-     * Ids of Orders to append to the `order_ids` array
-     */
-    append_order_ids?: string[];
-    
-    /**
      * User's Financial details.
      */
     financial_details?: UpdateFinancialDetailsParams;
@@ -5314,11 +5304,6 @@ export interface UpdateECommerceProjectUserParams extends UpdateProjectUserParam
      * Ids of Favorite Products to remove from the `favorite_product_ids` array
      */
     remove_favorite_product_ids?: string[];
-    
-    /**
-     * Ids of Orders to remove from the `order_ids` array
-     */
-    remove_order_ids?: string[];
 
 }
 
@@ -5348,7 +5333,6 @@ export const DEFAULT_ECOMMERCE_USER: ECommerceProjectUser = {
     metadata: {},
     name: '',
     object: 'user',
-    order_ids: [],
     password: '',
     password_hash: '',
     password_salt: '',
