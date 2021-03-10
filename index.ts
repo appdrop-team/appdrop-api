@@ -5016,12 +5016,19 @@ export function handleArrayUpdates(admin: any, docUpdates: any, fields: string[]
             docUpdates[array_field] = admin.firestore.FieldValue.arrayRemove(
                 [...updateParams[remove_field]]
             );
-        }
+        } 
         const result_arr = [...updateObj[array_field]
-        .filter((_r: string) => !updateParams[remove_field].includes(_r))];
-        for (const _a of updateParams[append_field]) {
-            if (!result_arr.includes(_a)) {
-                result_arr.push(_a);
+        .filter((_r: string) => {
+            if (updateParams[remove_field] === undefined) {
+                return true;
+            }
+            return !updateParams[remove_field].includes(_r);
+        })];
+        if (updateParams[remove_field] !== undefined) {
+            for (const _a of updateParams[append_field]) {
+                if (!result_arr.includes(_a)) {
+                    result_arr.push(_a);
+                }
             }
         }
         updateObj[array_field] = [...result_arr];
