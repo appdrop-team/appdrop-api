@@ -5007,12 +5007,16 @@ export function handleArrayUpdates(admin: any, docUpdates: any, fields: string[]
         const remove_field = `remove_${array_field}`;
         delete docUpdates[append_field];
         delete docUpdates[remove_field];
-        docUpdates[array_field] = admin.firestore.FieldValue.arrayUnion(
-            [...updateParams[append_field]]
-        );
-        docUpdates[array_field] = admin.firestore.FieldValue.arrayRemove(
-            [...updateParams[remove_field]]
-        );
+        if (updateParams[append_field] !== undefined) {
+            docUpdates[array_field] = admin.firestore.FieldValue.arrayUnion(
+                [...updateParams[append_field]]
+            );
+        }
+        if (updateParams[remove_field] !== undefined) {
+            docUpdates[array_field] = admin.firestore.FieldValue.arrayRemove(
+                [...updateParams[remove_field]]
+            );
+        }
         const result_arr = [...updateObj[array_field]
         .filter((_r: string) => !updateParams[remove_field].includes(_r))];
         for (const _a of updateParams[append_field]) {
