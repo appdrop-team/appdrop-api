@@ -5024,7 +5024,7 @@ export function handleArrayUpdates(admin: any, docUpdates: any, fields: string[]
             }
             return !updateParams[remove_field].includes(_r);
         })];
-        if (updateParams[remove_field] !== undefined) {
+        if (updateParams[append_field] !== undefined) {
             for (const _a of updateParams[append_field]) {
                 if (!result_arr.includes(_a)) {
                     result_arr.push(_a);
