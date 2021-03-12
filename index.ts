@@ -2973,7 +2973,7 @@ export interface UpdateOrganizationParams extends UpdateEntityParams {
  /**
  * Customer Order
  */
-export interface Order extends Identifiable, CreateOrderParams, ConfirmOrderParams, OrderResultBase {
+export interface Order extends Identifiable, CreateOrderParams, ConfirmOrderParams, OrderResultBase, RequestReturnParams {
 
     /**
      * Id in external system
@@ -3051,6 +3051,8 @@ export const DEFAULT_ECOMMERCE_ORDER: Order = {
         total: null,
         vat: null
     },
+    requested_return_at: null,
+    requested_return_data: [],
     shipping: 'STANDARD',
     status: 'draft',
     store: 0,
@@ -3409,6 +3411,44 @@ export interface UpdateOrderParams {
      * Order Recipient
      */
     recipient?: CreateOrderRecipientParams;
+
+}
+
+/**
+ * Params to initiate a return.
+ */
+export interface RequestReturnParams {
+
+    /**
+     * `null` by default.
+     * 
+     * This field contains a valid timestamp if the user has requested a return
+     * and is reset to null if the return is not completed within 30 days. 
+     * 
+     * Referenced by the refund automation script which checks the return 
+     * status of the order and completes the refund upon return completion
+     */
+     requested_return_at: Timestamped;
+    
+    /**
+     * An array of stringified objects, each containing
+     * 
+     * (1) the id of the Sync Variant being returned
+     * 
+     * (2) the quantity of that variant being returned
+     * 
+     * Used to calculate the refund amount.
+     * 
+     * Example:
+     * 
+     * [
+     * 
+     *      '{"quantity":2,"sync_variant_id":"example-1"}',
+     *      '{"quantity":1,"sync_variant_id":"example-2"}',
+     * 
+     * ]
+     */
+    requested_return_data: string[];
 
 }
 
@@ -4676,6 +4716,7 @@ export interface APIRequestBody {
     CreateSupportTicketParams|
     CreateUserParams|
     InitAppParams|
+    RequestReturnParams|
     RequestUserPasswordResetParams|
     RetrieveUserSecurityQuestionParams|
     SyncPrintfulProductsParams|
