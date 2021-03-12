@@ -352,12 +352,12 @@ export interface Address {
 }
 
 export type StateCodeUSA = 
-'AL'|'AK'|'AZ'|'AR'|'CA'|'CO'|'CT'|'DE'|'FL'|'GA'|'HI'|'ID'|'IL'|'IN'|
+'AL'|'AK'|'AZ'|'AR'|'CA'|'CO'|'CT'|'DC'|'DE'|'FL'|'GA'|'HI'|'ID'|'IL'|'IN'|
 'IA'|'KS'|'KY'|'LA'|'ME'|'MD'|'MA'|'MI'|'MN'|'MS'|'MO'|'MT'|'NE'|'NV'|
 'NH'|'NJ'|'NM'|'NY'|'NC'|'ND'|'OH'|'OK'|'OR'|'PA'|'RI'|'SC'|'SD'|'TN'|
 'TX'|'UT'|'VT'|'VA'|'WA'|'WV'|'WI'|'WY';
 export const STATE_CODE_USA_ARR = [
-'AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN',
+'AL','AK','AZ','AR','CA','CO','CT','DC','DE','FL','GA','HI','ID','IL','IN',
 'IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV',
 'NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN',
 'TX','UT','VT','VA','WA','WV','WI','WY'
@@ -365,16 +365,16 @@ export const STATE_CODE_USA_ARR = [
 export const STATE_CODE_USA_MAP: {
     [key in StateCodeUSA]: string
 }  = {
-    "AL":"Alabama","AK":"Alaska","AZ":"Arizona","AR":"Arkansas","CA":"California",
-    "CO":"Colorado","CT":"Connecticut","DE":"Delaware","FL":"Florida","GA":"Georgia",
-    "HI":"Hawaii","ID":"Idaho","IL":"Illinois","IN":"Indiana","IA":"Iowa","KS":"Kansas",
-    "KY":"Kentucky","LA":"Louisiana","ME":"Maine","MD":"Maryland","MA":"Massachusetts",
-    "MI":"Michigan","MN":"Minnesota","MS":"Mississippi","MO":"Missouri","MT":"Montana",
-    "NE":"Nebraska","NV":"Nevada","NH":"New Hampshire","NJ":"New Jersey","NM":"New Mexico",
-    "NY":"New York","NC":"North Carolina","ND":"North Dakota","OH":"Ohio","OK":"Oklahoma",
-    "OR":"Oregon","PA":"Pennsylvania","RI":"Rhode Island","SC":"South Carolina",
-    "SD":"South Dakota","TN":"Tennessee","TX":"Texas","UT":"Utah","VT":"Vermont",
-    "VA":"Virginia","WA":"Washington","WV":"West Virginia","WI":"Wisconsin","WY":"Wyoming"
+    'AL':'Alabama','AK':'Alaska','AZ':'Arizona','AR':'Arkansas','CA':'California',
+    'CO':'Colorado','CT':'Connecticut','DC':'District of Columbia', 'DE':'Delaware','FL':'Florida','GA':'Georgia',
+    'HI':'Hawaii','ID':'Idaho','IL':'Illinois','IN':'Indiana','IA':'Iowa','KS':'Kansas',
+    'KY':'Kentucky','LA':'Louisiana','ME':'Maine','MD':'Maryland','MA':'Massachusetts',
+    'MI':'Michigan','MN':'Minnesota','MS':'Mississippi','MO':'Missouri','MT':'Montana',
+    'NE':'Nebraska','NV':'Nevada','NH':'New Hampshire','NJ':'New Jersey','NM':'New Mexico',
+    'NY':'New York','NC':'North Carolina','ND':'North Dakota','OH':'Ohio','OK':'Oklahoma',
+    'OR':'Oregon','PA':'Pennsylvania','RI':'Rhode Island','SC':'South Carolina',
+    'SD':'South Dakota','TN':'Tennessee','TX':'Texas','UT':'Utah','VT':'Vermont',
+    'VA':'Virginia','WA':'Washington','WV':'West Virginia','WI':'Wisconsin','WY':'Wyoming'
 };
 
 /**
@@ -2099,6 +2099,42 @@ export interface CreateCardParams {
     
 }
 
+export const DEFAULT_CARD_PARAMS: CreateCardParams = {
+	address_zip: '',
+	cvc: '',
+	exp_month: '01',
+	exp_year: '2022',
+	number: ''
+};
+
+export type ExpMonthType = 
+'01'|'02'|'03'|'04'|
+'05'|'06'|'07'|'08'|
+'09'|'10'|'11'|'12';
+
+export type ExpYearType = 
+'2021'|'2022'|'2023'|'2024'|
+'2025'|'2026'|'2027'|'2028'|
+'2029'|'2030'|'2031'|'2032'|
+'2033'|'2034';
+
+export type ExpComponent = 'exp_month'|'exp_year';
+export const EXP_ARR_MAP: {
+    [key in ExpComponent]: (ExpMonthType|ExpYearType)[];
+} = {
+	exp_month: [
+		'01','02','03','04',
+		'05','06','07','08',
+		'09','10','11','12'
+	],
+	exp_year: [
+		'2021', '2022', '2023', '2024',
+		'2025', '2026', '2027', '2028',
+		'2029', '2030', '2031', '2032',
+		'2033', '2034'
+	]
+};
+
 /**
  * Card Source Token returned from Stripe
  */
@@ -2547,14 +2583,6 @@ export interface CreateChargeParams {
      * must also pass the ID of the associated customer.
      */
     source: string;
-
-    /**
-     * For card charges, use `statement_descriptor_suffix` instead. 
-     * Otherwise, you can use this value as the complete description 
-     * of a charge on your customers' statements. Must contain at 
-     * least one letter, maximum 22 characters.
-     */
-    statement_descriptor: string;
 
     /**
      * Provides information about the charge that customers see on 
@@ -3353,6 +3381,17 @@ export interface CreateOrderRecipientParams extends Address {
     name: string;
     
 }
+
+export const DEFAULT_ORDER_RECIPIENT: CreateOrderRecipientParams = {
+	address1: '',
+	address2: '',
+	city: '',
+	country_code: 'US',
+	email: '',
+	name: '',
+	state_code: 'AL',
+	zip: ''
+};
 
 /**
  * Params to update an existing order that is not `inprocess`, `partial` or `fulfilled`.
