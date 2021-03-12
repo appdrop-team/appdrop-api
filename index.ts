@@ -3053,6 +3053,7 @@ export const DEFAULT_ECOMMERCE_ORDER: Order = {
     },
     requested_return_at: null,
     requested_return_data: [],
+    requested_return_reason: 'The item has defects.',
     shipping: 'STANDARD',
     status: 'draft',
     store: 0,
@@ -3414,6 +3415,19 @@ export interface UpdateOrderParams {
 
 }
 
+export type RequestedReturnReason = 
+'The item has defects.'|
+'The item does not fit.'|
+'I no longer want this item.'|
+'Other reason';
+export const REQUESTED_RETURN_REASON_ARR:
+RequestedReturnReason[] = [
+    'The item has defects.',
+    'The item does not fit.',
+    'I no longer want this item.',
+    'Other reason'
+];
+
 /**
  * Params to initiate a return.
  */
@@ -3449,6 +3463,11 @@ export interface RequestReturnParams {
      * ]
      */
     requested_return_data: string[];
+
+    /**
+     * Why the customer is returning the item.
+     */
+    requested_return_reason: RequestedReturnReason;
 
 }
 
