@@ -5194,6 +5194,8 @@ export type APIRequestEndpoint =
 'v1/projects/:projectId/retrieveUserSecurityQuestion' |
 'v1/projects/:projectId/syncPrintfulProducts' |
 'v1/projects/:projectId/tickets' |
+'v1/projects/:projectId/promos' |
+'v1/projects/:projectId/promos/:promoId' |
 'v1/projects/:projectId/users' |
 'v1/projects/:projectId/users/:userId' |
 'v1/projects/:projectId/users/:userId/requestUserPasswordReset' |
@@ -5202,8 +5204,6 @@ export type APIRequestEndpoint =
 'v1/projects/:projectId/users/:userId/orders/:orderId' |
 'v1/projects/:projectId/users/:userId/orders/:orderId/cancel' |
 'v1/projects/:projectId/users/:userId/orders/:orderId/confirm' |
-'v1/projects/:projectId/users/:userId/promos' |
-'v1/projects/:projectId/users/:userId/promos/:promoId' |
 'v1/projectTemplates' |
 'v1/projectTemplates/:projectTemplateId';
 
