@@ -5247,6 +5247,11 @@ export interface InitAppParams {
      */
     project_user_id: string;
 
+    /**
+     * Whether this session is a live or for demoing / testing.
+     */
+    livemode: boolean;
+
 }
 
 /**
