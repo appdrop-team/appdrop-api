@@ -2976,6 +2976,12 @@ export interface UpdateOrganizationParams extends UpdateEntityParams {
 export interface Order extends Identifiable, CreateOrderParams, ConfirmOrderParams, OrderResultBase, RequestReturnParams {
 
     /**
+     * Timestamp object when the order was confirmed. Used to
+     * display shipping estimations.
+     */
+    confirmed_at: Timestamped;
+
+    /**
      * Id in external system
      */
     external_id: string|null;
@@ -3001,7 +3007,7 @@ export interface Order extends Identifiable, CreateOrderParams, ConfirmOrderPara
     project_user_id: string;
     
     /**
-     * Unix Timestamp in seconds of last order update.
+     * Timestamp onject of last order update.
      */
     updated_at: Timestamped;
 
@@ -3024,6 +3030,7 @@ export const DEFAULT_ECOMMERCE_ORDER: Order = {
         vat: '0.00'
     },
     created_at: null,
+    confirmed_at: null,
     external_id: '',
     has_discontinued_items: false,
     id: '',
@@ -4559,6 +4566,10 @@ export interface AppWeb extends App, CreateAppWebParams {
     platform: 'web';
 
 }
+
+/**
+ * Params to create a web app
+ */
 export interface CreateAppWebParams extends CreateAppParams {
 
     /**
@@ -4570,6 +4581,9 @@ export interface CreateAppWebParams extends CreateAppParams {
 
 }
 
+/**
+ * Params to update a web app
+ */
 export interface UpdateAppWebParams extends UpdateAppParams {
     
     /**
@@ -4730,6 +4744,7 @@ export interface APIRequestBody {
     CreateEntityParams|
     CreateOrderParams|
     CreateProjectParams|
+    CreatePromoParams|
     CreateRefundParams|
     CreateSubscriptionParams|
     CreateSupportTicketParams|
@@ -4740,6 +4755,7 @@ export interface APIRequestBody {
     RetrieveUserSecurityQuestionParams|
     SyncPrintfulProductsParams|
     UpdateOrderParams|
+    UpdatePromoParams|
     UpdateSubscriptionParams|
     UpdateEntityParams|
     UpdateUserParams;
@@ -4799,6 +4815,7 @@ InitAppResponseBody |
 Product |
 Project |
 ProjectTemplate |
+Promo |
 Refund |
 Subscription |
 User |
@@ -5150,6 +5167,9 @@ export interface CreateAPIRequest {
 
 }
 
+/**
+ * Base endpoint
+ */
 export const APIRequestBase = 'https://api.appdrop.com';
 
 /**
@@ -5182,9 +5202,14 @@ export type APIRequestEndpoint =
 'v1/projects/:projectId/users/:userId/orders/:orderId' |
 'v1/projects/:projectId/users/:userId/orders/:orderId/cancel' |
 'v1/projects/:projectId/users/:userId/orders/:orderId/confirm' |
+'v1/projects/:projectId/users/:userId/promos' |
+'v1/projects/:projectId/users/:userId/promos/:promoId' |
 'v1/projectTemplates' |
 'v1/projectTemplates/:projectTemplateId';
 
+/**
+ * Type of stripe customer
+ */
 export type StripeCustomerType = 'entities'|'users';
 
 /**
@@ -5249,6 +5274,22 @@ export interface InitCloudAppResponseBody extends InitAppResponseBody {
     };
 
     /**
+     * Orders created by this entity's project users.
+     */
+     orders: {
+        [key: string]: Order;
+    };
+
+    /**
+     * Active store owned by this entity's stores.
+     */
+    products: {
+
+        [key: string]: Product;
+
+    };
+
+    /**
      * If Enterprise:
      * 
      * Map of the projects owned by the Organizations in the workspace
@@ -5270,6 +5311,15 @@ export interface InitCloudAppResponseBody extends InitAppResponseBody {
 
         [key: string]: ProjectTemplate;
 
+    };
+    
+    /**
+     * Active store promos owned by this entity
+     */
+    promos: {
+
+        [key: string]: Promo;
+    
     };
 
     /**
@@ -5455,14 +5505,27 @@ export interface InitEcommerceAppResponseBody extends InitAppResponseBody {
      * Orders owned by this project user.
      */
     orders: {
+
         [key: string]: Order;
+    
     };
 
     /**
      * Active store products
      */
     products: {
+
         [key: string]: Product;
+    
+    };
+    
+    /**
+     * Active store promos
+     */
+    promos: {
+
+        [key: string]: Promo;
+    
     };
 
     /**
@@ -5479,12 +5542,184 @@ export interface InitEcommerceAppResponseBody extends InitAppResponseBody {
      * Minted project users. Key is ID
      */
     project_users: {
+
         [key: string]: ECommerceProjectUser
+    
     };
 
+}
+
+/**
+ * A promotional for an order
+ */
+export interface Promo extends CreatePromoParams, Identifiable  {
+
+    /**
+     * Object name
+     */
+     object: 'promo';
+
+     /**
+     * Id of the Appdrop project
+     */
+    project_id: string;
 
 }
- 
+
+/**
+ * Default Promo
+ */
+export const DEFAULT_PROMO: Promo = {
+    created_at: null,
+    code: '',
+    description: '',
+    expires: null,
+    id: '',
+    livemode: true,
+    max_num_redemptions: null,
+    min_subtotal_size: 0,
+    num_redemptions: 0,
+    object: 'promo',
+    project_id: '',
+    type: 'store_credit',
+    value: 0
+};
+
+/**
+ * Params to create a Promo
+ */
+export interface CreatePromoParams extends UpdatePromoParams {
+
+    /**
+     * User facing code for redemption.
+     * 
+     * Example: `APPDROP-FAMILY`
+     */
+    code: string;
+    
+    /**
+     * User facing description of the code
+     */
+    description: string;
+    
+    /**
+     * When the promo becomes inactive.
+     */
+    expires: Timestamped;
+
+    /**
+     * Max number of times this promo can be used.
+     * 
+     * `null` if the promo is evergreen
+     */
+    max_num_redemptions: number|null;
+
+    /**
+     * Mininum size of the cart before this promo is accepted.
+     * 
+     * `0` if the promo does not have a min. order size.
+     */
+    min_subtotal_size: number;
+    
+    /**
+     * Number of times this promo has been used.
+     */
+    num_redemptions: number;
+
+    /**
+     * Type of promotional
+     */
+    type: PromoType;
+
+    /**
+     * Multipurpose field for the promo value.
+     * 
+     * if `type === 'store_credit'`
+     * then this value is the credit amount in cents.
+     * 
+     * Example: `10050` means `$100.50` in credits
+     * 
+     * if `type === 'percentage'`
+     * then this value is percentage represented as a decimal.
+     * 
+     * Example: `0.1` means `10% off` the cart subtotal
+     * 
+     * if `type === 'free_shipping'`
+     * then this value is `0`
+     */
+    value: number;
+
+}
+
+/**
+ * Params to update a Promo
+ */
+export interface UpdatePromoParams {
+
+    /**
+     * User facing code for redemption
+     */
+    code?: string;
+    
+    /**
+     * User facing description of the code
+     */
+    description?: string;
+    
+    /**
+     * When the promo becomes inactive.
+     */
+    expires?: Timestamped;
+
+    /**
+     * Max number of times this promo can be used.
+     * 
+     * `null` if the promo is evergreen
+     */
+    max_num_redemptions?: number|null;
+
+    /**
+     * Mininum size of the cart before this promo is accepted.
+     * 
+     * `0` if the promo does not have a min. order size.
+     */
+    min_subtotal_size?: number;
+    
+    /**
+     * Number of times this promo has been used.
+     */
+    num_redemptions?: number;
+
+    /**
+     * Type of promotional
+     */
+    type?: PromoType;
+
+    /**
+     * Multipurpose field for the promo value.
+     * 
+     * if `type === 'store_credit'`
+     * then this value is the credit amount in cents.
+     * 
+     * Example: `10050` means `$100.50` in credits
+     * 
+     * if `type === 'percentage'`
+     * then this value is percentage represented as a decimal.
+     * 
+     * Example: `0.1` means `10% off` the cart subtotal
+     * 
+     * if `type === 'free_shipping'`
+     * then this value is `0`
+     */
+    value?: number;
+
+}
+
+/**
+ * Type of promotional
+ */
+ export type PromoType = 'store_credit'|'free_shipping'|'percentage';
+
  /**
  * 
  * **************
