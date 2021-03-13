@@ -2973,7 +2973,10 @@ export interface UpdateOrganizationParams extends UpdateEntityParams {
  /**
  * Customer Order
  */
-export interface Order extends Identifiable, CreateOrderParams, ConfirmOrderParams, OrderResultBase, RequestReturnParams {
+export interface Order extends 
+AttachOrderPromoParams, Identifiable, CreateOrderParams, 
+ConfirmOrderParams, OrderResultBase, RequestReturnParams 
+{
 
     /**
      * Timestamp object when the order was confirmed. Used to
@@ -3039,6 +3042,7 @@ export const DEFAULT_ECOMMERCE_ORDER: Order = {
     object: 'order',
     project_id: '',
     project_user_id: '',
+    promo_id: '',
     recipient: {
         address1: '200 Continental Drive',
         address2: 'STE 401',
@@ -3500,6 +3504,17 @@ export interface ConfirmOrderParams {
  * DELETE https://api.printful.com/orders/{id}
  */
 export interface CancelOrderParams {}
+
+/**
+ * Params to attach a Promo object to an order.
+ */
+export interface AttachOrderPromoParams {
+    
+    /**
+     * Id of the Promo object attached to this order or, if no promo, an empty string.
+     */
+     promo_id: string;
+}
 
 /**
  * Customer order for a product.
