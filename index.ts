@@ -4775,6 +4775,13 @@ export interface APIRequestBody {
     UpdateSubscriptionParams|
     UpdateEntityParams|
     UpdateUserParams;
+
+    /**
+     * Whether this session is a live or for demoing / testing.
+     * 
+     * Defaults to `true`
+     */
+    livemode: boolean;
     
 }
 
@@ -5246,11 +5253,6 @@ export interface InitAppParams {
      * Id of the ProjectUser initializing the app.
      */
     project_user_id: string;
-
-    /**
-     * Whether this session is a live or for demoing / testing.
-     */
-    livemode: boolean;
 
 }
 
