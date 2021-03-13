@@ -3035,6 +3035,7 @@ export const DEFAULT_ECOMMERCE_ORDER: Order = {
     created_at: null,
     confirmed_at: null,
     external_id: '',
+    gift: null,
     has_discontinued_items: false,
     id: '',
     items: [],
@@ -3081,6 +3082,11 @@ export interface OrderResultBase {
      * Costs to produce and ship the items
      */
     costs: OrderInternalCosts;
+
+    /**
+     * Gift text
+     */
+     gift: GiftOptions|null;
     
     /**
      * Whether the order contains discontinued items.
@@ -3250,6 +3256,11 @@ export type ShippingMethodType = 'STANDARD';
 export interface CreateOrderParams {
 
     /**
+     * Gift text
+     */
+     gift: GiftOptions|null;
+
+    /**
      * Order items
      */
     items: CreateOrderItemParams[];
@@ -3258,6 +3269,20 @@ export interface CreateOrderParams {
      * Order Recipient
      */
     recipient: CreateOrderRecipientParams;
+
+}
+
+export interface GiftOptions {
+        
+    /**
+     * Gift message for packing slip
+     */
+    message: string;
+
+   /**
+    * Gift subject for packing slip
+    */
+   subject: string;
 
 }
 
@@ -3415,6 +3440,11 @@ export const DEFAULT_ORDER_RECIPIENT: CreateOrderRecipientParams = {
 export interface UpdateOrderParams {
 
     /**
+     * Gift text
+     */
+     gift?: GiftOptions|null;
+
+    /**
      * Order items
      */
     items?: CreateOrderItemParams[];
@@ -3565,22 +3595,6 @@ export interface PrintfulOrderResult extends OrderResultBase {
      */
     external_id: string|null;
     
-    /**
-     * Gift text
-     */
-    gift: {
-        
-        /**
-         * Gift subject for packing slip
-         */
-        subject: string;
-
-        /**
-         * Gift message for packing slip
-         */
-        message: string;
-    
-    }|null;
     
     /**
      * Unique identifier.
