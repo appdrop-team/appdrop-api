@@ -4753,6 +4753,7 @@ export interface APIRequestBody {
      */
     data:
     AuthenticateUserParams|
+    AttachOrderPromoParams|
     ConfirmOrderParams|
     CreateCardParams|
     CreateChargeParams|
