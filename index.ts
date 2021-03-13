@@ -3244,6 +3244,22 @@ export interface OrderCosts {
 export type OrderStatus = 'draft'|'failed'|'pending'|'canceled'|'onhold'|'inprocess'|'partial'|'fulfilled';
 
 /**
+ * Human readable description of order status.
+ */
+export const ORDER_STATUS_MAP: {
+	[key in OrderStatus]: string;
+} = {
+	canceled: 'Canceled',
+	draft: 'Draft',
+	failed: 'Unable to Complete. Please contact support.',
+	fulfilled: 'Delivered',
+	inprocess: 'In Transit',
+	onhold: 'On Hold.',
+	partial: 'Partially Delivered',
+	pending: 'Preparing For Shipment',
+};
+
+/**
  * Type of shipping
  */
 export type ShippingMethodType = 'STANDARD';
@@ -5314,7 +5330,9 @@ export interface InitCloudAppResponseBody extends InitAppResponseBody {
      * Orders created by this entity's project users.
      */
      orders: {
+
         [key: string]: Order;
+    
     };
 
     /**
