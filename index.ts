@@ -5632,7 +5632,7 @@ export const DEFAULT_PROMO: Promo = {
     id: '',
     livemode: true,
     max_num_redemptions: null,
-    min_subtotal_size: 0,
+    min_subtotal_cents: 0,
     num_redemptions: 0,
     object: 'promo',
     project_id: '',
@@ -5674,7 +5674,7 @@ export interface CreatePromoParams extends UpdatePromoParams {
      * 
      * `0` if the promo does not have a min. order size.
      */
-    min_subtotal_size: number;
+    min_subtotal_cents: number;
     
     /**
      * Number of times this promo has been used.
@@ -5738,7 +5738,7 @@ export interface UpdatePromoParams {
      * 
      * `0` if the promo does not have a min. order size.
      */
-    min_subtotal_size?: number;
+    min_subtotal_cents?: number;
     
     /**
      * Number of times this promo has been used.
