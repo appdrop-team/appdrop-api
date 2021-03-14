@@ -5053,14 +5053,14 @@ export async function handleSuccess(
             //@ts-ignore
             cleansed_request_body['number'] = '*******';
         }
-            //@ts-ignore
+        //@ts-ignore
         if (validString(cleansed_request_body['security_answer'], true)) {
             //@ts-ignore
             cleansed_request_body['security_answer'] = '*******';
         }
         const api_request: APIRequest = {
             created_at: admin.firestore.Timestamp.fromDate(new Date()),
-            livemode: true,
+            livemode: cleansed_request_body.livemode,
             endpoint: endpoint,
             id: api_request_id,
             ip_address: ip_address,
@@ -5860,6 +5860,8 @@ export function dayMap(n: number) {
 export function secToTime(s: number) {
     return new Date(s * 1000).toISOString().substr(14, 5);
 };
+
+export const centsToStr = (cents: number) => (cents/100).toLocaleString('en-US', {style:'currency', currency:'USD'});
 
 export const getInstallUrlIOS = (s: string) => `https://apps.apple.com/us/app/${s}`;
 export const writeReviewUrlIOS = (s: string) => `https://apps.apple.com/app/${s}?action=write-review`;
