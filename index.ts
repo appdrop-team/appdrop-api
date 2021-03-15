@@ -3049,7 +3049,7 @@ export const DEFAULT_ECOMMERCE_ORDER: Order = {
         address2: 'STE 401',
         city: 'Newark',
         country_code: 'US',
-        email: 'support@appdrop.com',
+        email: '',
         name: 'Guest',
         state_code: 'DE',
         zip: '19713'
