@@ -3049,7 +3049,7 @@ export const DEFAULT_ECOMMERCE_ORDER: Order = {
         address2: 'STE 401',
         city: 'Newark',
         country_code: 'US',
-        email: '',
+        email: null,
         name: 'Guest',
         state_code: 'DE',
         zip: '19713'
@@ -3428,7 +3428,7 @@ export interface CreateOrderRecipientParams extends Address {
     /**
      * Recipient email.
      */
-    email: string;
+    email: string|null;
 
     /**
      * Recipient name.
@@ -3477,6 +3477,7 @@ export type RequestedReturnReason =
 'The item does not fit.'|
 'I no longer want this item.'|
 'Other reason';
+
 export const REQUESTED_RETURN_REASON_ARR:
 RequestedReturnReason[] = [
     'The item has defects.',
@@ -5407,6 +5408,8 @@ export const DEFAULT_ECOMMERCE_PROJECT: ECommerceProject = {
     app_ids: [],
     copyright: '',
     created_at: null,
+    deleted_product_ids: [],
+    deleted_sync_variant_ids: [],
     fulfillment_method: 'printful',
     id: '',
     livemode: true,
@@ -5434,6 +5437,18 @@ export const DEFAULT_ECOMMERCE_PROJECT: ECommerceProject = {
  */
 export interface CreateECommerceProjectParams extends CreateProjectParams {
     
+    /**
+     * Ids of the Products no longer available in this store. Used to filter
+     * out products that are not purchaseable.
+     */
+    deleted_product_ids: string[];
+
+    /**
+     * Ids of the Sync Variants no longer available in this store. Used to filter
+     * out product variants that are not purchaseable.
+     */
+    deleted_sync_variant_ids: string[];
+
     /**
      * Method of Fulfillment
      */
