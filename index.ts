@@ -4521,7 +4521,7 @@ export interface CreateProjectUserParams extends CreateUserParams {
     
 }
 
-export const DEFAULT_CLOUD_PROJECT_USER: ProjectUser = {
+export const DEFAULT_CLOUD_USER: ProjectUser = {
     address: {
         address1: '',
         address2: '',
@@ -5515,7 +5515,7 @@ export interface InitCloudAppResponseBody extends InitAppResponseBody {
      * @Important These Project Users are the team members of this user or 
      * end-users of the Projects created by this user's Entit(y/ies).
      */
-    project_users: {
+    users: {
         
         [key: string]: ProjectUser;
         
@@ -5747,7 +5747,7 @@ export interface InitEcommerceAppResponseBody extends InitAppResponseBody {
     /**
      * Minted project users. Key is ID
      */
-    project_users: {
+    users: {
         
         [key: string]: ECommerceProjectUser
         
