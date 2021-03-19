@@ -5533,7 +5533,14 @@ export interface InitCloudAppResponseBody extends InitAppResponseBody {
 /**
  * E-Commerce App supporting a store of products
  */
-export interface ECommerceProject extends CreateECommerceProjectParams, Project {}
+export interface ECommerceProject extends CreateECommerceProjectParams, Project {
+
+    /**
+     * Map of urls for this project.
+     */
+     urls: ECommerceProjectUrlMapParams;
+
+}
 
 export const DEFAULT_ECOMMERCE_PROJECT: ECommerceProject = {
     app_ids: [],
@@ -5566,12 +5573,15 @@ export const DEFAULT_ECOMMERCE_PROJECT: ECommerceProject = {
         homepage: '',
         instagram: '',
         privacy: '',
+        returns: '',
         snapchat: '',
         terms: '',
         tiktok: '',
         twitter: ''
     }
 };
+
+export interface ECommerceProjectUrlMapParams extends CreateECommerceProjectUrlMapParams {}
 
 /**
  * Params to create an ECommerce Project.
@@ -5599,6 +5609,11 @@ export interface CreateECommerceProjectParams extends CreateProjectParams {
      * Printful API Key hooked to store.
      */
     printful_api_key: string;
+
+    /**
+     * Map of urls for this project.
+     */
+    urls: CreateECommerceProjectUrlMapParams;
     
 }
 
@@ -5606,6 +5621,34 @@ export interface CreateECommerceProjectParams extends CreateProjectParams {
  * Method of Fulfillment
  */
 export type FulfillmentMethod = 'printful'|'manual';
+
+export interface CreateECommerceProjectUrlMapParams extends CreateProjectUrlMapParams {
+
+    /**
+     * Privacy Policy
+     * 
+     * Example: https://appdrop.com/apps/your-app-name/returns
+     * 
+     * Example: https://yourappname.com/returns
+     */
+    returns: string;
+
+}
+
+export interface UpdateECommerceProjectUrlMapParams extends UpdateProjectUrlMapParams {
+
+    /**
+     * Privacy Policy
+     * 
+     * Example: https://appdrop.com/apps/your-app-name/returns
+     * 
+     * Example: https://yourappname.com/returns
+     */
+     returns?: string;
+
+}
+
+
 
 /**
  * Params to update an ECommerce Project
