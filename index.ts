@@ -4336,9 +4336,76 @@ export interface CreateProjectParams extends UpdateProjectParams {
      * Id of the Project template that this project is built on.
      */
     template_id: string;
+
+    /**
+     * Map of urls for this project.
+     */
+    urls: CreateProjectUrlMapParams
     
 }
 
+/**
+ * Params to create the map of urls for this project.
+ */
+export interface CreateProjectUrlMapParams extends UpdateProjectUrlMapParams {
+
+    /**
+     * FB page
+     */
+    facebook: string;
+
+    /**
+     * Homepage
+     * 
+     * Example: https://appdrop.com/apps/your-app-name
+     * 
+     * Example: https://yourappname.com
+     */
+    homepage: string;
+
+    /**
+     * Instagram page
+     */
+    instagram: string;
+
+    /**
+     * Privacy Policy
+     * 
+     * Example: https://appdrop.com/apps/your-app-name/privacy
+     * 
+     * Example: https://yourappname.com/privacy
+     */
+    privacy: string;
+
+    /**
+     * Snapchat
+     */
+    snapchat: string;
+
+    /**
+     * Privacy Policy
+     * 
+     * Example: https://appdrop.com/apps/your-app-name/terms
+     * 
+     * Example: https://yourappname.com/terms
+     */
+    terms: string;
+
+    /**
+     * Tiktok url
+     */
+    tiktok: string;
+
+    /**
+     * Twitter url
+     */
+    twitter: string;
+
+}
+
+/**
+ * Params to update a project
+ */
 export interface UpdateProjectParams {
     
     /**
@@ -4370,6 +4437,70 @@ export interface UpdateProjectParams {
      * Id of the Project template that this project is built on.
      */
     template_id?: string;
+
+    /**
+     * Map of urls for this project.
+     */
+    urls?: UpdateProjectUrlMapParams;
+
+}
+
+/**
+ * Params to update the Project Url map
+ */
+export interface UpdateProjectUrlMapParams {
+
+    /**
+     * FB page
+     */
+    facebook?: string;
+
+    /**
+     * Homepage
+     * 
+     * Example: https://appdrop.com/apps/your-app-name
+     * 
+     * Example: https://yourappname.com
+     */
+    homepage?: string;
+
+    /**
+     * Instagram page
+     */
+    instagram?: string;
+
+    /**
+     * Privacy Policy
+     * 
+     * Example: https://appdrop.com/apps/your-app-name/privacy
+     * 
+     * Example: https://yourappname.com/privacy
+     */
+    privacy?: string;
+
+    /**
+     * Snapchat
+     */
+    snapchat?: string;
+
+    /**
+     * Privacy Policy
+     * 
+     * Example: https://appdrop.com/apps/your-app-name/terms
+     * 
+     * Example: https://yourappname.com/terms
+     */
+    terms?: string;
+
+    /**
+     * Tiktok url
+     */
+    tiktok?: string;
+
+    /**
+     * Twitter url
+     */
+    twitter?: string;
 
 }
 
@@ -5430,6 +5561,16 @@ export const DEFAULT_ECOMMERCE_PROJECT: ECommerceProject = {
     template_id: '',
     organization_id: '',
     support_email: '',
+    urls: {
+        facebook: '',
+        homepage: '',
+        instagram: '',
+        privacy: '',
+        snapchat: '',
+        terms: '',
+        tiktok: '',
+        twitter: ''
+    }
 };
 
 /**
@@ -5814,7 +5955,7 @@ export function randString(l = -1) {
 }
 
 /**
- * Maps month index to its name 
+ * Maps month index to its name. `0` is `Jan` or `January`
  */
 export const monthMap = (n: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11, long: boolean) => {
 	switch (n) {
@@ -5859,6 +6000,13 @@ export const validString = (s: string|null|undefined, requires_letters: boolean)
     );
 };
 
+/**
+ * Accepts an integer [0,6] and returns the english name of that day. 
+ * 
+ * `0` is `Sunday`
+ * 
+ * `1` is `Monday` and so on
+ */
 export function dayMap(n: number) {
     switch (n) {
         case 0: return 'Sunday';
@@ -5872,15 +6020,55 @@ export function dayMap(n: number) {
     }
 }
 
+/**
+ * Accepts a unix timestamp in seconds and returns the time. Example: 07:30
+ */
 export function secToTime(s: number) {
     return new Date(s * 1000).toISOString().substr(14, 5);
 };
 
+/**
+ * Accepts cents and returns human readable dollar amount.
+ */
 export const centsToStr = (cents: number) => (cents/100).toLocaleString('en-US', {style:'currency', currency:'USD'});
 
+/**
+ * 
+ * @param s Apple id, example: 12323432
+ * @returns Installation url
+ */
 export const getInstallUrlIOS = (s: string) => `https://apps.apple.com/us/app/${s}`;
+
+/**
+ * 
+ * @param s Apple id, example: 12323432
+ * @returns Review url
+ */
 export const writeReviewUrlIOS = (s: string) => `https://apps.apple.com/app/${s}?action=write-review`;
+
+/**
+ * 
+ * @param s Android package name, example: com.example
+ * @returns Installation url
+ */
 export const getInstallUrlAndroid = (s: string) => `https://play.google.com/store/apps/details?id=${s}`;
+
+/**
+ * 
+ * @param s Android package name, example: com.example
+ * @returns Review url
+ */
 export const writeReviewUrlAndroid = (s: string) => `https://play.google.com/store/apps/details?id=${s}`;
-export const IOS_CANCEL_SUB = 'https://apps.apple.com/account/subscriptions';
-export const ANDROID_CANCEL_SUB = 'https://play.google.com/store/account/subscriptions?package=fix this&sku=monthly_plan';
+
+/**
+ * Link to cancel a subscription on iOS
+ */
+export const getCancellationUrlIOS = () => 'https://apps.apple.com/account/subscriptions';
+
+/**
+ * 
+ * @param android_package_name Android package name, example: com.example
+ * @param iap_sku Sku of the IAP, example: monthly_pro
+ * @returns link to cancel subscription
+ */
+export const getCancellationUrlAndroid = (android_package_name: string, iap_sku: string) => `https://play.google.com/store/account/subscriptions?package=${android_package_name}&sku=${iap_sku}`;
