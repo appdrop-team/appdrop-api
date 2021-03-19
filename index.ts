@@ -3005,14 +3005,14 @@ ConfirmOrderParams, OrderResultBase, RequestReturnParams
     project_id: string;
     
     /**
-     * Id of the Appdrop project user who initiated the order
-     */
-    project_user_id: string;
-    
-    /**
      * Timestamp onject of last order update.
      */
     updated_at: Timestamped;
+    
+    /**
+     * Id of the Appdrop project user who initiated the order
+     */
+    user_id: string;
 
 }
 
@@ -3042,7 +3042,6 @@ export const DEFAULT_ECOMMERCE_ORDER: Order = {
     livemode: true,
     object: 'order',
     project_id: '',
-    project_user_id: '',
     promo_id: '',
     recipient: {
         address1: '200 Continental Drive',
@@ -3070,7 +3069,8 @@ export const DEFAULT_ECOMMERCE_ORDER: Order = {
     status: 'draft',
     store: 0,
     stripe_charge_id: '',
-    updated_at: null
+    updated_at: null,
+    user_id: '',
 };
 
 /**
@@ -5414,7 +5414,7 @@ export interface InitAppParams {
     /**
      * Id of the ProjectUser initializing the app.
      */
-    project_user_id: string;
+    user_id: string;
 
 }
 
@@ -5508,13 +5508,7 @@ export interface InitCloudAppResponseBody extends InitAppResponseBody {
         [key: string]: Promo;
     
     };
-
-    /**
-     * The id of the authenticated or guest user for
-     * this app session minted by the server
-     */
-    project_user_id: string;
-
+    
     /**
      * Map of all the minted project users in the scope of this Entity. Key is the id.
      * 
@@ -5524,8 +5518,14 @@ export interface InitCloudAppResponseBody extends InitAppResponseBody {
     project_users: {
         
         [key: string]: ProjectUser;
-    
+        
     };
+    
+    /**
+     * The id of the authenticated or guest user for
+     * this app session minted by the server
+     */
+    user_id: string;
 
 }
 
@@ -5745,18 +5745,18 @@ export interface InitEcommerceAppResponseBody extends InitAppResponseBody {
     project: ECommerceProject;
 
     /**
-     * Minted of the new or returning project user
-     */
-    project_user_id: string;
-    
-    /**
      * Minted project users. Key is ID
      */
     project_users: {
-
+        
         [key: string]: ECommerceProjectUser
-    
+        
     };
+    
+    /**
+     * Minted id of the new or returning project user
+     */
+    user_id: string;
 
 }
 
