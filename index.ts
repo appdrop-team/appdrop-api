@@ -6071,6 +6071,15 @@ export function secToTime(s: number) {
 };
 
 /**
+ * Accepts a unix timestamp in seconds and returns the date. Example: Friday, Mar. 19
+ */
+export function secToDate(s: number) {
+    const date = new Date(s*1000);
+    // @ts-ignore
+    return `${dayMap(date.getDay())}, ${monthMap(date.getMonth(), false)}. ${date.getDate()}`;
+};
+
+/**
  * Accepts cents and returns human readable dollar amount.
  */
 export const centsToStr = (cents: number) => (cents/100).toLocaleString('en-US', {style:'currency', currency:'USD'});
