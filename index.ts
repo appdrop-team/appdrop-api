@@ -6080,11 +6080,6 @@ export function secToDate(s: number) {
 };
 
 /**
- * Accepts cents and returns human readable dollar amount.
- */
-export const centsToStr = (cents: number) => (cents/100).toLocaleString('en-US', {style:'currency', currency:'USD'});
-
-/**
  * 
  * @param s Apple id, example: 12323432
  * @returns Installation url
