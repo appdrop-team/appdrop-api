@@ -5137,6 +5137,52 @@ export const ERROR_RESPONSES: {
 };
 
 /**
+ * Body of Async Errors
+ */
+export type AsyncErrorBody = CreateCustomerParams;
+
+/**
+ * Async Error types
+ */
+export type AsyncErrorType = 'customer-write-failed';
+
+/**
+ * Data to correct an async error. Used async tasks such as stripe customer creation.
+ */
+export interface AsyncError extends Identifiable {
+
+    /**
+     * Body of data
+     */
+    body: AsyncErrorBody;
+    
+    /**
+     * Message
+     */
+    message: string;
+    
+    /**
+     * Object name
+     */
+    object: 'async_error';
+    
+    /**
+     * Name of project where error occurred for convenience
+     */
+    project_name: string;
+    
+    /**
+     * Id of project where error occurred
+     */
+    project_id: string;
+
+    /**
+     * Type of error
+     */
+    type: AsyncErrorType;
+}
+
+/**
  * API response and logging for success cases.
  */
 export async function handleSuccess(
