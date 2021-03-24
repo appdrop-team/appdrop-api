@@ -5165,6 +5165,11 @@ export interface AsyncError extends Identifiable {
      * Object name
      */
     object: 'async_error';
+
+    /**
+     * Number of attempts at correcting error.
+     */
+    num_retries: number;
     
     /**
      * Name of project where error occurred for convenience
