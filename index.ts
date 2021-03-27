@@ -267,7 +267,9 @@ export interface AuthenticateUserParams {
     email: string;
 
     /**
-     * Raw password
+     * Raw password if Appdrop Auth
+     * 
+     * Auth Provider constant value if Firebase Auth
      */
     password: string;
 
@@ -276,7 +278,14 @@ export interface AuthenticateUserParams {
 /**
  * Auth operations
  */
-export type AuthenticationType = 'sign_in'|'sign_up';
+export type AuthenticationType = 'sign_in'|'sign_up'|'connect_firebase';
+
+export const FIREBASE_EMAIL_AUTH = 'FIREBASE_EMAIL_AUTH';
+export const FIREBASE_APPLE_AUTH = 'FIREBASE_APPLE_AUTH';
+export const FIREBASE_GOOGLE_AUTH = 'FIREBASE_GOOGLE_AUTH';
+export const FIREBASE_FACEBOOK_AUTH = 'FIREBASE_FACEBOOK_AUTH';
+export const FIREBASE_PHONE_AUTH = 'FIREBASE_PHONE_AUTH';
+
 
 /**
  * Params to exchange an email address for a User object which includes 
