@@ -116,6 +116,11 @@ export interface CreateUserParams extends UpdateUserParams {
     email: string;
 
     /**
+     * The user's fcm token for push notifications.
+     */
+    fcm_token: string;
+    
+    /**
      * Id of the user.
      * 
      * NOTE: user ids are scoped to each project.
@@ -126,6 +131,16 @@ export interface CreateUserParams extends UpdateUserParams {
      * `user_001` from either app.
      */
     id: string;
+
+    /**
+     * Latitude
+     */
+    lat: number;
+
+    /**
+    * Longitude
+    */
+    long: number;
 
     /**
      * Set of [key-value pairs] that you can attach to an object. 
@@ -185,6 +200,11 @@ export interface CreateUserParams extends UpdateUserParams {
     
 }
 
+export const DEFAULT_LATITUDE = 37.78825;
+export const DEFAULT_LONGITUDE = -122.4324;
+export const DEFAULT_LATITUDE_DELTA = 0.0922;
+export const DEFAULT_LONGITUDE_DELTA = 0.0421;
+
 /**
  * Params to update a user.
  * 
@@ -202,6 +222,21 @@ export interface UpdateUserParams {
      * The user's email address.
      */
     email?: string;
+
+    /**
+     * The user's fcm token for push notifications.
+     */
+    fcm_token?: string;
+
+    /**
+     * Latitude
+     */
+     lat?: number;
+
+     /**
+      * Longitude
+      */
+     long?: number;
 
     /**
      * Set of [key-value pairs] that you can attach to an object. 
@@ -4544,7 +4579,10 @@ export const DEFAULT_CLOUD_USER: ProjectUser = {
         _seconds: 0
     },
     email: '',
+    fcm_token: '',
     id: '',
+    lat: DEFAULT_LATITUDE,
+    long: DEFAULT_LONGITUDE,
     livemode: true,
     metadata: {},
     name: '',
@@ -5783,7 +5821,10 @@ export const DEFAULT_ECOMMERCE_USER: ECommerceProjectUser = {
     financial_details: {
         card: null
     },
+    fcm_token: '',
     id: '',
+    lat: DEFAULT_LATITUDE,
+    long: DEFAULT_LONGITUDE,
     livemode: true,
     metadata: {},
     name: '',
