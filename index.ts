@@ -122,13 +122,6 @@ export interface CreateUserParams extends UpdateUserParams {
     
     /**
      * Id of the user.
-     * 
-     * NOTE: user ids are scoped to each project.
-     * 
-     * Thus it is not possible to create a user with id `user_001` in an iOS app and
-     * later create a user with id `user_001` in an Android app, if the two
-     * apps belong to the same project. It is possible to update the data for
-     * `user_001` from either app.
      */
     id: string;
 
@@ -1779,6 +1772,11 @@ export interface CreateFinancialDetailsParams extends UpdateFinancialDetailsPara
      */
     card: Card|null;
 
+    /**
+     * An array of the ids of each active, non consumable IAP this user currently owns.
+     */
+    iap_ids: string[];
+
 }
 
 /**
@@ -1787,9 +1785,19 @@ export interface CreateFinancialDetailsParams extends UpdateFinancialDetailsPara
 export interface UpdateFinancialDetailsParams {
     
     /**
-     * The entity's credit card on file.
+     * Ids of the IAPs attached to this user.
+     */
+    append_iap_ids?: string[];
+
+    /**
+     * The user or entity's credit card on file.
      */
     card?: Card|null;
+    
+    /**
+     * Ids of the IAPs attached to this user.
+     */
+    remove_iap_ids?: string[];
 }
 
 /**
@@ -2869,6 +2877,7 @@ export const DEFAULT_ENTERPRISE: Enterprise = {
     entity_type: 'enterprise',
     financial_details: {
         card: null,
+        iap_ids: [],
         payout_balance: 0,
         stripe_subscription: null,
     },
@@ -2957,6 +2966,7 @@ export const DEFAULT_ORGANIZATION: Organization = {
     entity_type: 'organization',
     financial_details: {
         card: null,
+        iap_ids: [],
         payout_balance: 0,
         stripe_subscription: null,
     },
@@ -5629,7 +5639,7 @@ export interface InitCloudAppResponseBody extends InitAppResponseBody {
 
 
 /**
- * E-Commerce App supporting a store of products
+ * E-Commerce Project supporting a store of products
  */
 export interface ECommerceProject extends CreateECommerceProjectParams, Project {
 
@@ -5819,7 +5829,8 @@ export const DEFAULT_ECOMMERCE_USER: ECommerceProjectUser = {
     email: '',
     favorite_product_ids: [],
     financial_details: {
-        card: null
+        card: null,
+        iap_ids: []
     },
     fcm_token: '',
     id: '',
@@ -5846,9 +5857,177 @@ export const DEFAULT_ECOMMERCE_USER: ECommerceProjectUser = {
 export interface InitEcommerceAppParams extends InitAppParams  {}
 
 /**
- * Server response body for ECommerce App Initialization
+ * Marketplace Project supporting a creators and consumers
  */
-export interface InitEcommerceAppResponseBody extends InitAppResponseBody {
+ export interface MarketplaceProject extends CreateMarketplaceProjectParams, Project {
+
+    /**
+     * Map of urls for this project.
+     */
+     urls: MarketplaceProjectUrlMapParams;
+
+}
+
+export const DEFAULT_MARKETPLACE_PROJECT: MarketplaceProject = {
+    app_ids: [],
+    copyright: '',
+    created_at: null,
+    id: '',
+    livemode: true,
+    object: 'project',
+    logo_asset: {
+        asset_type: 'image',
+        created_at: null,
+        id: '',
+        livemode: true,
+        native_asset_height: 0,
+        native_asset_width: 0,
+        object: 'remote_asset',
+        remote_url: '',
+        updated_at: null
+    },
+    name: '',
+    template_id: '',
+    organization_id: '',
+    support_email: '',
+    urls: {
+        facebook: '',
+        homepage: '',
+        instagram: '',
+        privacy: '',
+        snapchat: '',
+        terms: '',
+        tiktok: '',
+        twitter: ''
+    }
+};
+
+export interface MarketplaceProjectUrlMapParams extends CreateMarketplaceProjectUrlMapParams {}
+
+/**
+ * Params to create a Marketplace Project.
+ */
+export interface CreateMarketplaceProjectParams extends CreateProjectParams {
+
+    /**
+     * Map of urls for this project.
+     */
+    urls: CreateMarketplaceProjectUrlMapParams;
+    
+}
+
+export interface CreateMarketplaceProjectUrlMapParams extends CreateProjectUrlMapParams {}
+
+export interface UpdateMarketplaceProjectUrlMapParams extends UpdateProjectUrlMapParams {}
+
+
+
+/**
+ * Params to update a Marketplace Project
+ */
+export interface UpdateMarketplaceProjectParams extends UpdateProjectParams {
+    
+    
+
+}
+
+
+
+/**
+ * User for an Marketplace App.
+ */
+export interface MarketplaceProjectUser extends CreateMarketplaceProjectUserParams, ProjectUser {}
+
+/**
+ * Params to create a marketplace user
+ */
+export interface CreateMarketplaceProjectUserParams extends CreateProjectUserParams {
+
+    /**
+     * Ids of the user's favorited products.
+     */
+    favorite_product_ids: string[];
+    
+    /**
+     * User's Financial details.
+     */
+    financial_details: FinancialDetails;
+
+}
+
+/**
+ * Params to update a marketplace user
+ */
+export interface UpdateMarketplaceProjectUserParams extends UpdateProjectUserParams {
+
+    /**
+     * Ids of Favorite Products to append to the `favorite_product_ids` array
+     */
+    append_favorite_product_ids?: string[];
+    
+    /**
+     * User's Financial details.
+     */
+    financial_details: FinancialDetails;
+
+    /**
+     * Ids of Favorite Products to remove from the `favorite_product_ids` array
+     */
+    remove_favorite_product_ids?: string[];
+
+}
+
+/**
+ * Initial value for Marketplace user.
+ */
+export const DEFAULT_MARKETPLACE_USER: MarketplaceProjectUser = {
+    address: {
+        address1: '',
+        address2: '',
+        city: '',
+        country_code: 'US',
+        zip: '',
+        state_code: ''
+    },
+    created_at: {
+        _nanoseconds: 0,
+        _seconds: 0
+    },
+    email: '',
+    favorite_product_ids: [],
+    financial_details: {
+        card: null,
+        iap_ids: [],
+    },
+    fcm_token: '',
+    id: '',
+    lat: DEFAULT_LATITUDE,
+    long: DEFAULT_LONGITUDE,
+    livemode: true,
+    metadata: {},
+    name: '',
+    object: 'user',
+    password: '',
+    password_hash: '',
+    password_salt: '',
+    phone: '',
+    project_id: '',
+    security_question: '',
+    security_answer: '',
+    security_answer_salt: '',
+    security_answer_hash: '',
+};
+
+/**
+ * Request Data for for Marketplace App Initialization
+ */
+export interface InitMarketplaceAppParams extends InitAppParams  {}
+
+
+/**
+ * Server response body for Marketplace App Initialization
+ */
+export interface InitMarketplaceAppResponseBody extends InitAppResponseBody {
 
     /**
      * App information. Critical for constructing the share url and review url 
@@ -5886,14 +6065,14 @@ export interface InitEcommerceAppResponseBody extends InitAppResponseBody {
     /**
      * Project information. Critical for copyright and support email.
      */
-    project: ECommerceProject;
+    project: MarketplaceProject;
 
     /**
      * Minted project users. Key is ID
      */
     users: {
         
-        [key: string]: ECommerceProjectUser
+        [key: string]: MarketplaceProjectUser
         
     };
     
