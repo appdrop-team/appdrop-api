@@ -4399,10 +4399,10 @@ export interface CreateProjectTemplateParams extends UpdateProjectTemplateParams
 export type ProjectType = 
 'e-commerce'|
 'developer-tool'|
-'social-network'|
-'marketplace'|
-'streaming-service'|
-'media';
+'marketplace';
+// 'social-network'|
+// 'streaming-service'|
+// 'media';
 
 export interface UpdateProjectTemplateParams extends UpdateVersionHistoryParams {
 
@@ -5193,38 +5193,7 @@ export interface APIRequestBody {
     /**
      * Request data.
      */
-    data:
-    AuthenticateUserParams|
-    AttachOrderPromoParams|
-    ConfirmOrderParams|
-    CreateCardParams|
-    CreateChargeParams|
-    CreateEntityParams|
-    CreateInAppPurchaseParams|
-    CreateOrderParams|
-    CreatePostParams|
-    CreateProjectParams|
-    CreatePromoParams|
-    CreateRefundParams|
-    CreateRemoteAssetParams|
-    CreateSubscriptionParams|
-    CreateSupportTicketParams|
-    CreateThreadParams|
-    CreateUserParams|
-    InitAppParams|
-    RequestReturnParams|
-    RequestUserPasswordResetParams|
-    RetrieveUserSecurityQuestionParams|
-    SyncPrintfulProductsParams|
-    UpdateInAppPurchaseParams|
-    UpdateOrderParams|
-    UpdatePostParams|
-    UpdatePromoParams|
-    UpdateRemoteAssetParams|
-    UpdateSubscriptionParams|
-    UpdateThreadParams|
-    UpdateEntityParams|
-    UpdateUserParams;
+    data: APIRequestBodyData;
 
     /**
      * Whether this session is a live or for demoing / testing.
@@ -5234,6 +5203,39 @@ export interface APIRequestBody {
     livemode: boolean;
     
 }
+
+export type APIRequestBodyData =
+AuthenticateUserParams|
+AttachOrderPromoParams|
+ConfirmOrderParams|
+CreateCardParams|
+CreateChargeParams|
+CreateEntityParams|
+CreateInAppPurchaseParams|
+CreateOrderParams|
+CreatePostParams|
+CreateProjectParams|
+CreatePromoParams|
+CreateRefundParams|
+CreateRemoteAssetParams|
+CreateSubscriptionParams|
+CreateSupportTicketParams|
+CreateThreadParams|
+CreateUserParams|
+InitAppParams|
+RequestReturnParams|
+RequestUserPasswordResetParams|
+RetrieveUserSecurityQuestionParams|
+SyncPrintfulProductsParams|
+UpdateInAppPurchaseParams|
+UpdateOrderParams|
+UpdatePostParams|
+UpdatePromoParams|
+UpdateRemoteAssetParams|
+UpdateSubscriptionParams|
+UpdateThreadParams|
+UpdateEntityParams|
+UpdateUserParams;
 
 /**
  * Params to sync a Printful products to an ECommerce Project.
@@ -5266,7 +5268,7 @@ export interface APIRequest extends CreateAPIRequest, Identifiable {
     /**
      * The response object sent back to the client.
      */
-    response_body: APIResponseBodyType;
+    response_body: APIResponseBody;
 
     /**
      * The HTTP status code.
@@ -5278,7 +5280,7 @@ export interface APIRequest extends CreateAPIRequest, Identifiable {
 /**
  * The response object sent back to the client.
  */
-export type APIResponseBodyType =
+export type APIResponseBody =
 App |
 Card |
 Charge |
@@ -5483,7 +5485,7 @@ export async function handleSuccess(
     db: any,
     endpoint: APIRequestEndpoint,
     method: APIRequestMethod,
-    response_body: APIResponseBodyType,
+    response_body: APIResponseBody,
     req: any,
     res: any
 ): Promise<void> {
@@ -5710,7 +5712,9 @@ export type APIRequestEndpoint =
 'v1/entities/:entityId' |
 'v1/initAppState/ecommerce' |
 'v1/initAppState/cloud' |
-'v1/projects' |
+'v1/projects/e-commerce' |
+'v1/projects/marketplace' |
+'v1/projects/developer-tool' |
 'v1/projects/:projectId' |
 'v1/projects/:projectId/apps' |
 'v1/projects/:projectId/apps/:appId' |
