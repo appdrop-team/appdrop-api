@@ -51,7 +51,7 @@ export const DEFAULT_REMOTE_ASSET: RemoteAsset = {
  * Params to create a remote asset
  */
 export interface CreateRemoteAssetParams extends 
-Publishable, UpdateRemoteAssetParams {
+ProjectScoped, Publishable, UpdateRemoteAssetParams {
     
     /**
      * Type of asset
@@ -77,11 +77,6 @@ Publishable, UpdateRemoteAssetParams {
      * Width in px.
      */
     native_asset_width: number;
-
-    /**
-     * Id of the Appdrop project
-     */
-    project_id: string;
 	
     /**
      * Asset download url
@@ -100,6 +95,18 @@ Publishable, UpdateRemoteAssetParams {
      */
     storage_ref: string;
 
+}
+
+/**
+ * Props for objects scoped to an Appdrop project
+ */
+export interface ProjectScoped {
+
+    /**
+     * Id of the Appdrop project
+     */
+    project_id: string;
+     
 }
 
 /**
@@ -2916,7 +2923,7 @@ export type RefundStatus = 'pending'|'succeeded'|'failed'|'canceled';
 /**
  * Params to create a Refund
  */
-export interface CreateRefundParams {
+export interface CreateRefundParams extends ProjectScoped {
     
     /**
      * Amount being returned in cents.
@@ -2927,11 +2934,6 @@ export interface CreateRefundParams {
      * Id of the Charge object.
      */
     charge: string;
-
-    /**
-     * Id of the ECommerce project this order belongs to.
-     */
-    project_id: string;
 
     /**
      * Reason for the refund.
@@ -3226,7 +3228,7 @@ export interface UpdateOrganizationParams extends UpdateEntityParams {
  */
 export interface Order extends 
 AttachOrderPromoParams, Identifiable, CreateOrderParams, 
-ConfirmOrderParams, OrderResultBase, RequestReturnParams 
+ConfirmOrderParams, OrderResultBase, ProjectScoped, RequestReturnParams 
 {
 
     /**
@@ -3249,11 +3251,6 @@ ConfirmOrderParams, OrderResultBase, RequestReturnParams
      * Object name
      */
     object: 'order';
-
-    /**
-     * Id of the Appdrop project
-     */
-    project_id: string;
     
     /**
      * Timestamp onject of last order update.
@@ -3914,7 +3911,7 @@ export interface PrintfulOrderResult extends OrderResultBase {
  /**
  * Store product
  */
-export interface Product extends Identifiable, ProductBase {
+export interface Product extends Identifiable, ProductBase, ProjectScoped {
     
     /**
      * Whether or not the product should be pushed to customers
@@ -3942,13 +3939,6 @@ export interface Product extends Identifiable, ProductBase {
      * A string representation of the rrice of the lowe
      */
     price_range: string;
-
-    /**
-     * Id of the ECommerce Project that this Product belongs to.
-     * 
-     * Used to query the `products` collection for Store owners and end-customers
-     */
-    project_id: string;
     
     /**
      * Map of all the product's sync variants
@@ -4771,14 +4761,8 @@ export interface ProjectUser extends CreateProjectUserParams, User {}
 /**
  * Params to create an end-user registered to an Appdrop Project.
  */
-export interface CreateProjectUserParams extends CreateUserParams {
-    
-    /**
-     * Id of the Project this User belongs to.
-     */
-    project_id: string;
-    
-}
+export interface CreateProjectUserParams 
+extends CreateUserParams, ProjectScoped {}
 
 export const DEFAULT_CLOUD_USER: ProjectUser = {
     address: {
@@ -4839,7 +4823,8 @@ export interface App extends CreateAppParams, Identifiable {
 }
 
 
-export interface CreateAppParams extends UpdateAppParams {
+export interface CreateAppParams extends 
+ProjectScoped, UpdateAppParams {
 
     /**
      * The name of this App. Example: MyCoolApp iOS or MyCoolApp Web
@@ -4852,7 +4837,7 @@ export interface CreateAppParams extends UpdateAppParams {
     platform: PlatformType;
 
     /**
-     * Id of the Project containing this App.
+     * Id of the Appdrop Project
      */
     project_id: string;
 
@@ -5050,7 +5035,8 @@ export interface SupportTicket extends CreateSupportTicketParams, Identifiable {
 /**
  * Params to create a Customer Support Ticket
  */
-export interface CreateSupportTicketParams {
+export interface CreateSupportTicketParams
+extends ProjectScoped {
 
     /**
      * The message attached with this support ticket.
@@ -5061,11 +5047,6 @@ export interface CreateSupportTicketParams {
      * The sender user's project id.
      */
     sender_id: string;
-
-    /**
-     * Id of the Project this SupportTicket belongs to.
-     */
-    project_id: string;
 
 }
 
@@ -5101,7 +5082,8 @@ export interface AppConfig extends AppConfigBase {
 /**
  * The compile-time config object downloaded from the Appdrop dashboard.
  */
-export interface AppConfigBase {
+export interface AppConfigBase
+extends ProjectScoped {
     
     /**
      * Raw API key.
@@ -5122,11 +5104,6 @@ export interface AppConfigBase {
      * Platform
      */
     platform: PlatformType|'';
-
-    /**
-     * Id of the Project.
-    */
-    project_id: string;
 
 }
 
@@ -5423,7 +5400,8 @@ export type AsyncErrorType = 'customer-write-failed';
 /**
  * Data to correct an async error. Used async tasks such as stripe customer creation.
  */
-export interface AsyncError extends Identifiable {
+export interface AsyncError extends
+Identifiable, ProjectScoped {
 
     /**
      * Body of data
@@ -5449,11 +5427,6 @@ export interface AsyncError extends Identifiable {
      * Name of project where error occurred for convenience
      */
     project_name: string;
-    
-    /**
-     * Id of project where error occurred
-     */
-    project_id: string;
 
     /**
      * Type of error
@@ -6139,17 +6112,12 @@ export interface InitEcommerceAppParams extends InitAppParams  {}
 /**
  * A promotional for an order
  */
- export interface Promo extends CreatePromoParams, Identifiable  {
+ export interface Promo extends CreatePromoParams, Identifiable, ProjectScoped  {
 
     /**
      * Object name
      */
      object: 'promo';
-
-     /**
-     * Id of the Appdrop project
-     */
-    project_id: string;
 
 }
 
@@ -6584,6 +6552,7 @@ export interface MarketplaceProjectUser extends CreateMarketplaceProjectUserPara
     avatar_asset_id: '',
     bio: '',
     blocked_member_ids: [],
+    community_status: 'approved',
 	cover_asset_id: '',
     created_at: {
         _nanoseconds: 0,
@@ -6710,11 +6679,21 @@ export interface ContainsSocial {
     blocked_member_ids: string[];
     
     /**
+     * Community status
+     */
+    community_status: CommunityStatus;
+    
+    /**
      * Username
      */
     username: string;
     
 }
+
+/**
+ * Community status. Editable only by admins.
+ */
+export type CommunityStatus = 'approved'|'deactivated';
 
 /**
  * Params to update social props
@@ -6730,6 +6709,11 @@ export interface UpdateContainsSocialParams {
      * Bio
      */
     bio?: string;
+
+    /**
+     * Community status
+     */
+    community_status?: CommunityStatus;
     
     /**
      * Ids of users to remove from the `blocked_member_ids` array
@@ -6777,7 +6761,8 @@ export interface Post extends CreatePostParams, Identifiable {
  * Params to create a post
  */
 export interface CreatePostParams extends 
-CreateMappableParams, Publishable, UpdatePostParams {
+CreateMappableParams, ProjectScoped,
+Publishable, UpdatePostParams {
 
     /**
      * Latitude
@@ -6867,6 +6852,7 @@ export const DEFAULT_EVENT_POST: EventPost = {
     attending_member_ids: [],
     bio: '',
     blocked_member_ids: [],
+    community_status: 'approved',
     cover_asset_id: '',
     created_at: null,
     creator_id: '',
@@ -6876,6 +6862,7 @@ export const DEFAULT_EVENT_POST: EventPost = {
     long: DEFAULT_LONGITUDE,
     object: 'post',
     post_type: 'event',
+    project_id: '',
     status: 'live',
     thread_id: '',
     title: '',
@@ -7014,6 +7001,7 @@ export const DEFAULT_LISTING_POST: ListingPost = {
     admin_ids: [],
     asset_ids: [],
     bio: '',
+    community_status: 'approved',
     cover_asset_id: '',
     created_at: null,
     creator_id: '',
@@ -7025,6 +7013,7 @@ export const DEFAULT_LISTING_POST: ListingPost = {
     long: DEFAULT_LONGITUDE,
     object: 'post',
     post_type: 'listing',
+    project_id: '',
     status: 'live',
     thread_id: '',
     username: ''
@@ -7072,6 +7061,7 @@ export const DEFAULT_MESSAGE_POST: MessagePost = {
     long: DEFAULT_LONGITUDE,
     object: 'post',
     post_type: 'message',
+    project_id: '',
     status: 'live',
     thread_id: ''
 };
@@ -7142,6 +7132,7 @@ export const DEFAULT_REACTION_POST: ReactionPost = {
     object: 'post',
     original_post_id: '',
     post_type: 'reaction',
+    project_id: '',
     status: 'live',
     thread_id: ''
 };
@@ -7218,6 +7209,7 @@ export const DEFAULT_STATUS_UPDATE_POST: StatusUpdatePost = {
     long: DEFAULT_LONGITUDE,
     object: 'post',
     post_type: 'status_update',
+    project_id: '',
     status: 'live',
     thread_id: ''
 };
@@ -7263,6 +7255,7 @@ export const DEFAULT_THREAD: Thread = {
     avatar_asset_id: '',
     bio: '',
     blocked_member_ids: [],
+    community_status: 'approved',
     created_at: null,
     creator_id: '',
     cover_asset_id: '',
@@ -7275,6 +7268,7 @@ export const DEFAULT_THREAD: Thread = {
     member_ids: [],
     object: 'thread',
     pending_member_ids: [],
+    project_id: '',
     thread_type: 'direct_message',
     title: '',
     username: ''
@@ -7286,7 +7280,7 @@ export const DEFAULT_THREAD: Thread = {
 export interface CreateThreadParams extends 
 ContainsAvatar, ContainsCover,
 ContainsSocial, CreateMappableParams, 
-Manageable, Publishable, Titled {
+Manageable, ProjectScoped, Publishable, Titled {
 
     /**
      * Latitude
