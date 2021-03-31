@@ -4540,6 +4540,35 @@ export interface Project extends CreateProjectParams, Identifiable {
 }
 
 /**
+ * Default project
+ */
+export const DEFAULT_PROJECT = {
+    app_ids: [],
+    asset_ids: [],
+    copyright: '',
+    created_at: null,
+    id: '',
+    logo_asset_id: '',
+    livemode: true,
+    name: '',
+    object: 'project',
+    organization_id: '',
+    support_email: '',
+    template_id: '',
+    project_type: 'developer-tool',
+    urls: {
+        facebook: '',
+        terms: '',
+        tiktok: '',
+        twitter: '',
+        snapchat: '',
+        homepage: '',
+        instagram: '',
+        privacy: ''
+    }
+};
+
+/**
  * Params to generate a project
  */
 export interface CreateProjectParams extends
@@ -5743,9 +5772,9 @@ export interface InitAppResponseBody {
      * App information. Critical for constructing the share url and review url 
      * from the app id / package name.
      */
-     app: App;
+    app: App;
 
-     /**
+    /**
      * Project information. Critical for copyright and support email.
      */
     project: Project;
@@ -5753,7 +5782,7 @@ export interface InitAppResponseBody {
     /**
      * Minted project users. Key is ID
      */
-     users: {
+    users: {
         
         [key: string]: ProjectUser
         
