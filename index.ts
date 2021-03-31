@@ -4542,7 +4542,7 @@ export interface Project extends CreateProjectParams, Identifiable {
 /**
  * Default project
  */
-export const DEFAULT_PROJECT = {
+export const DEFAULT_PROJECT: Project = {
     app_ids: [],
     asset_ids: [],
     copyright: '',
@@ -5894,6 +5894,20 @@ export interface InitCloudAppResponseBody extends InitAppResponseBody {
     };
 
 }
+
+export const erio: InitCloudAppResponseBody = {
+    app: DEFAULT_WEB_APP,
+    apps: {},
+    entities: {},
+    orders: {},
+    products: {},
+    project: DEFAULT_PROJECT,
+    projects: {},
+    project_templates: {},
+    promos: {},
+    users: {},
+    user_id: ''
+};
 
 
 /**
