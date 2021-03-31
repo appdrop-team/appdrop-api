@@ -5801,6 +5801,11 @@ export interface InitAppResponseBody {
 export interface InitCloudAppParams extends InitAppParams  {
 
     /**
+     * Id of entity (returning) or an empty string (guest)
+     */
+    entity_id: string;
+
+    /**
      * Type of entity
      */
     entity_type: EntityType;
@@ -5829,6 +5834,11 @@ export interface InitCloudAppResponseBody extends InitAppResponseBody {
         [key: string]: Entity;
 
     };
+
+    /**
+     * Minted entity id
+     */
+    entity_id: string;
 
     /**
      * Orders created by this entity's Ecommerce project users.
@@ -5894,20 +5904,6 @@ export interface InitCloudAppResponseBody extends InitAppResponseBody {
     };
 
 }
-
-export const erio: InitCloudAppResponseBody = {
-    app: DEFAULT_WEB_APP,
-    apps: {},
-    entities: {},
-    orders: {},
-    products: {},
-    project: DEFAULT_PROJECT,
-    projects: {},
-    project_templates: {},
-    promos: {},
-    users: {},
-    user_id: ''
-};
 
 
 /**
