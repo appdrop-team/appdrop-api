@@ -4889,7 +4889,7 @@ export const DEFAULT_ANDROID_APP: AppAndroid = {
     created_at: null,
     id: '',
     livemode: true,
-    name: 'MyApp for Android',
+    name: '',
     object: 'app',
     platform: 'android',
     project_id: ''
@@ -4937,7 +4937,7 @@ export const DEFAULT_IOS_APP: AppIOS = {
     ios_app_id: '',
     ios_bundle_id: '',
     livemode: true,
-    name: 'MyApp for Android',
+    name: '',
     object: 'app',
     platform: 'ios',
     project_id: ''
@@ -4990,6 +4990,18 @@ export interface AppWeb extends App, CreateAppWebParams {
     platform: 'web';
 
 }
+
+export const DEFAULT_WEB_APP: AppWeb = {
+    config_url: '',
+    created_at: null,
+    domain_name: '',
+    id: '',
+    livemode: true,
+    name: '',
+    object: 'app',
+    platform: 'web',
+    project_id: ''
+};
 
 /**
  * Params to create a web app
