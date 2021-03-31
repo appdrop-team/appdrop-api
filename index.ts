@@ -10,19 +10,63 @@ import atob from 'atob';
  */
 
 /**
- * Supported Assets
- */
-export type AssetType = 'image';
-
-/**
  * An Asset uploaded to Appdrop Cloud Storage
  */
-export interface RemoteAsset extends Identifiable {
+export interface RemoteAsset extends CreateRemoteAssetParams, Identifiable {
 
+    /**
+     * Object name
+     */
+    object: 'remote_asset';
+    
+    /**
+     * Last update timestamp.
+     */
+    updated_at: Timestamped;
+
+}
+
+/**
+ * Default remote asset
+ */
+export const DEFAULT_REMOTE_ASSET: RemoteAsset = {
+    asset_type: 'avatar',
+    created_at: null,
+    creator_id: '',
+    id: '',
+    index: 0,
+    livemode: true,
+    mime: 'image/jpg',
+    native_asset_height: 1,
+    native_asset_width: 1,
+    object: 'remote_asset',
+    project_id: '',
+    remote_url: '',
+    remote_url_thumbnail: '',
+    storage_ref: '',
+    updated_at: null,
+};
+
+/**
+ * Params to create a remote asset
+ */
+export interface CreateRemoteAssetParams extends 
+Publishable, UpdateRemoteAssetParams {
+    
     /**
      * Type of asset
      */
 	asset_type: AssetType;
+
+    /**
+     * Index of the asset in a collage
+     */
+    index: number;
+
+    /**
+     * Mime
+     */
+    mime: MimeType;
 	
     /**
      * Height in px.
@@ -35,9 +79,9 @@ export interface RemoteAsset extends Identifiable {
     native_asset_width: number;
 
     /**
-     * Object name
+     * Id of the Appdrop project
      */
-    object: 'remote_asset';
+    project_id: string;
 	
     /**
      * Asset download url
@@ -45,25 +89,89 @@ export interface RemoteAsset extends Identifiable {
     remote_url: string;
 
     /**
-     * Last update timestamp.
+     * Compressed asset download url
      */
-    updated_at: Timestamped;
+    remote_url_thumbnail: string;
+
+    /**
+     * Base of the storage ref
+     * 
+     * Ex. `'user_avatars/user_001/asset_0002.jpg'`
+     */
+    storage_ref: string;
 
 }
 
 /**
- * Local asset
+ * Type of asset
  */
-export interface CachedAsset extends RemoteAsset {
-    
+ export type AssetType = 'avatar'|'cover'|'logo'|'post';
+
+ /**
+  * Mime
+  */
+ export type MimeType = 
+ 'application/zip'|
+ 'audio/mpeg'|
+ 'image/jpg'|
+ 'image/png'|
+ 'text/html'|
+ 'text/plain'|
+ 'video/mp4';
+
+/**
+ * Default val for thumbnail url
+ */
+export const REMOTE_ASSET_THUMBNAIL_URL_PENDING = 'REMOTE_ASSET_THUMBNAIL_URL_PENDING';
+
+/**
+ * Params to update a remote asset 
+ */
+ export interface UpdateRemoteAssetParams {
+
     /**
-     * Cache timestamp
+     * Index of the asset in a collage
      */
-    cached_at: Timestamped;
+    index?: number;
 
 }
 
-export const REMOTE_ASSET_URI_ERROR = 'REMOTE_ASSET_URI_ERROR';
+/**
+ * Remote asset properties
+ */
+ export interface ContainsRemoteAssets {
+    
+    /**
+     * Ordered array of remote asset ids
+     */
+    asset_ids: string[];
+
+}
+
+/**
+ * Params to update remote assets
+ */
+export interface UpdateContainsRemoteAssetsParams {
+
+    /**
+     * Ids to append to the `asset_ids` array
+     */
+    append_asset_ids?: string[];
+    
+    /**
+     * Ids to remove from the `asset_ids` array
+     */
+    remove_asset_ids?: string[];
+
+}
+
+export const DEFAULT_MAX_NUM_ASSETS: {
+    [key: string]: number|null;
+} = {
+    'post_message': 8,
+    'post_listing': 10,
+    project: null
+};
 
 /**
  * 
@@ -76,7 +184,7 @@ export const REMOTE_ASSET_URI_ERROR = 'REMOTE_ASSET_URI_ERROR';
 /**
  * Generic User object.
  */
-export interface User extends CreateUserParams, Identifiable {
+export interface User extends CreateUserParams, Identifiable, Mappable {
 
     /**
      * String representing the object's type. Objects of the same type share the same value.
@@ -99,11 +207,10 @@ export const SECURITY_QUESTIONS_ARR = [
     'In what town or city did your parents meet?',
 ];
 
-
 /**
  * Params to create a user.
  */
-export interface CreateUserParams extends UpdateUserParams {
+export interface CreateUserParams extends CreateMappableParams, UpdateUserParams {
 
     /**
      * The user's address.
@@ -128,11 +235,11 @@ export interface CreateUserParams extends UpdateUserParams {
     /**
      * Latitude
      */
-    lat: number;
+     lat: number;
 
-    /**
-    * Longitude
-    */
+     /**
+     * Longitude
+     */
     long: number;
 
     /**
@@ -193,6 +300,28 @@ export interface CreateUserParams extends UpdateUserParams {
     
 }
 
+/**
+ * Properties for objects that can interact with a map.
+ */
+export interface Mappable extends CreateMappableParams {}
+
+/**
+ * Params to create a mappable object
+ */
+export interface CreateMappableParams {
+
+    /**
+     * Latitude
+     */
+    lat: number;
+
+     /**
+     * Longitude
+     */
+    long: number;
+
+}
+
 export const DEFAULT_LATITUDE = 37.78825;
 export const DEFAULT_LONGITUDE = -122.4324;
 export const DEFAULT_LATITUDE_DELTA = 0.0922;
@@ -204,7 +333,7 @@ export const DEFAULT_LONGITUDE_DELTA = 0.0421;
  * Note that the properties `id` and `livemode` are missing as these are 
  * not editable.
  */
-export interface UpdateUserParams {
+export interface UpdateUserParams extends UpdateMappableParams {
 
     /**
      * The user's address.
@@ -220,16 +349,6 @@ export interface UpdateUserParams {
      * The user's fcm token for push notifications.
      */
     fcm_token?: string;
-
-    /**
-     * Latitude
-     */
-     lat?: number;
-
-     /**
-      * Longitude
-      */
-     long?: number;
 
     /**
      * Set of [key-value pairs] that you can attach to an object. 
@@ -277,6 +396,19 @@ export interface UpdateUserParams {
      */
     security_question?: string;
 
+}
+
+export interface UpdateMappableParams {
+
+    /**
+     * Latitude
+     */
+     lat?: number;
+
+     /**
+      * Longitude
+      */
+     long?: number;
 }
 
 /**
@@ -1773,9 +1905,13 @@ export interface CreateFinancialDetailsParams extends UpdateFinancialDetailsPara
     card: Card|null;
 
     /**
-     * An array of the ids of each active, non consumable IAP this user currently owns.
+     * A map of the IAP receipts for this user.
      */
-    iap_ids: string[];
+     in_app_purchase_receipts: {
+
+        [key: string]: InAppPurchaseReceipt;
+    
+    };
 
 }
 
@@ -1783,21 +1919,82 @@ export interface CreateFinancialDetailsParams extends UpdateFinancialDetailsPara
  * Params to update a nested field in financial details.
  */
 export interface UpdateFinancialDetailsParams {
-    
-    /**
-     * Ids of the IAPs attached to this user.
-     */
-    append_iap_ids?: string[];
 
     /**
      * The user or entity's credit card on file.
      */
     card?: Card|null;
+
+    /**
+     * A map of the IAP receipts for this user.
+     * 
+     * Key is the InAppPurchaseReceipt `id`
+     */
+    in_app_purchase_receipts: {
+
+        [key: string]: UpdateInAppPurchaseReceiptParams;
+    
+    };
+    
+}
+
+/**
+ * Receipt from an IAP Purchase
+ */
+export interface InAppPurchaseReceipt extends CreateInAppPurchaseReceiptParams, Identifiable {
+
+    /**
+     * Object name
+     */
+    object: 'in_app_purchase_receipt';
+
+    /**
+     * Last update
+     */
+    updated_at: Timestamped;
+
+}
+
+export interface CreateInAppPurchaseReceiptParams extends UpdateInAppPurchaseReceiptParams {
     
     /**
-     * Ids of the IAPs attached to this user.
+     * Purchase token for Android IAP receipts
      */
-    remove_iap_ids?: string[];
+    android_purchase_token: string;
+    
+    /**
+     * Subscription id for Android IAP receipts
+     */
+    android_subscription_id: string;
+    
+    /**
+     * `true` if this receipt points to an active subscription.
+     * 
+     * `false` otherwise
+     */
+    auto_renewing: boolean;
+
+    /**
+     * Id of the IAP that the user purchased.
+     */
+    iap_id: string;
+    
+    /**
+     * Transaction receipt for iOS IAPs
+     */
+    ios_transaction_receipt: string;
+    
+}
+export interface UpdateInAppPurchaseReceiptParams {
+
+    android_purchase_token?: string;
+
+    android_subscription_id?: string;
+
+    auto_renewing?: boolean;
+
+    ios_transaction_receipt?: string;
+
 }
 
 /**
@@ -2822,7 +3019,7 @@ export type EntityType = 'enterprise'|'organization';
 export interface UpdateEntityParams {
 
     /**
-     * This array contains the ids to append to the `pending_team_member_emails` array.
+     * This array contains the emails to append to the `pending_team_member_emails` array.
      */
     append_pending_team_member_emails?: string[];
 
@@ -2842,7 +3039,7 @@ export interface UpdateEntityParams {
     owner_id?: string;
 
     /**
-     * This array contains the ids to remove from the `pending_team_member_emails` array.
+     * This array contains the emails to remove from the `pending_team_member_emails` array.
      */
     remove_pending_team_member_emails?: string[];
 
@@ -2877,7 +3074,7 @@ export const DEFAULT_ENTERPRISE: Enterprise = {
     entity_type: 'enterprise',
     financial_details: {
         card: null,
-        iap_ids: [],
+        in_app_purchase_receipts: {},
         payout_balance: 0,
         stripe_subscription: null,
     },
@@ -2966,7 +3163,7 @@ export const DEFAULT_ORGANIZATION: Organization = {
     entity_type: 'organization',
     financial_details: {
         card: null,
-        iap_ids: [],
+        in_app_purchase_receipts: {},
         payout_balance: 0,
         stripe_subscription: null,
     },
@@ -4191,7 +4388,7 @@ export interface CreateProjectTemplateParams extends UpdateProjectTemplateParams
     /**
      * Type of project
      */
-    project_template_type: ProjectTemplateType;
+    project_type: ProjectType;
 
     /**
      * Released versions
@@ -4207,10 +4404,11 @@ export interface CreateProjectTemplateParams extends UpdateProjectTemplateParams
 }
 
 /**
- * Type of project template
+ * Type of project
  */
-export type ProjectTemplateType = 
+export type ProjectType = 
 'e-commerce'|
+'developer-tool'|
 'social-network'|
 'marketplace'|
 'streaming-service'|
@@ -4246,7 +4444,7 @@ export interface UpdateProjectTemplateParams extends UpdateVersionHistoryParams 
     /**
      * Type of project
      */
-    project_template_type?: ProjectTemplateType;
+    project_template_type?: ProjectType;
     
 };
 
@@ -4354,7 +4552,8 @@ export interface Project extends CreateProjectParams, Identifiable {
 /**
  * Params to generate a project
  */
-export interface CreateProjectParams extends UpdateProjectParams { 
+export interface CreateProjectParams extends
+ContainsRemoteAssets, UpdateProjectParams { 
     
     /**
      * This array includes the id of each App that this Project contains.
@@ -4364,12 +4563,7 @@ export interface CreateProjectParams extends UpdateProjectParams {
     /**
      * Public name displayed to Users. Defaults to the name of the Organization that published the template.
      */
-     copyright: string;
-    
-    /**
-     * The Id of the Project logo Asset.
-     */
-    logo_asset: RemoteAsset;
+    copyright: string;
     
     /**
      * The name of this Project. Example: My Cool App
@@ -4377,9 +4571,19 @@ export interface CreateProjectParams extends UpdateProjectParams {
     name: string;
 
     /**
+     * The Id of the Project logo Asset.
+     */
+    logo_asset_id: string;
+
+    /**
      * The id of the organization that owns this project.
      */
     organization_id: string;
+
+    /**
+     * Type of project
+     */
+    project_type: ProjectType;
 
     /**
      * Email displayed to end users for Support requests.
@@ -4460,7 +4664,8 @@ export interface CreateProjectUrlMapParams extends UpdateProjectUrlMapParams {
 /**
  * Params to update a project
  */
-export interface UpdateProjectParams {
+export interface UpdateProjectParams extends 
+UpdateContainsRemoteAssetsParams {
     
     /**
      * Ids of Apps to append to the `app_ids` array
@@ -4470,7 +4675,7 @@ export interface UpdateProjectParams {
     /**
      * The Id of the Project logo Asset.
      */
-    logo_asset?: RemoteAsset;
+    logo_asset_id?: string;
     
     /**
      * The name of this Project. Example: My Cool App
@@ -4977,21 +5182,29 @@ export interface APIRequestBody {
     CreateCardParams|
     CreateChargeParams|
     CreateEntityParams|
+    CreateInAppPurchaseParams|
     CreateOrderParams|
+    CreatePostParams|
     CreateProjectParams|
     CreatePromoParams|
     CreateRefundParams|
+    CreateRemoteAssetParams|
     CreateSubscriptionParams|
     CreateSupportTicketParams|
+    CreateThreadParams|
     CreateUserParams|
     InitAppParams|
     RequestReturnParams|
     RequestUserPasswordResetParams|
     RetrieveUserSecurityQuestionParams|
     SyncPrintfulProductsParams|
+    UpdateInAppPurchaseParams|
     UpdateOrderParams|
+    UpdatePostParams|
     UpdatePromoParams|
+    UpdateRemoteAssetParams|
     UpdateSubscriptionParams|
+    UpdateThreadParams|
     UpdateEntityParams|
     UpdateUserParams;
 
@@ -5054,12 +5267,16 @@ Charge |
 Order |
 Entity |
 InitAppResponseBody |
+InAppPurchase |
+Post |
 Product |
 Project |
 ProjectTemplate |
 Promo |
 Refund |
+RemoteAsset |
 Subscription |
+Thread |
 User |
 {
     products: Product[]
@@ -5484,11 +5701,17 @@ export type APIRequestEndpoint =
 'v1/projects/:projectId/apps' |
 'v1/projects/:projectId/apps/:appId' |
 'v1/projects/:projectId/apps/:appId/config' |
-'v1/projects/:projectId/retrieveUserSecurityQuestion' |
-'v1/projects/:projectId/syncPrintfulProducts' |
-'v1/projects/:projectId/tickets' |
+'v1/projects/:projectId/inAppPurchases' |
+'v1/projects/:projectId/inAppPurchases/:inAppPurchaseId' |
+'v1/projects/:projectId/posts' |
+'v1/projects/:projectId/posts/:postId' |
 'v1/projects/:projectId/promos' |
 'v1/projects/:projectId/promos/:promoId' |
+'v1/projects/:projectId/retrieveUserSecurityQuestion' |
+'v1/projects/:projectId/syncPrintfulProducts' |
+'v1/projects/:projectId/threads' |
+'v1/projects/:projectId/threads/:threadId' |
+'v1/projects/:projectId/tickets' |
 'v1/projects/:projectId/users' |
 'v1/projects/:projectId/users/:userId' |
 'v1/projects/:projectId/users/:userId/requestUserPasswordReset' |
@@ -5529,7 +5752,34 @@ export interface InitAppParams {
 /**
  * Server response body for App Initialization
  */
-export interface InitAppResponseBody {}
+export interface InitAppResponseBody {
+    
+    /**
+     * App information. Critical for constructing the share url and review url 
+     * from the app id / package name.
+     */
+     app: App;
+
+     /**
+     * Project information. Critical for copyright and support email.
+     */
+    project: Project;
+
+    /**
+     * Minted project users. Key is ID
+     */
+     users: {
+        
+        [key: string]: ProjectUser
+        
+    };
+    
+    /**
+     * Minted id of the new or returning project user
+     */
+    user_id: string;
+
+}
 
 /**
  * Request Data for for Cloud App Initialization
@@ -5567,7 +5817,7 @@ export interface InitCloudAppResponseBody extends InitAppResponseBody {
     };
 
     /**
-     * Orders created by this entity's project users.
+     * Orders created by this entity's Ecommerce project users.
      */
      orders: {
 
@@ -5576,7 +5826,7 @@ export interface InitCloudAppResponseBody extends InitAppResponseBody {
     };
 
     /**
-     * Active store owned by this entity's stores.
+     * Products owned by this entity's Ecommerce projects
      */
     products: {
 
@@ -5628,12 +5878,6 @@ export interface InitCloudAppResponseBody extends InitAppResponseBody {
         [key: string]: ProjectUser;
         
     };
-    
-    /**
-     * The id of the authenticated or guest user for
-     * this app session minted by the server
-     */
-    user_id: string;
 
 }
 
@@ -5652,6 +5896,7 @@ export interface ECommerceProject extends CreateECommerceProjectParams, Project 
 
 export const DEFAULT_ECOMMERCE_PROJECT: ECommerceProject = {
     app_ids: [],
+    asset_ids: [],
     copyright: '',
     created_at: null,
     deleted_product_ids: [],
@@ -5661,20 +5906,11 @@ export const DEFAULT_ECOMMERCE_PROJECT: ECommerceProject = {
     livemode: true,
     object: 'project',
     printful_api_key: '',
-    logo_asset: {
-        asset_type: 'image',
-        created_at: null,
-        id: '',
-        livemode: true,
-        native_asset_height: 0,
-        native_asset_width: 0,
-        object: 'remote_asset',
-        remote_url: '',
-        updated_at: null
-    },
+    logo_asset_id: '',
     name: '',
     template_id: '',
     organization_id: '',
+    project_type: 'e-commerce',
     support_email: '',
     urls: {
         facebook: '',
@@ -5756,8 +5992,6 @@ export interface UpdateECommerceProjectUrlMapParams extends UpdateProjectUrlMapP
 
 }
 
-
-
 /**
  * Params to update an ECommerce Project
  */
@@ -5769,8 +6003,6 @@ export interface UpdateECommerceProjectParams extends UpdateProjectParams {
     printful_api_key?: string;
 
 }
-
-
 
 /**
  * End-user for an E-Commerce App.
@@ -5830,7 +6062,7 @@ export const DEFAULT_ECOMMERCE_USER: ECommerceProjectUser = {
     favorite_product_ids: [],
     financial_details: {
         card: null,
-        iap_ids: []
+        in_app_purchase_receipts: {}
     },
     fcm_token: '',
     id: '',
@@ -5857,184 +6089,10 @@ export const DEFAULT_ECOMMERCE_USER: ECommerceProjectUser = {
 export interface InitEcommerceAppParams extends InitAppParams  {}
 
 /**
- * Marketplace Project supporting a creators and consumers
+ * Server response body for ECommerce App Initialization
  */
- export interface MarketplaceProject extends CreateMarketplaceProjectParams, Project {
+ export interface InitEcommerceAppResponseBody extends InitAppResponseBody {
 
-    /**
-     * Map of urls for this project.
-     */
-     urls: MarketplaceProjectUrlMapParams;
-
-}
-
-export const DEFAULT_MARKETPLACE_PROJECT: MarketplaceProject = {
-    app_ids: [],
-    copyright: '',
-    created_at: null,
-    id: '',
-    livemode: true,
-    object: 'project',
-    logo_asset: {
-        asset_type: 'image',
-        created_at: null,
-        id: '',
-        livemode: true,
-        native_asset_height: 0,
-        native_asset_width: 0,
-        object: 'remote_asset',
-        remote_url: '',
-        updated_at: null
-    },
-    name: '',
-    template_id: '',
-    organization_id: '',
-    support_email: '',
-    urls: {
-        facebook: '',
-        homepage: '',
-        instagram: '',
-        privacy: '',
-        snapchat: '',
-        terms: '',
-        tiktok: '',
-        twitter: ''
-    }
-};
-
-export interface MarketplaceProjectUrlMapParams extends CreateMarketplaceProjectUrlMapParams {}
-
-/**
- * Params to create a Marketplace Project.
- */
-export interface CreateMarketplaceProjectParams extends CreateProjectParams {
-
-    /**
-     * Map of urls for this project.
-     */
-    urls: CreateMarketplaceProjectUrlMapParams;
-    
-}
-
-export interface CreateMarketplaceProjectUrlMapParams extends CreateProjectUrlMapParams {}
-
-export interface UpdateMarketplaceProjectUrlMapParams extends UpdateProjectUrlMapParams {}
-
-
-
-/**
- * Params to update a Marketplace Project
- */
-export interface UpdateMarketplaceProjectParams extends UpdateProjectParams {
-    
-    
-
-}
-
-
-
-/**
- * User for an Marketplace App.
- */
-export interface MarketplaceProjectUser extends CreateMarketplaceProjectUserParams, ProjectUser {}
-
-/**
- * Params to create a marketplace user
- */
-export interface CreateMarketplaceProjectUserParams extends CreateProjectUserParams {
-
-    /**
-     * Ids of the user's favorited products.
-     */
-    favorite_product_ids: string[];
-    
-    /**
-     * User's Financial details.
-     */
-    financial_details: FinancialDetails;
-
-}
-
-/**
- * Params to update a marketplace user
- */
-export interface UpdateMarketplaceProjectUserParams extends UpdateProjectUserParams {
-
-    /**
-     * Ids of Favorite Products to append to the `favorite_product_ids` array
-     */
-    append_favorite_product_ids?: string[];
-    
-    /**
-     * User's Financial details.
-     */
-    financial_details: FinancialDetails;
-
-    /**
-     * Ids of Favorite Products to remove from the `favorite_product_ids` array
-     */
-    remove_favorite_product_ids?: string[];
-
-}
-
-/**
- * Initial value for Marketplace user.
- */
-export const DEFAULT_MARKETPLACE_USER: MarketplaceProjectUser = {
-    address: {
-        address1: '',
-        address2: '',
-        city: '',
-        country_code: 'US',
-        zip: '',
-        state_code: ''
-    },
-    created_at: {
-        _nanoseconds: 0,
-        _seconds: 0
-    },
-    email: '',
-    favorite_product_ids: [],
-    financial_details: {
-        card: null,
-        iap_ids: [],
-    },
-    fcm_token: '',
-    id: '',
-    lat: DEFAULT_LATITUDE,
-    long: DEFAULT_LONGITUDE,
-    livemode: true,
-    metadata: {},
-    name: '',
-    object: 'user',
-    password: '',
-    password_hash: '',
-    password_salt: '',
-    phone: '',
-    project_id: '',
-    security_question: '',
-    security_answer: '',
-    security_answer_salt: '',
-    security_answer_hash: '',
-};
-
-/**
- * Request Data for for Marketplace App Initialization
- */
-export interface InitMarketplaceAppParams extends InitAppParams  {}
-
-
-/**
- * Server response body for Marketplace App Initialization
- */
-export interface InitMarketplaceAppResponseBody extends InitAppResponseBody {
-
-    /**
-     * App information. Critical for constructing the share url and review url 
-     * from the app id / package name.
-     */
-    app: App;
-    
     /**
      * Orders owned by this project user.
      */
@@ -6065,28 +6123,23 @@ export interface InitMarketplaceAppResponseBody extends InitAppResponseBody {
     /**
      * Project information. Critical for copyright and support email.
      */
-    project: MarketplaceProject;
+    project: ECommerceProject;
 
     /**
      * Minted project users. Key is ID
      */
     users: {
         
-        [key: string]: MarketplaceProjectUser
+        [key: string]: ECommerceProjectUser
         
     };
-    
-    /**
-     * Minted id of the new or returning project user
-     */
-    user_id: string;
 
 }
 
 /**
  * A promotional for an order
  */
-export interface Promo extends CreatePromoParams, Identifiable  {
+ export interface Promo extends CreatePromoParams, Identifiable  {
 
     /**
      * Object name
@@ -6253,6 +6306,1116 @@ export interface UpdatePromoParams {
  * Type of promotional
  */
  export type PromoType = 'store_credit'|'free_shipping'|'percentage';
+
+/**
+ * Marketplace Project supporting a creators and consumers
+ */
+ export interface MarketplaceProject extends CreateMarketplaceProjectParams, Project, ProjectInAppPurchases {
+
+    /**
+     * Map of IAPs.
+     * 
+     * Key is the `id` of the IAP
+     */
+    in_app_purchases: {
+
+        [key: string]: InAppPurchase;
+
+    };
+
+    /**
+     * Map of urls for this project.
+     */
+     urls: MarketplaceProjectUrlMapParams;
+
+}
+
+export const DEFAULT_MARKETPLACE_PROJECT: MarketplaceProject = {
+    app_ids: [],
+    asset_ids: [],
+    copyright: '',
+    created_at: null,
+    creator_name_singular: 'business',
+    creator_name_plural: 'businesses',
+    consumer_name_singular: 'user',
+    consumer_name_plural: 'users',
+    id: '',
+    in_app_purchases: {},
+    livemode: true,
+    object: 'project',
+    logo_asset_id: '',
+    name: '',
+    template_id: '',
+    organization_id: '',
+    project_type: 'marketplace',
+    support_email: '',
+    urls: {
+        facebook: '',
+        homepage: '',
+        instagram: '',
+        privacy: '',
+        snapchat: '',
+        terms: '',
+        tiktok: '',
+        twitter: ''
+    }
+};
+
+export interface MarketplaceProjectUrlMapParams extends CreateMarketplaceProjectUrlMapParams {}
+
+/**
+ * Params to create a Marketplace Project.
+ */
+export interface CreateMarketplaceProjectParams extends CreateProjectParams, CreateProjectInAppPurchasesParams {
+
+    /**
+     * How to refer to a creator in this marketplace
+     * 
+     * Example: 'host', 'business', 'organizer'
+     */
+    creator_name_singular: string;
+    
+    /**
+     * How to refer to creators in this marketplace
+     * 
+     * Example: 'hosts', 'businesses', 'organizers'
+     */
+     creator_name_plural: string;
+    
+     /**
+      * How to refer to a consumer in this marketplace
+      * 
+      * Example: 'guest', 'member', 'user'
+      */
+     consumer_name_singular: string;
+     
+     /**
+      * How to refer to consumers in this marketplace
+      * 
+      * Example: 'guests', 'members', 'users'
+      */
+     consumer_name_plural: string;
+
+    /**
+     * Map of urls for this project.
+     */
+    urls: CreateMarketplaceProjectUrlMapParams;
+    
+}
+
+export interface CreateMarketplaceProjectUrlMapParams extends CreateProjectUrlMapParams {}
+
+export interface UpdateMarketplaceProjectUrlMapParams extends UpdateProjectUrlMapParams {}
+
+
+
+/**
+ * Params to update a Marketplace Project
+ */
+export interface UpdateMarketplaceProjectParams extends UpdateProjectParams, UpdateProjectInAppPurchaseParams {
+
+    /**
+     * How to refer to a creator in this marketplace
+     * 
+     * Example: 'host', 'business', 'organizer'
+     */
+    creator_name_singular?: string;
+    
+    /**
+     * How to refer to creators in this marketplace
+     * 
+     * Example: 'hosts', 'businesses', 'organizers'
+     */
+    creator_name_plural?: string;
+    
+    /**
+     * How to refer to a consumer in this marketplace
+     * 
+     * Example: 'guest', 'member', 'user'
+     */
+    consumer_name_singular?: string;
+    
+    /**
+     * How to refer to consumers in this marketplace
+     * 
+     * Example: 'guests', 'members', 'users'
+     */
+    consumer_name_plural?: string;
+
+}
+
+/**
+ * Map of IAPs
+ */
+ export interface ProjectInAppPurchases {
+    
+    /**
+     * Map of IAPs
+     * 
+     * Key is the `id` of the IAP
+     */
+    in_app_purchases: {
+        
+        [key: string]: InAppPurchase;
+        
+    };
+    
+}
+
+/**
+ * Params to create map of IAPs
+ */
+export interface CreateProjectInAppPurchasesParams {
+    
+    /**
+     * Map of IAPs
+     * 
+     * Key is the `id` of the IAP
+     */
+    in_app_purchases: {
+        
+        [key: string]: CreateInAppPurchaseParams;
+        
+    };
+    
+}
+
+/**
+ * Params to update map of IAPs
+ */
+export interface UpdateProjectInAppPurchaseParams {
+    
+    /**
+     * Map of IAPs
+     * 
+     * Key is the `id` of the IAP
+     */
+    in_app_purchases: {
+    
+        [key: string]: UpdateInAppPurchaseParams;
+    
+    };
+
+}
+
+/**
+ * In App Purchase
+ */
+export interface InAppPurchase extends CreateInAppPurchaseParams, Identifiable {
+
+    /**
+     * Object name
+     */
+    object: 'in_app_purchase';
+    
+}
+
+/**
+ * Params to create an IAP
+ */
+export interface CreateInAppPurchaseParams extends UpdateInAppPurchaseParams {
+    
+    /**
+     * Whether or not this IAP is available for consumption
+     */
+    active: boolean;
+    
+    /**
+     * Type of IAP
+     */
+    iap_type: InAppPurchaseType;
+    
+    /**
+     * Platform
+     */
+    platform: PlatformType;
+    
+    /**
+     * Cost of IAP
+     */
+    price_cents: number;
+    
+    /**
+     * Id of the product on App Store or Play Store
+     */
+    product_id: string;
+
+    /**
+     * Renewal period
+     */
+    renews: 'monthly'|BillingInterval|null;
+    
+}
+
+/**
+ * Type of IAP
+ */
+export type InAppPurchaseType = 'consumable'|'nonconsumable';
+
+/**
+ * Params to update an IAP
+ */
+export interface UpdateInAppPurchaseParams {
+    
+    /**
+     * Whether or not this IAP is available for consumption
+     */
+    active?: boolean;
+
+}
+
+/**
+ * User for an Marketplace App.
+ */
+export interface MarketplaceProjectUser extends CreateMarketplaceProjectUserParams, ProjectUser {}
+
+/**
+ * Initial value for Marketplace user.
+ */
+ export const DEFAULT_MARKETPLACE_USER: MarketplaceProjectUser = {
+    address: {
+        address1: '',
+        address2: '',
+        city: '',
+        country_code: 'US',
+        zip: '',
+        state_code: ''
+    },
+    avatar_asset_id: '',
+    bio: '',
+    blocked_member_ids: [],
+	cover_asset_id: '',
+    created_at: {
+        _nanoseconds: 0,
+        _seconds: 0
+    },
+    email: '',
+    financial_details: {
+        card: null,
+        in_app_purchase_receipts: {},
+    },
+    fcm_token: '',
+    id: '',
+    lat: DEFAULT_LATITUDE,
+    long: DEFAULT_LONGITUDE, 
+    livemode: true,
+    metadata: {},
+    name: '',
+    object: 'user',
+    role: 'consumer',
+    password: '',
+    password_hash: '',
+    password_salt: '',
+    phone: '',
+    project_id: '',
+    security_question: '',
+    security_answer: '',
+    security_answer_salt: '',
+    security_answer_hash: '',
+    username: ''
+};
+
+/**
+ * Params to create a marketplace user
+ */
+export interface CreateMarketplaceProjectUserParams extends 
+ContainsAvatar, ContainsCover,
+ContainsSocial, CreateProjectUserParams {
+    
+    /**
+     * User's Financial details.
+     * 
+     * Typically, Marketplace users utilize IAPs.
+     */
+    financial_details: FinancialDetails;
+
+    /**
+     * Role of user
+     */
+    role: MarketplaceProjectUserRole;
+    
+}
+
+/**
+ * Props for avatars
+ */
+export interface ContainsAvatar {
+
+    /**
+     * Id of the remote asset for the avatar.
+     */
+    avatar_asset_id: string;
+
+}
+
+/**
+ * Params to update an avatar image
+ */
+export interface UpdateContainsAvatarParams {
+
+    /**
+     * Id of the remote asset for the avatar
+     */
+    avatar_asset_id?: string;
+
+}
+
+/**
+ * Props for covers
+ */
+export interface ContainsCover {
+
+    /**
+     * Id of the remote asset for the cover
+     */
+    cover_asset_id: string;
+
+}
+
+/**
+ * Params to update a cover image
+ */
+ export interface UpdateContainsCoverParams {
+
+    /**
+     * Id of the remote asset for the cover
+     */
+    cover_asset_id?: string;
+
+}
+
+/**
+ * Height dimensions of cover image
+ */
+export const COVER_IMAGE_HEIGHT = 352;
+
+/**
+ * Width dimensions of cover image
+ */
+export const COVER_IMAGE_WIDTH = 940;
+
+/**
+ * Social info
+ */
+export interface ContainsSocial {
+
+    /**
+     * Bio
+     */
+    bio: string;
+
+    /**
+     * Ids of the users blocked
+     */
+    blocked_member_ids: string[];
+    
+    /**
+     * Username
+     */
+    username: string;
+    
+}
+
+/**
+ * Params to update social props
+ */
+export interface UpdateContainsSocialParams {
+    
+    /**
+     * Ids of users to append to the `blocked_member_ids` array
+     */
+    append_blocked_member_ids?: string[];
+
+    /**
+     * Bio
+     */
+    bio?: string;
+    
+    /**
+     * Ids of users to remove from the `blocked_member_ids` array
+     */
+    remove_blocked_member_ids?: string[];
+
+    /**
+     * Username
+     */
+    username?: string;
+}
+
+/**
+ * Role of user
+ */
+export type MarketplaceProjectUserRole = 'consumer'|'creator';
+
+/**
+ * Params to update a marketplace user
+ */
+export interface UpdateMarketplaceProjectUserParams extends 
+UpdateContainsAvatarParams, UpdateContainsCoverParams,
+UpdateContainsSocialParams, UpdateProjectUserParams {
+    
+    /**
+     * User's Financial details.
+     */
+    financial_details?: UpdateFinancialDetailsParams;
+
+}
+
+/**
+ * Post
+ */
+export interface Post extends CreatePostParams, Identifiable {
+
+    /**
+     * Object name
+     */
+    object: 'post';
+
+}
+
+/**
+ * Params to create a post
+ */
+export interface CreatePostParams extends 
+CreateMappableParams, Publishable, UpdatePostParams {
+
+    /**
+     * Latitude
+     */
+    lat: number;
+
+     /**
+     * Longitude
+     */
+    long: number;
+
+    /**
+     * Type of post
+     */
+    post_type: PostType;
+
+    /**
+     * Status of post
+     */
+    status: PostStatus;
+
+    /**
+     * Id of the thread this post belongs to,
+     * or, if public, an empty string
+     */
+    thread_id: string;
+    
+}
+
+/**
+ * Props on publishable object
+ */
+export interface Publishable {
+
+    /**
+     * Ids of the user who created the post
+     */
+    creator_id: string;
+    
+}
+
+/**
+ * Status
+ */
+export type PostStatus = 'draft'|'deleted'|'live';
+
+/**
+ * Type of post
+ */
+export type PostType = 
+'event'|
+'listing'|
+'message'|
+'reaction'|
+'status_update';
+
+/**
+ * Params to update a Post
+ */
+export interface UpdatePostParams extends UpdateMappableParams {
+
+    /**
+     * Status of post
+     */
+    status?: PostStatus;
+
+}
+
+/**
+ * Event
+ */
+export interface EventPost extends Post, CreateEventPostParams {
+    
+    /**
+     * Type of post
+     */
+    post_type: 'event';
+
+}
+
+/**
+ * Default event
+ */
+export const DEFAULT_EVENT_POST: EventPost = {
+    address: '',
+    admin_ids: [],
+    attending_member_ids: [],
+    bio: '',
+    blocked_member_ids: [],
+    cover_asset_id: '',
+    created_at: null,
+    creator_id: '',
+    id: '',
+    lat: DEFAULT_LATITUDE,
+    livemode: true,
+    long: DEFAULT_LONGITUDE,
+    object: 'post',
+    post_type: 'event',
+    status: 'live',
+    thread_id: '',
+    title: '',
+    username: ''
+};
+
+/**
+ * Params to create an Event
+ */
+export interface CreateEventPostParams extends 
+ContainsAddress, ContainsCover,
+ContainsSocial, CreatePostParams, 
+Manageable, Titled {
+
+    /**
+     * Ids of the members attending the event
+     */
+    attending_member_ids: string[];
+    
+}
+
+/**
+ * Address properties
+ */
+export interface ContainsAddress {
+
+    /**
+     * Address of the event or, if no physical address, a description
+     * such as a Zoom room join link
+     */
+    address: Address|string;
+
+}
+
+/**
+ * Manageable object
+ */
+export interface Manageable {
+
+    /**
+     * Ids of the admins in the thread
+     */
+    admin_ids: string[];
+
+}
+
+/**
+ * Titled object
+ */
+ export interface Titled {
+    
+    /**
+     * Title of the object
+     */
+    title: string;
+
+}
+
+/**
+ * Params to update an Event
+ */
+export interface UpdateEventPostParams extends 
+UpdateContainsAddressParams,
+UpdateContainsCoverParams,
+UpdateContainsSocialParams, UpdateManageableParams,
+UpdatePostParams, UpdateTitledParams {
+    
+    /**
+     * Ids to append to the `attending_member_ids` array
+     */
+    append_attending_member_ids?: string[];
+    
+    /**
+     * Ids to remove from the `attending_member_ids` array
+     */
+    remove_attending_member_ids?: string[];
+
+}
+
+export interface UpdateContainsAddressParams {
+
+    /**
+     * Physical address or, if no physical address, a description
+     * such as a Zoom room join link
+     */
+    address?: Address|string;
+
+}
+
+/**
+ * Params to update a Manageable object
+ */
+export interface UpdateManageableParams {
+
+    /**
+     * Ids to append to the `admin_ids` array
+     */
+    append_admin_ids?: string[];
+
+    /**
+     * Ids to remove from the `admin_ids` array
+     */
+    remove_admin_ids?: string[];
+
+}
+
+/**
+ * Params to update a Titled object
+ */
+export interface UpdateTitledParams {
+
+    /**
+     * Title of object
+     */
+    title?: string;
+
+}
+
+/**
+ * Listing
+ */
+ export interface ListingPost extends Post, CreateListingPostParams {
+    
+    /**
+     * Type of post
+     */
+    post_type: 'listing';
+
+}
+
+/**
+ * Default listing
+ */
+export const DEFAULT_LISTING_POST: ListingPost = {
+    address: '',
+    admin_ids: [],
+    asset_ids: [],
+    bio: '',
+    cover_asset_id: '',
+    created_at: null,
+    creator_id: '',
+    blocked_member_ids: [],
+    id: '',
+    title: '',
+    lat: DEFAULT_LATITUDE,
+    livemode: true,
+    long: DEFAULT_LONGITUDE,
+    object: 'post',
+    post_type: 'listing',
+    status: 'live',
+    thread_id: '',
+    username: ''
+};
+
+/**
+ * Params to create a listing
+ */
+export interface CreateListingPostParams extends 
+ContainsAddress, ContainsCover,
+ContainsRemoteAssets, ContainsSocial,
+CreatePostParams, Manageable, Titled {}
+
+/**
+ * Params to update a listing
+ */
+export interface UpdateListingPostParams extends
+UpdateContainsAddressParams, UpdateContainsRemoteAssetsParams,
+UpdateContainsSocialParams, UpdateManageableParams,
+UpdatePostParams, UpdateTitledParams {}
+
+/**
+ * Message
+ */
+ export interface MessagePost extends Post, CreateMessagePostParams {
+    
+    /**
+     * Type of post
+     */
+    post_type: 'message';
+
+}
+
+/**
+ * Default message
+ */
+export const DEFAULT_MESSAGE_POST: MessagePost = {
+    asset_ids: [],
+    body: '',
+    created_at: null,
+    creator_id: '',
+    id: '',
+    lat: DEFAULT_LATITUDE,
+    livemode: true,
+    long: DEFAULT_LONGITUDE,
+    object: 'post',
+    post_type: 'message',
+    status: 'live',
+    thread_id: ''
+};
+
+/**
+ * Params to create a message
+ */
+export interface CreateMessagePostParams extends 
+Bodied, ContainsRemoteAssets, CreatePostParams {}
+
+/**
+ * Body properties
+ */
+ export interface Bodied {
+
+    /**
+     * Body
+     */
+    body: string;
+
+}
+
+/**
+ * Params to update a message
+ */
+export interface UpdateMessagePostParams extends
+UpdateBodiedParams, UpdateContainsRemoteAssetsParams,
+UpdatePostParams {}
+
+/**
+ * Params to update body
+ */
+ export interface UpdateBodiedParams {
+
+    /**
+     * Body
+     */
+    body?: string;
+
+}
+
+/**
+ * Reaction
+ */
+ export interface ReactionPost extends
+ CreateReactionPostParams, Post {
+    
+    /**
+     * Type of post
+     */
+    post_type: 'reaction';
+
+}
+
+/**
+ * Default Reaction
+ */
+export const DEFAULT_REACTION_POST: ReactionPost = {
+    asset_ids: [],
+    body: '',
+    reaction_type: 'comment',
+    created_at: null,
+    creator_id: '',
+    id: '',
+    lat: DEFAULT_LATITUDE,
+    livemode: true,
+    long: DEFAULT_LONGITUDE,
+    object: 'post',
+    original_post_id: '',
+    post_type: 'reaction',
+    status: 'live',
+    thread_id: ''
+};
+
+/**
+ * Params to create a reaction
+ */
+export interface CreateReactionPostParams extends 
+Bodied, ContainsRemoteAssets, CreatePostParams {
+
+    /**
+     * Type of reaction
+     */
+    reaction_type: ReactionType;
+
+    /**
+     * Id of the original post being reactioned on
+     */
+    original_post_id: string;
+
+}
+
+/**
+ * Type of reaction
+ */
+export type ReactionType = 
+'anger'|
+'attending_event'|
+'clap'|
+'comment'|
+'laugh'|
+'like'|
+'love'|
+'not_attending_event';
+
+/**
+ * Params to update a reaction
+ */
+export interface UpdateReactionPostParams extends
+UpdateBodiedParams, UpdateContainsRemoteAssetsParams,
+UpdatePostParams {
+
+    /**
+     * Type of reaction
+     */
+    reaction_type?: ReactionType;
+
+}
+
+/**
+ * Status Update
+ */
+ export interface StatusUpdatePost extends
+ CreateStatusUpdatePostParams, Post {
+    
+    /**
+     * Type of post
+     */
+    post_type: 'status_update';
+
+}
+
+/**
+ * Default Status Update
+ */
+export const DEFAULT_STATUS_UPDATE_POST: StatusUpdatePost = {
+    asset_ids: [],
+    body: '',
+    created_at: null,
+    creator_id: '',
+    id: '',
+    lat: DEFAULT_LATITUDE,
+    livemode: true,
+    long: DEFAULT_LONGITUDE,
+    object: 'post',
+    post_type: 'status_update',
+    status: 'live',
+    thread_id: ''
+};
+
+/**
+ * Params to create a status_update
+ */
+export interface CreateStatusUpdatePostParams extends 
+Bodied, ContainsRemoteAssets, CreatePostParams {}
+
+/**
+ * Params to update a status_update
+ */
+export interface UpdateStatusUpdatePostParams extends
+UpdateBodiedParams, UpdateContainsRemoteAssetsParams,
+UpdatePostParams {}
+
+
+/**
+ * Thread of users
+ */
+export interface Thread extends CreateThreadParams, Identifiable {
+
+    /**
+      * Timestamp of the latest post
+      */
+    latest_post_at: Timestamped;
+     
+     /**
+      * Caption of the latest post
+      */
+    latest_post_body: string;
+
+    /**
+     * Object name
+     */
+    object: 'thread';
+
+}
+
+export const DEFAULT_THREAD: Thread = {
+    admin_ids: [],
+    avatar_asset_id: '',
+    bio: '',
+    blocked_member_ids: [],
+    created_at: null,
+    creator_id: '',
+    cover_asset_id: '',
+    id: '',
+    latest_post_at: null,
+    latest_post_body: '',
+    lat: DEFAULT_LATITUDE,
+    livemode: true,
+    long: DEFAULT_LONGITUDE,
+    member_ids: [],
+    object: 'thread',
+    pending_member_ids: [],
+    thread_type: 'direct_message',
+    title: '',
+    username: ''
+};
+
+/**
+ * Params to create a thread
+ */
+export interface CreateThreadParams extends 
+ContainsAvatar, ContainsCover,
+ContainsSocial, CreateMappableParams, 
+Manageable, Publishable, Titled {
+
+    /**
+     * Latitude
+     */
+    lat: number;
+
+     /**
+     * Longitude
+     */
+    long: number;
+
+    /**
+     * Ids of the members in the thread.
+     * 
+     * @Important This array is exhaustive i.e. `member_ids` is 
+     * a superset of both `pending_member_ids` and `admin_ids`
+     */
+    member_ids: string[];
+    
+    /**
+     * Ids of the members invited to the thread
+     */
+    pending_member_ids: string[];
+    
+    /**
+     * Type of thread
+     */
+    thread_type: ThreadType;
+
+}
+
+/**
+ * Type of thread
+ */
+export type ThreadType = 'direct_message'|'group';
+
+/**
+ * Params to update a thread
+ */
+export interface UpdateThreadParams
+extends UpdateContainsAvatarParams, UpdateContainsCoverParams,
+UpdateContainsSocialParams, UpdateManageableParams,
+UpdateMappableParams, UpdateTitledParams {
+
+    /**
+     * Ids to append to the `member_ids` array
+     */
+    append_member_ids?: string[];
+
+    /**
+     * Ids to append to the `pending_member_ids` array
+     */
+    append_pending_member_ids?: string[];
+
+    /**
+     * Ids to remove from the `member_ids` array
+     */
+    remove_member_ids?: string[];
+
+     /**
+      * Ids to remove from the `pending_member_ids` array
+      */
+    remove_pending_member_ids?: string[];
+
+}
+
+/**
+ * Request Data for for Marketplace App Initialization
+ */
+ export interface InitMarketplaceAppParams extends InitAppParams  {}
+
+ /**
+  * Server response body for Marketplace App Initialization
+  */
+ export interface InitMarketplaceAppResponseBody extends InitAppResponseBody {
+
+     /**
+      * Project information. Critical for copyright and support email.
+      */
+     project: MarketplaceProject;
+     
+     /**
+      * Map of Posts
+      * 
+      * Key is the `id` of the Post 
+      */
+     posts: {
+         
+         [key: string]: Post;
+     
+     };
+
+     /**
+      * Map of Remote Assets
+      * 
+      * Key is the `id` of the RemoteAsset
+     */
+    remote_assets: {
+    
+        [key: string]: RemoteAsset;
+    
+    };
+ 
+     /**
+      * Map of Threads
+      * 
+      * Key is the `id` of the Thread
+      */
+     threads: {
+         
+         [key: string]: Thread;
+         
+     };
+ 
+     /**
+      * Minted project users. Key is ID
+      */
+     users: {
+         
+         [key: string]: MarketplaceProjectUser;
+         
+     };
+     
+     /**
+      * Minted id of the new or returning project user
+      */
+     user_id: string;
+ 
+ }
 
  /**
  * 
