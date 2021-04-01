@@ -5713,8 +5713,7 @@ export type APIRequestEndpoint =
 'v1/initAppState/cloud' |
 'v1/initAppState/ecommerce' |
 'v1/initAppState/marketplace' |
-'v1/projects/ecommerce' |
-'v1/projects/marketplace' |
+'v1/projects' |
 'v1/projects/:projectId' |
 'v1/projects/:projectId/apps' |
 'v1/projects/:projectId/apps/:appId' |
