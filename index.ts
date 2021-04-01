@@ -4397,11 +4397,11 @@ export interface CreateProjectTemplateParams extends UpdateProjectTemplateParams
  * Type of project
  */
 export type ProjectType = 
-'e-commerce'|
-'developer-tool'|
+'ecommerce'|
+'developer_tool'|
 'marketplace';
-// 'social-network'|
-// 'streaming-service'|
+// 'social_network'|
+// 'streaming_service'|
 // 'media';
 
 export interface UpdateProjectTemplateParams extends UpdateVersionHistoryParams {
@@ -4555,7 +4555,7 @@ export const DEFAULT_PROJECT: Project = {
     organization_id: '',
     support_email: '',
     template_id: '',
-    project_type: 'developer-tool',
+    project_type: 'developer_tool',
     urls: {
         facebook: '',
         terms: '',
@@ -5713,7 +5713,7 @@ export type APIRequestEndpoint =
 'v1/initAppState/cloud' |
 'v1/initAppState/ecommerce' |
 'v1/initAppState/marketplace' |
-'v1/projects/e-commerce' |
+'v1/projects/ecommerce' |
 'v1/projects/marketplace' |
 'v1/projects/:projectId' |
 'v1/projects/:projectId/apps' |
@@ -5938,7 +5938,7 @@ export const DEFAULT_ECOMMERCE_PROJECT: ECommerceProject = {
     name: '',
     template_id: '',
     organization_id: '',
-    project_type: 'e-commerce',
+    project_type: 'ecommerce',
     support_email: '',
     urls: {
         facebook: '',
