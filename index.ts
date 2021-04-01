@@ -4356,7 +4356,7 @@ export interface CreateProjectTemplateParams extends UpdateProjectTemplateParams
     /**
      * Branded cover photo of the template
      */
-    cover_photo: RemoteAsset;
+    cover_photo: RemoteAsset|null;
 
     /**
      * Description of template
@@ -4412,7 +4412,7 @@ export interface UpdateProjectTemplateParams extends UpdateVersionHistoryParams 
     /**
      * Branded cover photo of the template
      */
-    cover_photo?: RemoteAsset;
+    cover_photo?: RemoteAsset|null;
 
     /**
      * Description of template
@@ -6550,12 +6550,20 @@ export interface Interest extends CreateInterestParams, Identifiable {
 
 }
 
+/**
+ * Params to create interests
+ */
 export interface CreateInterestParams {
 
     /**
      * Community status
      */
     community_status: CommunityStatus;
+
+    /**
+     * Display order for list
+     */
+    index: number;
 
      /**
       * Name
@@ -6564,12 +6572,20 @@ export interface CreateInterestParams {
 
 }
 
+/**
+ * Params to update interest
+ */
 export interface UpdateInterestParams {
     
     /**
      * Community status
      */
     community_status?: CommunityStatus;
+
+    /**
+     * Display order for users to select.
+     */
+    index?: number;
 
     /**
      * Name
