@@ -5710,7 +5710,7 @@ export type APIRequestEndpoint =
 'v1/customers/:stripeCustomerId/subscriptions/:subscriptionId/:stripeCustomerType'|
 'v1/customers/:stripeCustomerId/verifyBankAccount/:stripeCustomerType' |
 'v1/entities/:entityId' |
-'v1/initAppState/cloud' |
+'v1/initAppState/developerTool' |
 'v1/initAppState/ecommerce' |
 'v1/initAppState/marketplace' |
 'v1/projects/ecommerce' |
