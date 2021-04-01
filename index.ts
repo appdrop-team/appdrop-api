@@ -6366,6 +6366,7 @@ export interface UpdatePromoParams {
 
 export const DEFAULT_MARKETPLACE_PROJECT: MarketplaceProject = {
     app_ids: [],
+    api_base_url: '',
     asset_ids: [],
     copyright: '',
     created_at: null,
@@ -6373,6 +6374,7 @@ export const DEFAULT_MARKETPLACE_PROJECT: MarketplaceProject = {
     creator_name_plural: 'businesses',
     consumer_name_singular: 'user',
     consumer_name_plural: 'users',
+    google_web_client_id: '',
     id: '',
     in_app_purchases: {},
     interests: {},
@@ -6408,6 +6410,13 @@ CreateProjectInterestsParams
 {
 
     /**
+     * Base API for FCM fetch. No trailing slash.
+     * 
+     * Example: `https://api.example.co`
+     */
+    api_base_url: string;
+
+    /**
      * How to refer to a creator in this marketplace
      * 
      * Example: 'host', 'business', 'organizer'
@@ -6419,21 +6428,28 @@ CreateProjectInterestsParams
      * 
      * Example: 'hosts', 'businesses', 'organizers'
      */
-     creator_name_plural: string;
+    creator_name_plural: string;
     
      /**
       * How to refer to a consumer in this marketplace
       * 
       * Example: 'guest', 'member', 'user'
       */
-     consumer_name_singular: string;
+    consumer_name_singular: string;
      
      /**
       * How to refer to consumers in this marketplace
       * 
       * Example: 'guests', 'members', 'users'
       */
-     consumer_name_plural: string;
+    consumer_name_plural: string;
+
+    /**
+     * Google client id.
+     * 
+     * Used for Continue with Google.
+     */
+    google_web_client_id: string;
 
     /**
      * Map of urls for this project.
@@ -6454,6 +6470,13 @@ export interface UpdateMarketplaceProjectUrlMapParams extends UpdateProjectUrlMa
 export interface UpdateMarketplaceProjectParams extends 
 UpdateProjectParams, UpdateProjectInAppPurchaseParams,
 UpdateProjectInterestsParams {
+
+    /**
+     * Base API for FCM fetch. No trailing slash.
+     * 
+     * Example: `https://api.example.co`
+     */
+    api_base_url?: string;
 
     /**
      * How to refer to a creator in this marketplace
@@ -6482,6 +6505,13 @@ UpdateProjectInterestsParams {
      * Example: 'guests', 'members', 'users'
      */
     consumer_name_plural?: string;
+
+    /**
+     * Google client id.
+     * 
+     * Used for Continue with Google.
+     */
+    google_web_client_id?: string;
 
 }
 
@@ -7601,7 +7631,7 @@ UpdateMappableParams, UpdateTitledParams {
       */
      posts: {
          
-         [key: string]: Post;
+        [key: string]: Post;
      
      };
 
