@@ -6797,6 +6797,11 @@ UpdateContainsSocialParams, UpdateProjectUserParams {
      */
     financial_details?: UpdateFinancialDetailsParams;
 
+    /**
+     * Role of user
+     */
+    role?: MarketplaceProjectUserRole;
+
 }
 
 /**
