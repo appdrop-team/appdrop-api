@@ -18,7 +18,7 @@ export interface RemoteAsset extends CreateRemoteAssetParams, Identifiable {
      * Object name
      */
     object: 'remote_asset';
-    
+
     /**
      * Last update timestamp.
      */
@@ -50,13 +50,13 @@ export const DEFAULT_REMOTE_ASSET: RemoteAsset = {
 /**
  * Params to create a remote asset
  */
-export interface CreateRemoteAssetParams extends 
-ProjectScoped, Publishable, UpdateRemoteAssetParams {
-    
+export interface CreateRemoteAssetParams extends
+    ProjectScoped, Publishable, UpdateRemoteAssetParams {
+
     /**
      * Type of asset
      */
-	asset_type: AssetType;
+    asset_type: AssetType;
 
     /**
      * Index of the asset in a collage
@@ -67,17 +67,17 @@ ProjectScoped, Publishable, UpdateRemoteAssetParams {
      * Mime
      */
     mime: MimeType;
-	
+
     /**
      * Height in px.
      */
     native_asset_height: number;
-	
+
     /**
      * Width in px.
      */
     native_asset_width: number;
-	
+
     /**
      * Asset download url
      */
@@ -106,25 +106,25 @@ export interface ProjectScoped {
      * Id of the Appdrop project
      */
     project_id: string;
-     
+
 }
 
 /**
  * Type of asset
  */
- export type AssetType = 'avatar'|'cover'|'logo'|'post';
+export type AssetType = 'avatar' | 'cover' | 'logo' | 'post';
 
- /**
-  * Mime
-  */
- export type MimeType = 
- 'application/zip'|
- 'audio/mpeg'|
- 'image/jpg'|
- 'image/png'|
- 'text/html'|
- 'text/plain'|
- 'video/mp4';
+/**
+ * Mime
+ */
+export type MimeType =
+    'application/zip' |
+    'audio/mpeg' |
+    'image/jpg' |
+    'image/png' |
+    'text/html' |
+    'text/plain' |
+    'video/mp4';
 
 /**
  * Default val for thumbnail url
@@ -134,7 +134,7 @@ export const REMOTE_ASSET_THUMBNAIL_URL_PENDING = 'REMOTE_ASSET_THUMBNAIL_URL_PE
 /**
  * Params to update a remote asset 
  */
- export interface UpdateRemoteAssetParams {
+export interface UpdateRemoteAssetParams {
 
     /**
      * Index of the asset in a collage
@@ -146,8 +146,8 @@ export const REMOTE_ASSET_THUMBNAIL_URL_PENDING = 'REMOTE_ASSET_THUMBNAIL_URL_PE
 /**
  * Remote asset properties
  */
- export interface ContainsRemoteAssets {
-    
+export interface ContainsRemoteAssets {
+
     /**
      * Ordered array of remote asset ids
      */
@@ -164,7 +164,7 @@ export interface UpdateContainsRemoteAssetsParams {
      * Ids to append to the `asset_ids` array
      */
     append_asset_ids?: string[];
-    
+
     /**
      * Ids to remove from the `asset_ids` array
      */
@@ -173,7 +173,7 @@ export interface UpdateContainsRemoteAssetsParams {
 }
 
 export const DEFAULT_MAX_NUM_ASSETS: {
-    [key: string]: number|null;
+    [key: string]: number | null;
 } = {
     'post_message': 8,
     'post_listing': 10,
@@ -233,7 +233,7 @@ export interface CreateUserParams extends CreateMappableParams, UpdateUserParams
      * The user's fcm token for push notifications.
      */
     fcm_token: string;
-    
+
     /**
      * Id of the user.
      */
@@ -242,11 +242,11 @@ export interface CreateUserParams extends CreateMappableParams, UpdateUserParams
     /**
      * Latitude
      */
-     lat: number;
+    lat: number;
 
-     /**
-     * Longitude
-     */
+    /**
+    * Longitude
+    */
     long: number;
 
     /**
@@ -274,7 +274,7 @@ export interface CreateUserParams extends CreateMappableParams, UpdateUserParams
      * The user's password encrypted or an empty string.
      */
     password_hash: string;
-    
+
     /**
      * The user's password salt or an empty string.
      */
@@ -294,23 +294,23 @@ export interface CreateUserParams extends CreateMappableParams, UpdateUserParams
      * Security answer encrypted for password resets encrypted or an empty string.
      */
     security_answer_hash: string;
-    
+
     /**
      * Security answer salt for password resets or an empty string.
      */
     security_answer_salt: string;
-    
+
     /**
      * Security question for password resets or an empty string.
      */
     security_question: string;
-    
+
 }
 
 /**
  * Properties for objects that can interact with a map.
  */
-export interface Mappable extends CreateMappableParams {}
+export interface Mappable extends CreateMappableParams { }
 
 /**
  * Params to create a mappable object
@@ -322,9 +322,9 @@ export interface CreateMappableParams {
      */
     lat: number;
 
-     /**
-     * Longitude
-     */
+    /**
+    * Longitude
+    */
     long: number;
 
 }
@@ -397,7 +397,7 @@ export interface UpdateUserParams extends UpdateMappableParams {
      * Security answer for password resets encrypted or an empty string.
      */
     security_answer_hash?: string;
-    
+
     /**
      * Security question for password resets or an empty string.
      */
@@ -410,12 +410,12 @@ export interface UpdateMappableParams {
     /**
      * Latitude
      */
-     lat?: number;
+    lat?: number;
 
-     /**
-      * Longitude
-      */
-     long?: number;
+    /**
+     * Longitude
+     */
+    long?: number;
 }
 
 /**
@@ -445,7 +445,7 @@ export interface AuthenticateUserParams {
 /**
  * Auth operations
  */
-export type AuthenticationType = 'sign_in'|'sign_up'|'firebase_auth';
+export type AuthenticationType = 'sign_in' | 'sign_up' | 'firebase_auth';
 export const FIREBASE_EMAIL_AUTH = 'FIREBASE_EMAIL_AUTH';
 export const FIREBASE_APPLE_AUTH = 'FIREBASE_APPLE_AUTH';
 export const FIREBASE_GOOGLE_AUTH = 'FIREBASE_GOOGLE_AUTH';
@@ -498,7 +498,7 @@ export interface Address {
      * Address line 1
      */
     address1: string;
-    
+
     /**
      * Address line 2
      */
@@ -526,97 +526,97 @@ export interface Address {
 
 }
 
-export type StateCodeUSA = 
-'AL'|'AK'|'AZ'|'AR'|'CA'|'CO'|'CT'|'DC'|'DE'|'FL'|'GA'|'HI'|'ID'|'IL'|'IN'|
-'IA'|'KS'|'KY'|'LA'|'ME'|'MD'|'MA'|'MI'|'MN'|'MS'|'MO'|'MT'|'NE'|'NV'|
-'NH'|'NJ'|'NM'|'NY'|'NC'|'ND'|'OH'|'OK'|'OR'|'PA'|'RI'|'SC'|'SD'|'TN'|
-'TX'|'UT'|'VT'|'VA'|'WA'|'WV'|'WI'|'WY';
+export type StateCodeUSA =
+    'AL' | 'AK' | 'AZ' | 'AR' | 'CA' | 'CO' | 'CT' | 'DC' | 'DE' | 'FL' | 'GA' | 'HI' | 'ID' | 'IL' | 'IN' |
+    'IA' | 'KS' | 'KY' | 'LA' | 'ME' | 'MD' | 'MA' | 'MI' | 'MN' | 'MS' | 'MO' | 'MT' | 'NE' | 'NV' |
+    'NH' | 'NJ' | 'NM' | 'NY' | 'NC' | 'ND' | 'OH' | 'OK' | 'OR' | 'PA' | 'RI' | 'SC' | 'SD' | 'TN' |
+    'TX' | 'UT' | 'VT' | 'VA' | 'WA' | 'WV' | 'WI' | 'WY';
 export const STATE_CODE_USA_ARR = [
-'AL','AK','AZ','AR','CA','CO','CT','DC','DE','FL','GA','HI','ID','IL','IN',
-'IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV',
-'NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN',
-'TX','UT','VT','VA','WA','WV','WI','WY'
+    'AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN',
+    'IA', 'KS', 'KY', 'LA', 'ME', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV',
+    'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN',
+    'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY'
 ];
 export const STATE_CODE_USA_MAP: {
     [key in StateCodeUSA]: string
-}  = {
-    'AL':'Alabama','AK':'Alaska','AZ':'Arizona','AR':'Arkansas','CA':'California',
-    'CO':'Colorado','CT':'Connecticut','DC':'District of Columbia', 'DE':'Delaware','FL':'Florida','GA':'Georgia',
-    'HI':'Hawaii','ID':'Idaho','IL':'Illinois','IN':'Indiana','IA':'Iowa','KS':'Kansas',
-    'KY':'Kentucky','LA':'Louisiana','ME':'Maine','MD':'Maryland','MA':'Massachusetts',
-    'MI':'Michigan','MN':'Minnesota','MS':'Mississippi','MO':'Missouri','MT':'Montana',
-    'NE':'Nebraska','NV':'Nevada','NH':'New Hampshire','NJ':'New Jersey','NM':'New Mexico',
-    'NY':'New York','NC':'North Carolina','ND':'North Dakota','OH':'Ohio','OK':'Oklahoma',
-    'OR':'Oregon','PA':'Pennsylvania','RI':'Rhode Island','SC':'South Carolina',
-    'SD':'South Dakota','TN':'Tennessee','TX':'Texas','UT':'Utah','VT':'Vermont',
-    'VA':'Virginia','WA':'Washington','WV':'West Virginia','WI':'Wisconsin','WY':'Wyoming'
+} = {
+    'AL': 'Alabama', 'AK': 'Alaska', 'AZ': 'Arizona', 'AR': 'Arkansas', 'CA': 'California',
+    'CO': 'Colorado', 'CT': 'Connecticut', 'DC': 'District of Columbia', 'DE': 'Delaware', 'FL': 'Florida', 'GA': 'Georgia',
+    'HI': 'Hawaii', 'ID': 'Idaho', 'IL': 'Illinois', 'IN': 'Indiana', 'IA': 'Iowa', 'KS': 'Kansas',
+    'KY': 'Kentucky', 'LA': 'Louisiana', 'ME': 'Maine', 'MD': 'Maryland', 'MA': 'Massachusetts',
+    'MI': 'Michigan', 'MN': 'Minnesota', 'MS': 'Mississippi', 'MO': 'Missouri', 'MT': 'Montana',
+    'NE': 'Nebraska', 'NV': 'Nevada', 'NH': 'New Hampshire', 'NJ': 'New Jersey', 'NM': 'New Mexico',
+    'NY': 'New York', 'NC': 'North Carolina', 'ND': 'North Dakota', 'OH': 'Ohio', 'OK': 'Oklahoma',
+    'OR': 'Oregon', 'PA': 'Pennsylvania', 'RI': 'Rhode Island', 'SC': 'South Carolina',
+    'SD': 'South Dakota', 'TN': 'Tennessee', 'TX': 'Texas', 'UT': 'Utah', 'VT': 'Vermont',
+    'VA': 'Virginia', 'WA': 'Washington', 'WV': 'West Virginia', 'WI': 'Wisconsin', 'WY': 'Wyoming'
 };
 
 /**
  * ISO 3166-1 alpha-2 country code
  */
-export type CountryCode = 
-'AD' | 'AE' | 'AF' | 'AG' | 'AI' | 'AL' | 'AM' |
-'AO' | 'AR' | 'AS' | 'AT' | 'AU' | 'AW' | 'AZ' | 'BA' |
-'BB' | 'BD' | 'BE' | 'BF' | 'BG' | 'BH' | 'BI' | 'BJ' | 'BL' |
-'BM' | 'BN' | 'BO' | 'BR' | 'BS' | 'BT' | 'BW' | 'BY' | 'BZ' |
-'CA' | 'CC' | 'CD' | 'CF' | 'CG' | 'CH' | 'CI' | 'CK' | 'CL' |
-'CM' | 'CN' | 'CO' | 'CR' | 'CU' | 'CV' | 'CW' | 'CX' | 'CY' |
-'CZ' | 'DE' | 'DJ' | 'DK' | 'DM' | 'DO' | 'DZ' | 'EC' | 'EE' |
-'EG' | 'ER' | 'ES' | 'ET' | 'FI' | 'FJ' | 'FK' | 'FM' |
-'FO' | 'FR' | 'GA' | 'GB' | 'GD' | 'GE' | 'GF' | 'GG' | 'GH' |
-'GI' | 'GL' | 'GM' | 'GN' | 'GP' | 'GQ' | 'GR' | 'GT' |
-'GU' | 'GW' | 'GY' | 'HK' | 'HN' | 'HR' | 'HT' | 'HU' | 'ID' |
-'IE' | 'IL' | 'IM' | 'IN' | 'IO' | 'IQ' | 'IR' | 'IS' | 'IT' |
-'JE' | 'JM' | 'JO' | 'JP' | 'KE' | 'KG' | 'KH' | 'KI' | 'KM' |
-'KN' | 'KP' | 'KR' | 'KW' | 'KY' | 'KZ' | 'LA' | 'LB' | 'LC' |
-'LI' | 'LK' | 'LR' | 'LS' | 'LT' | 'LU' | 'LV' | 'LY' | 'MA' |
-'MC' | 'MD' | 'ME' | 'MF' | 'MG' | 'MH' | 'MK' | 'ML' | 'MM' |
-'MN' | 'MO' | 'MP' | 'MQ' | 'MR' | 'MS' | 'MT' | 'MU' | 'MV' |
-'MW' | 'MX' | 'MY' | 'MZ' | 'NA' | 'NC' | 'NE' | 'NF' | 'NG' |
-'NI' | 'NL' | 'NO' | 'NP' | 'NR' | 'NU' | 'NZ' | 'OM' | 'PA' |
-'PE' | 'PF' | 'PG' | 'PH' | 'PK' | 'PL' | 'PM' | 'PR' |
-'PS' | 'PT' | 'PW' | 'PY' | 'QA' | 'RE' | 'RO' | 'RS' | 'RU' |
-'RW' | 'SA' | 'SB' | 'SC' | 'SD' | 'SE' | 'SG' | 'SH' | 'SI' |
-'SJ' | 'SK' | 'SL' | 'SM' | 'SN' | 'SO' | 'SR' | 'SS' | 'ST' |
-'SV' | 'SX' | 'SY' | 'SZ' | 'TC' | 'TD' | 'TG' | 'TH' |
-'TJ' | 'TK' | 'TL' | 'TM' | 'TN' | 'TO' | 'TR' | 'TT' | 'TV' |
-'TW' | 'TZ' | 'UA' | 'UG' | 'US' | 'UY' | 'UZ' | 'VA' |
-'VC' | 'VE' | 'VG' | 'VI' | 'VN' | 'VU' | 'WF' | 'WS' | 'XK' |
-'YE' | 'YT' | 'ZA' | 'ZM' | 'ZW';
+export type CountryCode =
+    'AD' | 'AE' | 'AF' | 'AG' | 'AI' | 'AL' | 'AM' |
+    'AO' | 'AR' | 'AS' | 'AT' | 'AU' | 'AW' | 'AZ' | 'BA' |
+    'BB' | 'BD' | 'BE' | 'BF' | 'BG' | 'BH' | 'BI' | 'BJ' | 'BL' |
+    'BM' | 'BN' | 'BO' | 'BR' | 'BS' | 'BT' | 'BW' | 'BY' | 'BZ' |
+    'CA' | 'CC' | 'CD' | 'CF' | 'CG' | 'CH' | 'CI' | 'CK' | 'CL' |
+    'CM' | 'CN' | 'CO' | 'CR' | 'CU' | 'CV' | 'CW' | 'CX' | 'CY' |
+    'CZ' | 'DE' | 'DJ' | 'DK' | 'DM' | 'DO' | 'DZ' | 'EC' | 'EE' |
+    'EG' | 'ER' | 'ES' | 'ET' | 'FI' | 'FJ' | 'FK' | 'FM' |
+    'FO' | 'FR' | 'GA' | 'GB' | 'GD' | 'GE' | 'GF' | 'GG' | 'GH' |
+    'GI' | 'GL' | 'GM' | 'GN' | 'GP' | 'GQ' | 'GR' | 'GT' |
+    'GU' | 'GW' | 'GY' | 'HK' | 'HN' | 'HR' | 'HT' | 'HU' | 'ID' |
+    'IE' | 'IL' | 'IM' | 'IN' | 'IO' | 'IQ' | 'IR' | 'IS' | 'IT' |
+    'JE' | 'JM' | 'JO' | 'JP' | 'KE' | 'KG' | 'KH' | 'KI' | 'KM' |
+    'KN' | 'KP' | 'KR' | 'KW' | 'KY' | 'KZ' | 'LA' | 'LB' | 'LC' |
+    'LI' | 'LK' | 'LR' | 'LS' | 'LT' | 'LU' | 'LV' | 'LY' | 'MA' |
+    'MC' | 'MD' | 'ME' | 'MF' | 'MG' | 'MH' | 'MK' | 'ML' | 'MM' |
+    'MN' | 'MO' | 'MP' | 'MQ' | 'MR' | 'MS' | 'MT' | 'MU' | 'MV' |
+    'MW' | 'MX' | 'MY' | 'MZ' | 'NA' | 'NC' | 'NE' | 'NF' | 'NG' |
+    'NI' | 'NL' | 'NO' | 'NP' | 'NR' | 'NU' | 'NZ' | 'OM' | 'PA' |
+    'PE' | 'PF' | 'PG' | 'PH' | 'PK' | 'PL' | 'PM' | 'PR' |
+    'PS' | 'PT' | 'PW' | 'PY' | 'QA' | 'RE' | 'RO' | 'RS' | 'RU' |
+    'RW' | 'SA' | 'SB' | 'SC' | 'SD' | 'SE' | 'SG' | 'SH' | 'SI' |
+    'SJ' | 'SK' | 'SL' | 'SM' | 'SN' | 'SO' | 'SR' | 'SS' | 'ST' |
+    'SV' | 'SX' | 'SY' | 'SZ' | 'TC' | 'TD' | 'TG' | 'TH' |
+    'TJ' | 'TK' | 'TL' | 'TM' | 'TN' | 'TO' | 'TR' | 'TT' | 'TV' |
+    'TW' | 'TZ' | 'UA' | 'UG' | 'US' | 'UY' | 'UZ' | 'VA' |
+    'VC' | 'VE' | 'VG' | 'VI' | 'VN' | 'VU' | 'WF' | 'WS' | 'XK' |
+    'YE' | 'YT' | 'ZA' | 'ZM' | 'ZW';
 
 /**
  * Array of Countries
  */
 export const COUNTRY_CODES_ARR = [
-'AD', 'AE', 'AF', 'AG', 'AI', 'AL', 'AM',
-'AO', 'AR', 'AS', 'AT', 'AU', 'AW', 'AZ', 'BA',
-'BB', 'BD', 'BE', 'BF', 'BG', 'BH', 'BI', 'BJ', 'BL',
-'BM', 'BN', 'BO', 'BR', 'BS', 'BT', 'BW', 'BY', 'BZ',
-'CA', 'CC', 'CD', 'CF', 'CG', 'CH', 'CI', 'CK', 'CL',
-'CM', 'CN', 'CO', 'CR', 'CU', 'CV', 'CW', 'CX', 'CY',
-'CZ', 'DE', 'DJ', 'DK', 'DM', 'DO', 'DZ', 'EC', 'EE',
-'EG', 'ER', 'ES', 'ET', 'FI', 'FJ', 'FK', 'FM',
-'FO', 'FR', 'GA', 'GB', 'GD', 'GE', 'GF', 'GG', 'GH',
-'GI', 'GL', 'GM', 'GN', 'GP', 'GQ', 'GR', 'GT',
-'GU', 'GW', 'GY', 'HK', 'HN', 'HR', 'HT', 'HU', 'ID',
-'IE', 'IL', 'IM', 'IN', 'IO', 'IQ', 'IR', 'IS', 'IT',
-'JE', 'JM', 'JO', 'JP', 'KE', 'KG', 'KH', 'KI', 'KM',
-'KN', 'KP', 'KR', 'KW', 'KY', 'KZ', 'LA', 'LB', 'LC',
-'LI', 'LK', 'LR', 'LS', 'LT', 'LU', 'LV', 'LY', 'MA',
-'MC', 'MD', 'ME', 'MF', 'MG', 'MH', 'MK', 'ML', 'MM',
-'MN', 'MO', 'MP', 'MQ', 'MR', 'MS', 'MT', 'MU', 'MV',
-'MW', 'MX', 'MY', 'MZ', 'NA', 'NC', 'NE', 'NF', 'NG',
-'NI', 'NL', 'NO', 'NP', 'NR', 'NU', 'NZ', 'OM', 'PA',
-'PE', 'PF', 'PG', 'PH', 'PK', 'PL', 'PM', 'PR',
-'PS', 'PT', 'PW', 'PY', 'QA', 'RE', 'RO', 'RS', 'RU',
-'RW', 'SA', 'SB', 'SC', 'SD', 'SE', 'SG', 'SH', 'SI',
-'SJ', 'SK', 'SL', 'SM', 'SN', 'SO', 'SR', 'SS', 'ST',
-'SV', 'SX', 'SY', 'SZ', 'TC', 'TD', 'TG', 'TH',
-'TJ', 'TK', 'TL', 'TM', 'TN', 'TO', 'TR', 'TT', 'TV',
-'TW', 'TZ', 'UA', 'UG', 'US', 'UY', 'UZ', 'VA',
-'VC', 'VE', 'VG', 'VI', 'VN', 'VU', 'WF', 'WS', 'XK',
-'YE', 'YT', 'ZA', 'ZM', 'ZW'];
+    'AD', 'AE', 'AF', 'AG', 'AI', 'AL', 'AM',
+    'AO', 'AR', 'AS', 'AT', 'AU', 'AW', 'AZ', 'BA',
+    'BB', 'BD', 'BE', 'BF', 'BG', 'BH', 'BI', 'BJ', 'BL',
+    'BM', 'BN', 'BO', 'BR', 'BS', 'BT', 'BW', 'BY', 'BZ',
+    'CA', 'CC', 'CD', 'CF', 'CG', 'CH', 'CI', 'CK', 'CL',
+    'CM', 'CN', 'CO', 'CR', 'CU', 'CV', 'CW', 'CX', 'CY',
+    'CZ', 'DE', 'DJ', 'DK', 'DM', 'DO', 'DZ', 'EC', 'EE',
+    'EG', 'ER', 'ES', 'ET', 'FI', 'FJ', 'FK', 'FM',
+    'FO', 'FR', 'GA', 'GB', 'GD', 'GE', 'GF', 'GG', 'GH',
+    'GI', 'GL', 'GM', 'GN', 'GP', 'GQ', 'GR', 'GT',
+    'GU', 'GW', 'GY', 'HK', 'HN', 'HR', 'HT', 'HU', 'ID',
+    'IE', 'IL', 'IM', 'IN', 'IO', 'IQ', 'IR', 'IS', 'IT',
+    'JE', 'JM', 'JO', 'JP', 'KE', 'KG', 'KH', 'KI', 'KM',
+    'KN', 'KP', 'KR', 'KW', 'KY', 'KZ', 'LA', 'LB', 'LC',
+    'LI', 'LK', 'LR', 'LS', 'LT', 'LU', 'LV', 'LY', 'MA',
+    'MC', 'MD', 'ME', 'MF', 'MG', 'MH', 'MK', 'ML', 'MM',
+    'MN', 'MO', 'MP', 'MQ', 'MR', 'MS', 'MT', 'MU', 'MV',
+    'MW', 'MX', 'MY', 'MZ', 'NA', 'NC', 'NE', 'NF', 'NG',
+    'NI', 'NL', 'NO', 'NP', 'NR', 'NU', 'NZ', 'OM', 'PA',
+    'PE', 'PF', 'PG', 'PH', 'PK', 'PL', 'PM', 'PR',
+    'PS', 'PT', 'PW', 'PY', 'QA', 'RE', 'RO', 'RS', 'RU',
+    'RW', 'SA', 'SB', 'SC', 'SD', 'SE', 'SG', 'SH', 'SI',
+    'SJ', 'SK', 'SL', 'SM', 'SN', 'SO', 'SR', 'SS', 'ST',
+    'SV', 'SX', 'SY', 'SZ', 'TC', 'TD', 'TG', 'TH',
+    'TJ', 'TK', 'TL', 'TM', 'TN', 'TO', 'TR', 'TT', 'TV',
+    'TW', 'TZ', 'UA', 'UG', 'US', 'UY', 'UZ', 'VA',
+    'VC', 'VE', 'VG', 'VI', 'VN', 'VU', 'WF', 'WS', 'XK',
+    'YE', 'YT', 'ZA', 'ZM', 'ZW'];
 
 /**
  * Map of Countries
@@ -1845,14 +1845,14 @@ export type Timestamped = FirebaseFirestore.Timestamp |
      * Nanoseconds since the Unix epoch.
      */
     _nanoseconds: number;
-    
+
     /**
      * Seconds since the Unix epoch.
      */
     _seconds: number;
 
-}|
-null;
+} |
+    null;
 
 /**
  * Identity mechanics
@@ -1865,7 +1865,7 @@ export interface Identifiable {
      * This value is autogenerated server side, except in the cases where the API request
      * includes a `createdMS` value.
      */
-    created_at: Timestamped
+    created_at: Timestamped;
 
     /**
      * Id of object.
@@ -1887,18 +1887,18 @@ export interface Identifiable {
 }
 
 
- /**
- * 
- * **************
- * Billing
- * **************
- * 
- */
- 
- /**
- * Financial details for Entities and Project Users.
- */
-export interface FinancialDetails extends CreateFinancialDetailsParams {}
+/**
+* 
+* **************
+* Billing
+* **************
+* 
+*/
+
+/**
+* Financial details for Entities and Project Users.
+*/
+export interface FinancialDetails extends CreateFinancialDetailsParams { }
 
 /**
  * Params to create financial details.
@@ -1908,15 +1908,15 @@ export interface CreateFinancialDetailsParams extends UpdateFinancialDetailsPara
     /**
      * The entity's credit card on file.
      */
-    card: Card|null;
+    card: Card | null;
 
     /**
      * A map of the IAP receipts for this user.
      */
-     in_app_purchase_receipts: {
+    in_app_purchase_receipts: {
 
         [key: string]: InAppPurchaseReceipt;
-    
+
     };
 
 }
@@ -1929,7 +1929,7 @@ export interface UpdateFinancialDetailsParams {
     /**
      * The user or entity's credit card on file.
      */
-    card?: Card|null;
+    card?: Card | null;
 
     /**
      * A map of the IAP receipts for this user.
@@ -1939,9 +1939,9 @@ export interface UpdateFinancialDetailsParams {
     in_app_purchase_receipts: {
 
         [key: string]: UpdateInAppPurchaseReceiptParams;
-    
+
     };
-    
+
 }
 
 /**
@@ -1962,17 +1962,17 @@ export interface InAppPurchaseReceipt extends CreateInAppPurchaseReceiptParams, 
 }
 
 export interface CreateInAppPurchaseReceiptParams extends UpdateInAppPurchaseReceiptParams {
-    
+
     /**
      * Purchase token for Android IAP receipts
      */
     android_purchase_token: string;
-    
+
     /**
      * Subscription id for Android IAP receipts
      */
     android_subscription_id: string;
-    
+
     /**
      * `true` if this receipt points to an active subscription.
      * 
@@ -1984,12 +1984,12 @@ export interface CreateInAppPurchaseReceiptParams extends UpdateInAppPurchaseRec
      * Id of the IAP that the user purchased.
      */
     iap_id: string;
-    
+
     /**
      * Transaction receipt for iOS IAPs
      */
     ios_transaction_receipt: string;
-    
+
 }
 export interface UpdateInAppPurchaseReceiptParams {
 
@@ -2006,29 +2006,29 @@ export interface UpdateInAppPurchaseReceiptParams {
 /**
  * Three-letter ISO 4217 code in all lowercase
  */
-export type CurrencyCode = 'aed' | 'afn' | 'all' | 'amd' | 'ang' | 'aoa' | 'ars' | 'aud' | 
-'awg' | 'azn' | 'bam' | 'bbd' | 'bdt' | 'bgn' | 'bif' | 'bmd' | 
-'bnd' | 'bob' | 'brl' | 'bsd' | 'bwp' | 'bzd' | 'cad' | 'cdf' | 
-'chf' | 'clp' | 'cny' | 'cop' | 'crc' | 'cve' | 'czk' | 'djf' | 
-'dkk' | 'dop' | 'dzd' | 'egp' | 'etb' | 'eur' | 'fjd' | 'fkp' | 
-'gbp' | 'gel' | 'gip' | 'gmd' | 'gnf' | 'gtq' | 'gyd' | 'hkd' | 
-'hnl' | 'hrk' | 'htg' | 'huf' | 'idr' | 'ils' | 'inr' | 'isk' | 
-'jmd' | 'jpy' | 'kes' | 'kgs' | 'khr' | 'kmf' | 'krw' | 'kyd' | 
-'kzt' | 'lak' | 'lbp' | 'lkr' | 'lrd' | 'lsl' | 'mad' | 'mdl' | 
-'mga' | 'mkd' | 'mmk' | 'mnt' | 'mop' | 'mro' | 'mur' | 'mvr' | 
-'mwk' | 'mxn' | 'myr' | 'mzn' | 'nad' | 'ngn' | 'nio' | 'nok' | 
-'npr' | 'nzd' | 'pab' | 'pen' | 'pgk' | 'php' | 'pkr' | 'pln' | 
-'pyg' | 'qar' | 'ron' | 'rsd' | 'rub' | 'rwf' | 'sar' | 'sbd' | 
-'scr' | 'sek' | 'sgd' | 'shp' | 'sll' | 'sos' | 'srd' | 'std' | 
-'szl' | 'thb' | 'tjs' | 'top' | 'try' | 'ttd' | 'twd' | 'tzs' | 
-'uah' | 'ugx' | 'usd' | 'uyu' | 'uzs' | 'vnd' | 'vuv' | 'wst' | 
-'xaf' | 'xcd' | 'xof' | 'xpf' | 'yer' | 'zar' | 'zmw';
+export type CurrencyCode = 'aed' | 'afn' | 'all' | 'amd' | 'ang' | 'aoa' | 'ars' | 'aud' |
+    'awg' | 'azn' | 'bam' | 'bbd' | 'bdt' | 'bgn' | 'bif' | 'bmd' |
+    'bnd' | 'bob' | 'brl' | 'bsd' | 'bwp' | 'bzd' | 'cad' | 'cdf' |
+    'chf' | 'clp' | 'cny' | 'cop' | 'crc' | 'cve' | 'czk' | 'djf' |
+    'dkk' | 'dop' | 'dzd' | 'egp' | 'etb' | 'eur' | 'fjd' | 'fkp' |
+    'gbp' | 'gel' | 'gip' | 'gmd' | 'gnf' | 'gtq' | 'gyd' | 'hkd' |
+    'hnl' | 'hrk' | 'htg' | 'huf' | 'idr' | 'ils' | 'inr' | 'isk' |
+    'jmd' | 'jpy' | 'kes' | 'kgs' | 'khr' | 'kmf' | 'krw' | 'kyd' |
+    'kzt' | 'lak' | 'lbp' | 'lkr' | 'lrd' | 'lsl' | 'mad' | 'mdl' |
+    'mga' | 'mkd' | 'mmk' | 'mnt' | 'mop' | 'mro' | 'mur' | 'mvr' |
+    'mwk' | 'mxn' | 'myr' | 'mzn' | 'nad' | 'ngn' | 'nio' | 'nok' |
+    'npr' | 'nzd' | 'pab' | 'pen' | 'pgk' | 'php' | 'pkr' | 'pln' |
+    'pyg' | 'qar' | 'ron' | 'rsd' | 'rub' | 'rwf' | 'sar' | 'sbd' |
+    'scr' | 'sek' | 'sgd' | 'shp' | 'sll' | 'sos' | 'srd' | 'std' |
+    'szl' | 'thb' | 'tjs' | 'top' | 'try' | 'ttd' | 'twd' | 'tzs' |
+    'uah' | 'ugx' | 'usd' | 'uyu' | 'uzs' | 'vnd' | 'vuv' | 'wst' |
+    'xaf' | 'xcd' | 'xof' | 'xpf' | 'yer' | 'zar' | 'zmw';
 
 
 /**
  * Financial details for Appdrop Entities
  */
-export interface EntityFinancialDetails extends CreateEntityFinancialDetailsParams, FinancialDetails {}
+export interface EntityFinancialDetails extends CreateEntityFinancialDetailsParams, FinancialDetails { }
 
 /**
  * Params to create financial details for an entity.
@@ -2050,7 +2050,7 @@ export interface CreateEntityFinancialDetailsParams extends CreateFinancialDetai
      * Note – Pro plan organizations with add-ons get a wildcard Stripe
      * price following their selections during strategy session calls.
      */
-    stripe_subscription: Subscription|null;
+    stripe_subscription: Subscription | null;
 
 }
 
@@ -2074,14 +2074,14 @@ export interface UpdateEntityFinancialDetailsParams extends UpdateFinancialDetai
      * Note – Starter & Pro plan organizations with add-ons get a wildcard Stripe
      * price following their selections during strategy session calls.
      */
-    stripe_subscription?: Subscription|null;
+    stripe_subscription?: Subscription | null;
 
 }
 
 /**
  * Invoice renewal interval.
  */
-export type BillingInterval = 'quarterly'|'annually';
+export type BillingInterval = 'quarterly' | 'annually';
 
 /**
  * Invoice payment method.
@@ -2094,26 +2094,26 @@ export type BillingMethod = 'card';
 /**
  * Enterprise tier.
  */
-export type EnterpriseTier = 'large'|'medium'|'small';
+export type EnterpriseTier = 'large' | 'medium' | 'small';
 
 /**
  * Organization tier.
  */
-export type OrganizationTier = 'business'|'enterprise'|'pro'|'starter';
+export type OrganizationTier = 'business' | 'enterprise' | 'pro' | 'starter';
 
 
 /**
  * Price of Appdrop services.
  */
 export interface Price {
-    
+
     /**
      * Price of product. The unit is the smallest unit of the Organization's currency.
      * 
      * USD Example: 10050 indicates $100.50
      */
     price: number;
-    
+
     /**
      * Price Id in Stripe dashboard
      */
@@ -2207,25 +2207,25 @@ export interface Customer extends CreateCustomerParams {
     /**
      * The customer's payment sources, if any.
      */
-    sources:  {
+    sources: {
 
         /**
          * Source data
          */
         data: Card[];
-  
-    }
+
+    };
 
     /**
      * The customer's current subscriptions, if any.
      */
     subscriptions: {
-        
+
         /**
          * Subscription data
          */
-        data: Subscription[]
-    
+        data: Subscription[];
+
     };
 
 }
@@ -2248,39 +2248,39 @@ export interface CreateCustomerParams extends UpdateCustomerParams {
     /**
      * Name
      */
-    name: string
-    
+    name: string;
+
 }
 
 /**
  * Params to update a Stripe customer
  */
 export interface UpdateCustomerParams {
-    
+
     /**
      * Email address
      */
     email?: string;
-    
+
     /**
      * Name
      */
-    name?: string
+    name?: string;
 
 }
 
 export interface CreateTokenResponseBody {
-    
+
     /**
      * IP Address
      */
     client_ip: string;
-    
+
     /**
      * Unix timestamp in seconds.
      */
     created: number;
-    
+
     /**
      * Unique id for the token.
      * 
@@ -2297,7 +2297,7 @@ export interface CreateTokenResponseBody {
      * Object name.
      */
     object: 'token';
-    
+
     /**
      * Token type
      */
@@ -2314,11 +2314,11 @@ export interface CreateTokenResponseBody {
  * Params to create a Card Token
  */
 export interface CreateCardTokenParams {
-    
+
     /**
      * Card params
      */
-    card: CreateCardParams
+    card: CreateCardParams;
 
 }
 
@@ -2326,68 +2326,68 @@ export interface CreateCardTokenParams {
  * Params to generate a Stripe Card
  */
 export interface CreateCardParams {
-    
+
     /**
      * Zip code
      */
     address_zip: string;
-    
+
     /**
      * Card verification number
      */
     cvc: string;
-    
+
     /**
      * Expiration Month
      */
     exp_month: string;
-    
+
     /**
      * Expiration Year
      */
     exp_year: string;
-    
+
     /**
      * Card number
      */
     number: string;
-    
+
 }
 
 export const DEFAULT_CARD_PARAMS: CreateCardParams = {
-	address_zip: '',
-	cvc: '',
-	exp_month: '01',
-	exp_year: '2022',
-	number: ''
+    address_zip: '',
+    cvc: '',
+    exp_month: '01',
+    exp_year: '2022',
+    number: ''
 };
 
-export type ExpMonthType = 
-'01'|'02'|'03'|'04'|
-'05'|'06'|'07'|'08'|
-'09'|'10'|'11'|'12';
+export type ExpMonthType =
+    '01' | '02' | '03' | '04' |
+    '05' | '06' | '07' | '08' |
+    '09' | '10' | '11' | '12';
 
-export type ExpYearType = 
-'2021'|'2022'|'2023'|'2024'|
-'2025'|'2026'|'2027'|'2028'|
-'2029'|'2030'|'2031'|'2032'|
-'2033'|'2034';
+export type ExpYearType =
+    '2021' | '2022' | '2023' | '2024' |
+    '2025' | '2026' | '2027' | '2028' |
+    '2029' | '2030' | '2031' | '2032' |
+    '2033' | '2034';
 
-export type ExpComponent = 'exp_month'|'exp_year';
+export type ExpComponent = 'exp_month' | 'exp_year';
 export const EXP_ARR_MAP: {
-    [key in ExpComponent]: (ExpMonthType|ExpYearType)[];
+    [key in ExpComponent]: (ExpMonthType | ExpYearType)[];
 } = {
-	exp_month: [
-		'01','02','03','04',
-		'05','06','07','08',
-		'09','10','11','12'
-	],
-	exp_year: [
-		'2021', '2022', '2023', '2024',
-		'2025', '2026', '2027', '2028',
-		'2029', '2030', '2031', '2032',
-		'2033', '2034'
-	]
+    exp_month: [
+        '01', '02', '03', '04',
+        '05', '06', '07', '08',
+        '09', '10', '11', '12'
+    ],
+    exp_year: [
+        '2021', '2022', '2023', '2024',
+        '2025', '2026', '2027', '2028',
+        '2029', '2030', '2031', '2032',
+        '2033', '2034'
+    ]
 };
 
 /**
@@ -2399,7 +2399,7 @@ export interface CreateCardTokenResponseBody extends CreateTokenResponseBody {
      * Card object.
      */
     card: Card;
-    
+
     /**
      * Token type
      */
@@ -2420,22 +2420,22 @@ export interface Card extends CreateCardParams {
      * Unique identifier
      */
     id: string;
-    
+
     /**
      * Object name
      */
     object: 'card';
-    
+
     /**
      * Card's brand.
      */
-    brand: CardBrand|null;
-    
+    brand: CardBrand | null;
+
     /**
      * If a CVC was provided, results of the check.
      */
-    cvc_check: CVCCheckType|null;
-    
+    cvc_check: CVCCheckType | null;
+
     /**
      * Uniquely identifies this particular card number. You can use this attribute
      * to check whether two customers who've signed up with you are using the same
@@ -2444,38 +2444,38 @@ export interface Card extends CreateCardParams {
      * of the underlying card number.
      */
     fingerprint: string;
-    
+
     /**
      * Card funding type.
      */
-    funding: CardFundingType|null;
-    
+    funding: CardFundingType | null;
+
     /**
      * The last four digits of the card.
      */
     last4: string;
-    
+
 }
 
 /**
  * Card's brand.
  */
-export type CardBrand = 'American Express'|
-'Diners Club'|
-'DiscoverCard'|
-'JCB'|
-'MasterCard'|
-'Visa';
+export type CardBrand = 'American Express' |
+    'Diners Club' |
+    'DiscoverCard' |
+    'JCB' |
+    'MasterCard' |
+    'Visa';
 
 /**
  * If a CVC was provided, results of the check.
  */
-export type CVCCheckType = 'pass'|'fail'|'unavailable'|'unchecked';
+export type CVCCheckType = 'pass' | 'fail' | 'unavailable' | 'unchecked';
 
 /**
  * Card funding type.
  */
-export type CardFundingType = 'credit'|'debit'|'prepaid'|'unknown';
+export type CardFundingType = 'credit' | 'debit' | 'prepaid' | 'unknown';
 
 /**
  * Params to create a Card Source and attach it to a Customer.
@@ -2508,22 +2508,22 @@ export interface Subscription extends CreateSubscriptionParams {
      * Object name.
      */
     object: 'subscription';
-    
+
     /**
      * Subscription status.
      */
-    status: 
+    status:
     'incomplete' | 'incomplete_expired' |
     'trialing' | 'active' | 'past_due' |
     'canceled' | 'unpaid';
-    
+
 }
 
 /**
  * Params to generate a Stripe Subscription
  */
 export interface CreateSubscriptionParams extends UpdateSubscriptionParams {
-    
+
     /**
      * Boolean indicating whether this subscription should cancel at the end of the current period.
      */
@@ -2533,12 +2533,12 @@ export interface CreateSubscriptionParams extends UpdateSubscriptionParams {
      * Customer id
      */
     customer: string;
-    
+
     /**
      * Subscription item
      */
     items: SubscriptionItem[];
-    
+
 }
 
 /**
@@ -2550,7 +2550,7 @@ export interface SubscriptionItem {
      * id of the subscription item.
      */
     id: string;
-    
+
     /**
      * The ID of the price object.
      */
@@ -2681,24 +2681,24 @@ export interface Charge extends CreateChargeParams {
      * A list of refunds that have been applied to the charge.
      */
     refunds: {
-      
+
         object: 'list';
-      
+
         data: Refund[];
-    
+
     };
 
     /**
      * The status of the payment.
      */
     status: ChargeStatus;
-    
+
 }
 
 /**
  * The status of the payment.
  */
-export type ChargeStatus = 'succeeded'|'pending'|'failed';
+export type ChargeStatus = 'succeeded' | 'pending' | 'failed';
 
 /**
  * Details of payment method for charge
@@ -2719,16 +2719,16 @@ export interface PaymentMethodDetails {
 
 }
 
-export type PaymentMethodType = 
-'ach_credit_transfer'|'ach_debit'|'alipay'|'au_becs_debit'|
-'bancontact'|'card'|'card_present'|'eps'|'giropay'|'ideal'|
-'klarna'|'multibanco'|'p24'|'sepa_debit'|'sofort'|'stripe_account'|'wechat';
+export type PaymentMethodType =
+    'ach_credit_transfer' | 'ach_debit' | 'alipay' | 'au_becs_debit' |
+    'bancontact' | 'card' | 'card_present' | 'eps' | 'giropay' | 'ideal' |
+    'klarna' | 'multibanco' | 'p24' | 'sepa_debit' | 'sofort' | 'stripe_account' | 'wechat';
 
 /**
  * Params to generate a Stripe Charge
  */
 export interface CreateChargeParams {
-    
+
     /**
      * Amount intended to be collected by this payment. A positive integer 
      * representing how much to charge in the [smallest currency 
@@ -2788,17 +2788,17 @@ export interface CreateChargeParams {
          * Shipping address.
          */
         address: {
-            
+
             /**
              * City, district, suburb, town, or village.
              */
             city: string;
-            
+
             /**
              * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
              */
             country: CountryCode;
-            
+
             /**
              * Address line 1 (e.g., street, PO Box, or company name).
              */
@@ -2825,8 +2825,8 @@ export interface CreateChargeParams {
          * Recipient name.
          */
         name: string;
-        
-    }
+
+    };
 
     /**
      * A payment source to be charged. This can be the ID of 
@@ -2912,18 +2912,18 @@ export interface Refund extends CreateRefundParams {
 /**
  * If the refund failed, the reason for refund failure if known.
  */
-export type RefundFailureReason = 'lost_or_stolen_card'|'expired_or_canceled_card'|'unknown';
+export type RefundFailureReason = 'lost_or_stolen_card' | 'expired_or_canceled_card' | 'unknown';
 
 /**
  * Status of the refund. 
  */
-export type RefundStatus = 'pending'|'succeeded'|'failed'|'canceled';
+export type RefundStatus = 'pending' | 'succeeded' | 'failed' | 'canceled';
 
 /**
  * Params to create a Refund
  */
 export interface CreateRefundParams extends ProjectScoped {
-    
+
     /**
      * Amount being returned in cents.
      */
@@ -2938,25 +2938,25 @@ export interface CreateRefundParams extends ProjectScoped {
      * Reason for the refund.
      */
     reason: RefundReason;
-    
+
 }
 
 /**
  * Reason for the refund.
  */
 export type RefundReason = 'duplicate' | 'fraudulent' | 'requested_by_customer';
- 
- /**
- * 
- * **************
- * Entities
- * **************
- * 
- */
- 
- /**
- * An entity utilizing Appdrop Saas.
- */
+
+/**
+* 
+* **************
+* Entities
+* **************
+* 
+*/
+
+/**
+* An entity utilizing Appdrop Saas.
+*/
 export interface Entity extends CreateEntityParams, Identifiable {
 
     /**
@@ -3012,7 +3012,7 @@ export interface CreateEntityParams extends UpdateEntityParams {
 /**
  * Type of entity
  */
-export type EntityType = 'enterprise'|'organization';
+export type EntityType = 'enterprise' | 'organization';
 
 /**
  * Params to update an entity.
@@ -3205,30 +3205,29 @@ export interface UpdateOrganizationParams extends UpdateEntityParams {
      * This array includes the id of each Project that this Organization owns.
      */
     project_ids?: string[];
-    
+
     /**
      * Ids to remove from the `project_ids` array
      */
     remove_project_ids?: string[];
 
 }
- 
- 
- /**
- * 
- * **************
- * Orders
- * **************
- *
- */
 
- /**
- * Customer Order
- */
-export interface Order extends 
-AttachOrderPromoParams, Identifiable, CreateOrderParams, 
-ConfirmOrderParams, OrderResultBase, ProjectScoped, RequestReturnParams 
-{
+
+/**
+* 
+* **************
+* Orders
+* **************
+*
+*/
+
+/**
+* Customer Order
+*/
+export interface Order extends
+    AttachOrderPromoParams, Identifiable, CreateOrderParams,
+    ConfirmOrderParams, OrderResultBase, ProjectScoped, RequestReturnParams {
 
     /**
      * Timestamp object when the order was confirmed. Used to
@@ -3239,23 +3238,23 @@ ConfirmOrderParams, OrderResultBase, ProjectScoped, RequestReturnParams
     /**
      * Id in external system
      */
-    external_id: string|null;
+    external_id: string | null;
 
     /**
      * Items in order
      */
     items: OrderItem[];
-    
+
     /**
      * Object name
      */
     object: 'order';
-    
+
     /**
      * Timestamp onject of last order update.
      */
     updated_at: Timestamped;
-    
+
     /**
      * Id of the Appdrop project user who initiated the order
      */
@@ -3324,7 +3323,7 @@ export const DEFAULT_ECOMMERCE_ORDER: Order = {
  * Shared Order API
  */
 export interface OrderResultBase {
-    
+
     /**
      * Costs to produce and ship the items
      */
@@ -3333,8 +3332,8 @@ export interface OrderResultBase {
     /**
      * Gift text
      */
-     gift: GiftOptions|null;
-    
+    gift: GiftOptions | null;
+
     /**
      * Whether the order contains discontinued items.
      */
@@ -3349,7 +3348,7 @@ export interface OrderResultBase {
      * Order Recipient
      */
     recipient: OrderRecipient;
-    
+
     /**
      * Costs displayed and billed to the end-customer.
      */
@@ -3401,22 +3400,22 @@ export interface OrderInternalCosts extends OrderCosts {
      * Shipping costs. Often used to pass price to consumer.
      */
     shipping: string;
-    
+
     /**
      * Subtotal
      */
     subtotal: string;
-    
+
     /**
      * Sales tax. Often used to pass price to consumer.
      */
     tax: string;
-    
+
     /**
      * Grand total billed to store owner
      */
     total: string;
-    
+
     /**
      * Vat tax.
      */
@@ -3427,7 +3426,7 @@ export interface OrderInternalCosts extends OrderCosts {
 /**
  * Costs displayed and billed to the end-customer.
  */
-export interface OrderRetailCosts extends OrderCosts {}
+export interface OrderRetailCosts extends OrderCosts { }
 
 /**
  * Order Cost shared properties
@@ -3442,32 +3441,32 @@ export interface OrderCosts {
     /**
      * Costs saved from discounts
      */
-    discount: string|null;
+    discount: string | null;
 
     /**
      * Shipping costs. Often used to pass price to consumer.
      */
-    shipping: string|null;
-    
+    shipping: string | null;
+
     /**
      * Subtotal
      */
-    subtotal: string|null;
-    
+    subtotal: string | null;
+
     /**
      * Sales tax. Often used to pass price to consumer.
      */
-    tax: string|null;
-    
+    tax: string | null;
+
     /**
      * Grand total
      */
-    total: string|null;
-    
+    total: string | null;
+
     /**
      * Vat tax.
      */
-    vat: string|null;
+    vat: string | null;
 
 }
 
@@ -3488,22 +3487,22 @@ export interface OrderCosts {
  * 
  * `fulfilled` - all items are shipped
  */
-export type OrderStatus = 'draft'|'failed'|'pending'|'canceled'|'onhold'|'inprocess'|'partial'|'fulfilled';
+export type OrderStatus = 'draft' | 'failed' | 'pending' | 'canceled' | 'onhold' | 'inprocess' | 'partial' | 'fulfilled';
 
 /**
  * Human readable description of order status.
  */
 export const ORDER_STATUS_MAP: {
-	[key in OrderStatus]: string;
+    [key in OrderStatus]: string;
 } = {
-	canceled: 'Canceled',
-	draft: 'Draft',
-	failed: 'Unable to Complete. Please contact support.',
-	fulfilled: 'Delivered',
-	inprocess: 'In Transit',
-	onhold: 'On Hold.',
-	partial: 'Partially Delivered',
-	pending: 'Preparing For Shipment',
+    canceled: 'Canceled',
+    draft: 'Draft',
+    failed: 'Unable to Complete. Please contact support.',
+    fulfilled: 'Delivered',
+    inprocess: 'In Transit',
+    onhold: 'On Hold.',
+    partial: 'Partially Delivered',
+    pending: 'Preparing For Shipment',
 };
 
 /**
@@ -3521,7 +3520,7 @@ export interface CreateOrderParams {
     /**
      * Gift text
      */
-     gift: GiftOptions|null;
+    gift: GiftOptions | null;
 
     /**
      * Order items
@@ -3536,16 +3535,16 @@ export interface CreateOrderParams {
 }
 
 export interface GiftOptions {
-        
+
     /**
      * Gift message for packing slip
      */
     message: string;
 
-   /**
-    * Gift subject for packing slip
-    */
-   subject: string;
+    /**
+     * Gift subject for packing slip
+     */
+    subject: string;
 
 }
 
@@ -3553,17 +3552,17 @@ export interface GiftOptions {
  * Order item
  */
 export interface OrderItem extends CreateOrderItemParams {
-    
+
     /**
      * Tracks whether the item is discontinued
      */
     discontinued: boolean;
-    
+
     /**
      * Line item ID from the external system
      */
-    external_id: number|null;
-    
+    external_id: number | null;
+
     /**
      * Unique identifier.
      */
@@ -3573,13 +3572,13 @@ export interface OrderItem extends CreateOrderItemParams {
      * Item name
      */
     name: string;
-    
+
     /**
      * Important flag determining whether the item is in or out of stock.
      * Out of stock items can take an additional 2-weeks to deliver.
      */
     out_of_stock: boolean;
-    
+
     /**
      * Important flag determining whether the item is in or out of stock in the EU.
      * Out of stock items can take an additional 2-weeks to deliver.
@@ -3590,60 +3589,60 @@ export interface OrderItem extends CreateOrderItemParams {
      * Printful production price
      */
     price: number;
-   
+
     /**
      * Underlying Product information.
      */
     product: {
-        
+
         /**
          * Variant id
          */
         variant_id: number;
-        
+
         /**
          * Product id
          */
         product_id: number;
-        
+
         /**
          * Image url
          */
         image: string;
-        
+
         /**
          * Product name
          */
         name: string;
 
     };
-    
+
     /**
      * Retail price for packing slip.
      */
-    retail_price: string|null;
-    
+    retail_price: string | null;
+
     /**
      * Printful generated sku
      */
-    sku: string|null;
+    sku: string | null;
 
     /**
      * Sync variant ID of the item ordered.
      */
     sync_variant_id: number;
-    
+
     /**
      * Variant ID of the item ordered. See Products API
      */
     variant_id: number;
-    
+
 }
 
 /**
  * Params to create an Order item
  */
-export interface CreateOrderItemParams extends UpdateOrderItemParams {}
+export interface CreateOrderItemParams extends UpdateOrderItemParams { }
 
 /**
  * Params to update an Order Item.
@@ -3653,46 +3652,46 @@ export interface UpdateOrderItemParams {
     /**
      * External variant Id of selected sync variant.
      */
-     external_variant_id: string;
+    external_variant_id: string;
 
-     /**
-      * Number of items.
-      */
-     quantity: number;
+    /**
+     * Number of items.
+     */
+    quantity: number;
 
 }
 
 /**
  * Order Recipient
  */
-export interface OrderRecipient extends CreateOrderRecipientParams {}
+export interface OrderRecipient extends CreateOrderRecipientParams { }
 
 /**
  * Params to generate an Order recipient
  */
 export interface CreateOrderRecipientParams extends Address {
-    
+
     /**
      * Recipient email.
      */
-    email: string|null;
+    email: string | null;
 
     /**
      * Recipient name.
      */
     name: string;
-    
+
 }
 
 export const DEFAULT_ORDER_RECIPIENT: CreateOrderRecipientParams = {
-	address1: '',
-	address2: '',
-	city: '',
-	country_code: 'US',
-	email: '',
-	name: '',
-	state_code: 'AL',
-	zip: ''
+    address1: '',
+    address2: '',
+    city: '',
+    country_code: 'US',
+    email: '',
+    name: '',
+    state_code: 'AL',
+    zip: ''
 };
 
 /**
@@ -3705,7 +3704,7 @@ export interface UpdateOrderParams {
     /**
      * Gift text
      */
-     gift?: GiftOptions|null;
+    gift?: GiftOptions | null;
 
     /**
      * Order items
@@ -3719,19 +3718,19 @@ export interface UpdateOrderParams {
 
 }
 
-export type RequestedReturnReason = 
-'The item has defects.'|
-'The item does not fit.'|
-'I no longer want this item.'|
-'Other reason';
+export type RequestedReturnReason =
+    'The item has defects.' |
+    'The item does not fit.' |
+    'I no longer want this item.' |
+    'Other reason';
 
 export const REQUESTED_RETURN_REASON_ARR:
-RequestedReturnReason[] = [
-    'The item has defects.',
-    'The item does not fit.',
-    'I no longer want this item.',
-    'Other reason'
-];
+    RequestedReturnReason[] = [
+        'The item has defects.',
+        'The item does not fit.',
+        'I no longer want this item.',
+        'Other reason'
+    ];
 
 /**
  * Params to initiate a return.
@@ -3747,8 +3746,8 @@ export interface RequestReturnParams {
      * Referenced by the refund automation script which checks the return 
      * status of the order and completes the refund upon return completion
      */
-     requested_return_at: Timestamped;
-    
+    requested_return_at: Timestamped;
+
     /**
      * An array of stringified objects, each containing
      * 
@@ -3797,29 +3796,29 @@ export interface ConfirmOrderParams {
  * 
  * DELETE https://api.printful.com/orders/{id}
  */
-export interface CancelOrderParams {}
+export interface CancelOrderParams { }
 
 /**
  * Params to attach a Promo object to an order.
  */
 export interface AttachOrderPromoParams {
-    
+
     /**
      * Id of the Promo object attached to this order or, if no promo, an empty string.
      */
-     promo_id: string;
+    promo_id: string;
 }
 
 /**
  * Customer order for a product.
  */
 export interface PrintfulOrderResponseBody {
-    
+
     /**
      * Status code. Returns `200` Unless call performed incorrectly.
      */
     code: number;
-    
+
     /**
      * Extra data (ignoreable)
      */
@@ -3829,37 +3828,37 @@ export interface PrintfulOrderResponseBody {
      * Call result.
      */
     result: PrintfulOrderResult;
-    
+
 };
 
 export interface PrintfulOrderResult extends OrderResultBase {
-    
+
     /**
      * Unix timestamp seconds
      */
     created: number;
-    
+
     /**
      * Printful url with more information
      */
     dashboard_url: string;
-    
+
     /**
      * Error message
      */
-    error: string|null;
-    
+    error: string | null;
+
     /**
      * Error code. `0` if no error
      */
     errorCode: number;
-    
+
     /**
      * Id in external system
      */
-    external_id: string|null;
-    
-    
+    external_id: string | null;
+
+
     /**
      * Unique identifier.
      */
@@ -3869,17 +3868,17 @@ export interface PrintfulOrderResult extends OrderResultBase {
      * Whether order is sample or customer order
      */
     is_sample: boolean;
-    
+
     /**
      * Whether order needs approval
      */
     needs_approval: boolean;
-    
+
     /**
      * Order notes
      */
-    notes: string|null;
-    
+    notes: string | null;
+
     /**
      * Whether order is synced
      */
@@ -3894,29 +3893,29 @@ export interface PrintfulOrderResult extends OrderResultBase {
      * Unix Timestamp in seconds of last order update.
      */
     updated: number;
-    
-    
+
+
 }
- 
- 
- /**
- * 
- * **************
- * Products
- * **************
- * 
- */
- 
- /**
- * Store product
- */
+
+
+/**
+* 
+* **************
+* Products
+* **************
+* 
+*/
+
+/**
+* Store product
+*/
 export interface Product extends Identifiable, ProductBase, ProjectScoped {
-    
+
     /**
      * Whether or not the product should be pushed to customers
      */
     active: boolean;
-    
+
     /**
      * Decimal number displayed as the discount on the 
      * item. 
@@ -3928,17 +3927,17 @@ export interface Product extends Identifiable, ProductBase, ProjectScoped {
      * price was $100
      */
     discount: number;
-    
+
     /**
      * Object name
      */
     object: 'product';
-    
+
     /**
      * A string representation of the rrice of the lowe
      */
     price_range: string;
-    
+
     /**
      * Map of all the product's sync variants
      * 
@@ -3947,11 +3946,11 @@ export interface Product extends Identifiable, ProductBase, ProjectScoped {
      * @Important Generated during store sync.
      */
     sync_variants: {
-    
+
         [key: string]: ProductVariant;
-        
+
     };
-    
+
     /**
      * Utility map of the product's color and sizes to assist
      * with navigating the sync variants.
@@ -3969,13 +3968,13 @@ export interface Product extends Identifiable, ProductBase, ProjectScoped {
      * 
      */
     variant_map: {
-    
+
         [key: string]: {
-            
+
             [key: string]: string;
-    
+
         };
-    
+
     };
 
 };
@@ -4000,13 +3999,13 @@ export interface ProductBase {
 /**
  * Product variant for purchase
  */
-export interface ProductVariant extends ProductVariantBase {    
+export interface ProductVariant extends ProductVariantBase {
 
     /**
      * Currency of item.
      */
     currency: CurrencyCode;
-    
+
     /**
      * Files for store preview
      */
@@ -4016,7 +4015,7 @@ export interface ProductVariant extends ProductVariantBase {
      * Unique identifier for the variant
      */
     id: string;
-    
+
     /**
      * Order that the variant appeared in Printful's original result set.
      * Used in the product size sorting algorithm so that XL is not before M.
@@ -4050,22 +4049,22 @@ export interface ProductVariantBase {
      * Underlying Product information.
      */
     product: {
-        
+
         /**
          * Variant id
          */
         variant_id?: number;
-        
+
         /**
          * Product id
          */
         product_id?: number;
-        
+
         /**
          * Image url
          */
         image: string;
-        
+
         /**
          * Name
          * 
@@ -4106,7 +4105,7 @@ export interface ProductVariantFile extends FileBase {
      * Unique identifier
      */
     id: string;
-    
+
 }
 
 
@@ -4114,17 +4113,17 @@ export interface ProductVariantFile extends FileBase {
  * Shared File API
  */
 export interface FileBase {
-    
+
     /**
      * Height in px
      */
     height: number;
-    
+
     /**
      * Large image
      */
     preview_url: string;
-    
+
     /**
      * Small image
      */
@@ -4139,13 +4138,13 @@ export interface FileBase {
      * Width in px
      */
     width: number;
-    
+
 }
 
 /**
  * Type of file
  */
-export type VariantFileType = 'default'|'preview';
+export type VariantFileType = 'default' | 'preview';
 
 
 /**
@@ -4159,61 +4158,61 @@ export interface PrintfulStoreResponseBody {
      * Status code. Returns `200` Unless call performed incorrectly.
      */
     code: number;
-    
+
     /**
      * Extra data (ignoreable)
      */
     extra: any[];
-    
+
     /**
      * Numeric information. Used to ensure no products are left behind
      */
     paging: {
-    
+
         /**
          * Total number of products in the store
          */
         total: number;
-    
+
         /**
          * Result set offset from query string
          */
         offset: number;
-    
+
         /**
          * Result limit from query string
          */
         limit: number;
-    
+
     };
-    
+
     /**
      * List of results
      */
     result: PrintfulProductSummary[];
-    
+
 }
 
 /**
  * Printful Porduct summary
  */
 export interface PrintfulProductSummary extends ProductBase {
-    
+
     /**
      * Id in external system
      */
     id: number;
-    
+
     /**
      * Id in external system
      */
     external_id: string;
-    
+
     /**
      * Number of variants
      */
     variants: number;
-    
+
     /**
      * Number of variants that are synced
      */
@@ -4227,12 +4226,12 @@ export interface PrintfulProductSummary extends ProductBase {
  * GET https://api.printful.com/store/products/{id}
  */
 export interface PrintfulProductDetailResponseBody {
-    
+
     /**
      * Status code. Returns `200` Unless call performed incorrectly.
      */
     code: number;
-    
+
     /**
      * Call result
      */
@@ -4242,12 +4241,12 @@ export interface PrintfulProductDetailResponseBody {
          * Summary of product
          */
         sync_product: PrintfulProductSummary;
-        
+
         /**
          * List of variants
          */
         sync_variants: PrintfulSyncVariant[];
-    
+
     };
 
     /**
@@ -4280,53 +4279,53 @@ export interface PrintfulSyncVariant extends ProductVariantBase {
      * Sync product id
      */
     sync_product_id: string;
-    
+
     /**
      * Id of the variant
      */
     variant_id: number;
-    
+
     /**
      * Warehouse identifier
      */
-    warehouse_product_variant_id: number|null;
-    
+    warehouse_product_variant_id: number | null;
+
 }
 
 /**
  * Printful preview file
  */
 export interface PrintfulFile extends FileBase {
-    
+
     /**
      * Unique identifier
      */
     id: number;
-    
+
     /**
      * File size
      */
     size: number;
-    
+
     /**
      * `ok` when file is working
      */
     status: string;
 
 }
- 
- 
- /**
- * 
- * **************
- * Projects
- * **************
- * 
- */
- 
- /**
- * React Native Project Template
- */
+
+
+/**
+* 
+* **************
+* Projects
+* **************
+* 
+*/
+
+/**
+* React Native Project Template
+*/
 export interface ProjectTemplate extends CreateProjectTemplateParams, Identifiable, VersionHistory {
 
     /**
@@ -4342,11 +4341,11 @@ export interface ProjectTemplate extends CreateProjectTemplateParams, Identifiab
     version_history: {
 
         [key: string]: Version;
-    
+
     };
 
 }
-    
+
 export interface CreateProjectTemplateParams extends UpdateProjectTemplateParams, CreateVersionHistoryParams {
 
     /**
@@ -4357,7 +4356,7 @@ export interface CreateProjectTemplateParams extends UpdateProjectTemplateParams
     /**
      * Branded cover photo of the template
      */
-    cover_photo: RemoteAsset|null;
+    cover_photo: RemoteAsset | null;
 
     /**
      * Description of template
@@ -4368,7 +4367,7 @@ export interface CreateProjectTemplateParams extends UpdateProjectTemplateParams
      * Download Url for the template code.
      */
     git_repo: string;
-    
+
     /**
      * Name of the template
      */
@@ -4387,7 +4386,7 @@ export interface CreateProjectTemplateParams extends UpdateProjectTemplateParams
     version_history: {
 
         [key: string]: CreateVersionParams;
-    
+
     };
 
 }
@@ -4395,10 +4394,10 @@ export interface CreateProjectTemplateParams extends UpdateProjectTemplateParams
 /**
  * Type of project
  */
-export type ProjectType = 
-'cloud'|
-'ecommerce'|
-'marketplace';
+export type ProjectType =
+    'cloud' |
+    'ecommerce' |
+    'marketplace';
 // 'social_network'|
 // 'streaming_service'|
 // 'media';
@@ -4413,7 +4412,7 @@ export interface UpdateProjectTemplateParams extends UpdateVersionHistoryParams 
     /**
      * Branded cover photo of the template
      */
-    cover_photo?: RemoteAsset|null;
+    cover_photo?: RemoteAsset | null;
 
     /**
      * Description of template
@@ -4424,7 +4423,7 @@ export interface UpdateProjectTemplateParams extends UpdateVersionHistoryParams 
      * Download Url for the template code.
      */
     git_repo?: string;
-    
+
     /**
      * Name of the template
      */
@@ -4434,7 +4433,7 @@ export interface UpdateProjectTemplateParams extends UpdateVersionHistoryParams 
      * Type of project
      */
     project_template_type?: ProjectType;
-    
+
 };
 
 export interface VersionHistory extends CreateVersionHistoryParams {
@@ -4447,7 +4446,7 @@ export interface VersionHistory extends CreateVersionHistoryParams {
     version_history: {
 
         [key: string]: Version;
-    
+
     };
 
 }
@@ -4456,7 +4455,7 @@ export interface VersionHistory extends CreateVersionHistoryParams {
  * Version mechanics
  */
 export interface CreateVersionHistoryParams extends UpdateVersionHistoryParams {
-    
+
     /**
      * Released versions
      * 
@@ -4465,7 +4464,7 @@ export interface CreateVersionHistoryParams extends UpdateVersionHistoryParams {
     version_history: {
 
         [key: string]: CreateVersionParams;
-    
+
     };
 
 }
@@ -4474,7 +4473,7 @@ export interface CreateVersionHistoryParams extends UpdateVersionHistoryParams {
  * Version mechanics
  */
 export interface UpdateVersionHistoryParams {
-    
+
     /**
      * Released versions
      * 
@@ -4483,7 +4482,7 @@ export interface UpdateVersionHistoryParams {
     version_history?: {
 
         [key: string]: CreateVersionParams;
-    
+
     };
 
 }
@@ -4497,11 +4496,11 @@ export interface Version extends CreateVersionParams, Identifiable {
      * Object name.
      */
     object: 'version';
-    
+
 }
 
 export interface CreateVersionParams extends UpdateVersionParams {
-    
+
     /**
      * Brief description of the features and functionality introduced in this version.
      */
@@ -4515,7 +4514,7 @@ export interface CreateVersionParams extends UpdateVersionParams {
     version_name: string;
 
 }
-    
+
 export interface UpdateVersionParams {
 
     /**
@@ -4530,7 +4529,7 @@ export interface UpdateVersionParams {
  * settings.
  */
 export interface Project extends CreateProjectParams, Identifiable {
-    
+
     /**
      * Object name.
      */
@@ -4571,8 +4570,8 @@ export const DEFAULT_PROJECT: Project = {
  * Params to generate a project
  */
 export interface CreateProjectParams extends
-ContainsRemoteAssets, UpdateProjectParams { 
-    
+    ContainsRemoteAssets, UpdateProjectParams {
+
     /**
      * This array includes the id of each App that this Project contains.
      */
@@ -4582,7 +4581,7 @@ ContainsRemoteAssets, UpdateProjectParams {
      * Public name displayed to Users. Defaults to the name of the Organization that published the template.
      */
     copyright: string;
-    
+
     /**
      * The name of this Project. Example: My Cool App
      */
@@ -4607,7 +4606,7 @@ ContainsRemoteAssets, UpdateProjectParams {
      * Email displayed to end users for Support requests.
      */
     support_email: string;
-    
+
     /**
      * Id of the Project template that this project is built on.
      */
@@ -4616,8 +4615,8 @@ ContainsRemoteAssets, UpdateProjectParams {
     /**
      * Map of urls for this project.
      */
-    urls: CreateProjectUrlMapParams
-    
+    urls: CreateProjectUrlMapParams;
+
 }
 
 /**
@@ -4682,19 +4681,19 @@ export interface CreateProjectUrlMapParams extends UpdateProjectUrlMapParams {
 /**
  * Params to update a project
  */
-export interface UpdateProjectParams extends 
-UpdateContainsRemoteAssetsParams {
-    
+export interface UpdateProjectParams extends
+    UpdateContainsRemoteAssetsParams {
+
     /**
      * Ids of Apps to append to the `app_ids` array
      */
     append_app_ids?: string[];
-    
+
     /**
      * The Id of the Project logo Asset.
      */
     logo_asset_id?: string;
-    
+
     /**
      * The name of this Project. Example: My Cool App
      */
@@ -4709,7 +4708,7 @@ UpdateContainsRemoteAssetsParams {
      * Email displayed to end users for Support requests.
      */
     support_email?: string;
-    
+
     /**
      * Id of the Project template that this project is built on.
      */
@@ -4784,13 +4783,13 @@ export interface UpdateProjectUrlMapParams {
 /**
  * An end-user registered to an Appdrop Project.
  */
-export interface ProjectUser extends CreateProjectUserParams, User {}
+export interface ProjectUser extends CreateProjectUserParams, User { }
 
 /**
  * Params to create an end-user registered to an Appdrop Project.
  */
-export interface CreateProjectUserParams 
-extends CreateUserParams, ProjectScoped {}
+export interface CreateProjectUserParams
+    extends CreateUserParams, ProjectScoped { }
 
 export const DEFAULT_CLOUD_USER: ProjectUser = {
     address: {
@@ -4830,7 +4829,7 @@ export const DEFAULT_CLOUD_USER: ProjectUser = {
  * 
  * Note – `project_id` is not editable once set.
  */
-export interface UpdateProjectUserParams extends UpdateUserParams {}
+export interface UpdateProjectUserParams extends UpdateUserParams { }
 
 
 /**
@@ -4851,8 +4850,8 @@ export interface App extends CreateAppParams, Identifiable {
 }
 
 
-export interface CreateAppParams extends 
-ProjectScoped, UpdateAppParams {
+export interface CreateAppParams extends
+    ProjectScoped, UpdateAppParams {
 
     /**
      * The name of this App. Example: MyCoolApp iOS or MyCoolApp Web
@@ -4872,7 +4871,7 @@ ProjectScoped, UpdateAppParams {
 }
 
 export interface UpdateAppParams {
-    
+
     /**
      * The name of this App. Example: MyCoolApp iOS or MyCoolApp Web
      */
@@ -4891,13 +4890,13 @@ export interface UpdateAppParams {
 }
 
 export type PlatformType = 'android' |
-'androidTV' |
-'ios' |
-'macOS' |
-'tvOS' |
-'wearOS' |
-'web' |
-'windows';
+    'androidTV' |
+    'ios' |
+    'macOS' |
+    'tvOS' |
+    'wearOS' |
+    'web' |
+    'windows';
 
 /**
  * Native Android App
@@ -4924,19 +4923,19 @@ export const DEFAULT_ANDROID_APP: AppAndroid = {
 };
 
 export interface CreateAppAndroidParams extends CreateAppParams {
-    
+
     /**
      * Package name for an android app
      * 
      * Example: com.example
      */
     android_package_name: string;
-    
+
 }
 
 
 export interface UpdateAppAndroidParams extends UpdateAppParams {
-    
+
     /**
      * Package name for an android app
      * 
@@ -4972,7 +4971,7 @@ export const DEFAULT_IOS_APP: AppIOS = {
 };
 
 export interface CreateAppIOSParams extends CreateAppParams {
-    
+
     /**
      * Bundle ID for an ios app.
      * 
@@ -4986,11 +4985,11 @@ export interface CreateAppIOSParams extends CreateAppParams {
      * Example: 154213891
      */
     ios_app_id: string;
-    
+
 }
 
 export interface UpdateAppIOSParams extends UpdateAppParams {
-    
+
     /**
      * Bundle ID for an iOS app.
      * 
@@ -5049,14 +5048,14 @@ export interface CreateAppWebParams extends CreateAppParams {
  * Params to update a web app
  */
 export interface UpdateAppWebParams extends UpdateAppParams {
-    
+
     /**
      * Fully formed domain name, used for web apps
      * 
      * Example: dashboard.example.com
      */
     domain_name?: string;
-    
+
 }
 
 
@@ -5076,7 +5075,7 @@ export interface SupportTicket extends CreateSupportTicketParams, Identifiable {
  * Params to create a Customer Support Ticket
  */
 export interface CreateSupportTicketParams
-extends ProjectScoped {
+    extends ProjectScoped {
 
     /**
      * The message attached with this support ticket.
@@ -5109,41 +5108,41 @@ export interface AppConfig extends AppConfigBase {
      * on the latest version of the template.
      */
     template_version_id: string;
-    
+
     /**
      * Id of the App version. 
      * 
      * We recommend using semantic versioning (semver), but this can be any string.
      */
     version_id: string;
-    
+
 }
 
 /**
  * The compile-time config object downloaded from the Appdrop dashboard.
  */
 export interface AppConfigBase
-extends ProjectScoped {
-    
+    extends ProjectScoped {
+
     /**
      * Raw API key.
      */
     api_key: string;
-    
+
     /**
      * Id of the App.
      */
     app_id: string;
-    
+
     /**
      * Name of the App.
      */
     app_name: string;
-    
+
     /**
      * Platform
      */
-    platform: PlatformType|'';
+    platform: PlatformType | '';
 
 }
 
@@ -5182,13 +5181,13 @@ export function validConfig(app_config: AppConfig) {
  * An API request to an Appdrop endpoint called by a client app.
  */
 export interface APIRequestBody {
-    
+
     /**
      * App Config object. Should remain constant across all the 
      * users of a version/build.
      */
     app_config: AppConfig;
-    
+
     /**
      * Request data.
      */
@@ -5200,41 +5199,41 @@ export interface APIRequestBody {
      * Defaults to `true`
      */
     livemode: boolean;
-    
+
 }
 
 export type APIRequestBodyData =
-AuthenticateUserParams|
-AttachOrderPromoParams|
-ConfirmOrderParams|
-CreateCardParams|
-CreateChargeParams|
-CreateEntityParams|
-CreateInAppPurchaseParams|
-CreateOrderParams|
-CreatePostParams|
-CreateProjectParams|
-CreatePromoParams|
-CreateRefundParams|
-CreateRemoteAssetParams|
-CreateSubscriptionParams|
-CreateSupportTicketParams|
-CreateThreadParams|
-CreateUserParams|
-InitAppParams|
-RequestReturnParams|
-RequestUserPasswordResetParams|
-RetrieveUserSecurityQuestionParams|
-SyncPrintfulProductsParams|
-UpdateInAppPurchaseParams|
-UpdateOrderParams|
-UpdatePostParams|
-UpdatePromoParams|
-UpdateRemoteAssetParams|
-UpdateSubscriptionParams|
-UpdateThreadParams|
-UpdateEntityParams|
-UpdateUserParams;
+    AuthenticateUserParams |
+    AttachOrderPromoParams |
+    ConfirmOrderParams |
+    CreateCardParams |
+    CreateChargeParams |
+    CreateEntityParams |
+    CreateInAppPurchaseParams |
+    CreateOrderParams |
+    CreatePostParams |
+    CreateProjectParams |
+    CreatePromoParams |
+    CreateRefundParams |
+    CreateRemoteAssetParams |
+    CreateSubscriptionParams |
+    CreateSupportTicketParams |
+    CreateThreadParams |
+    CreateUserParams |
+    InitAppParams |
+    RequestReturnParams |
+    RequestUserPasswordResetParams |
+    RetrieveUserSecurityQuestionParams |
+    SyncPrintfulProductsParams |
+    UpdateInAppPurchaseParams |
+    UpdateOrderParams |
+    UpdatePostParams |
+    UpdatePromoParams |
+    UpdateRemoteAssetParams |
+    UpdateSubscriptionParams |
+    UpdateThreadParams |
+    UpdateEntityParams |
+    UpdateUserParams;
 
 /**
  * Params to sync a Printful products to an ECommerce Project.
@@ -5263,7 +5262,7 @@ export interface APIRequest extends CreateAPIRequest, Identifiable {
      * The IP Address where this API call originated.
      */
     ip_address: string;
-    
+
     /**
      * The response object sent back to the client.
      */
@@ -5272,7 +5271,7 @@ export interface APIRequest extends CreateAPIRequest, Identifiable {
     /**
      * The HTTP status code.
      */
-    status_code: 200|ErrorStatusCode;
+    status_code: 200 | ErrorStatusCode;
 
 }
 
@@ -5280,29 +5279,29 @@ export interface APIRequest extends CreateAPIRequest, Identifiable {
  * The response object sent back to the client.
  */
 export type APIResponseBody =
-App |
-Card |
-Charge |
-Order |
-Entity |
-InitAppResponseBody |
-InAppPurchase |
-Post |
-Product |
-Project |
-ProjectTemplate |
-Promo |
-Refund |
-RemoteAsset |
-Subscription |
-Thread |
-User |
-{
-    products: Product[]
-}|
-{
-    error: APIRequestError
-};
+    App |
+    Card |
+    Charge |
+    Order |
+    Entity |
+    InitAppResponseBody |
+    InAppPurchase |
+    Post |
+    Product |
+    Project |
+    ProjectTemplate |
+    Promo |
+    Refund |
+    RemoteAsset |
+    Subscription |
+    Thread |
+    User |
+    {
+        products: Product[];
+    } |
+    {
+        error: APIRequestError;
+    };
 
 /**
  * An object with information about why an API Call failed.
@@ -5336,30 +5335,30 @@ export interface APIRequestError {
  * `500`: INTERNAL_SERVER_ERROR
  * `503`: SERVICE_UNAVAILABLE
  */
-export type ErrorStatusCode = 
-400 |
-401 |
-403 |
-429 |
-500 |
-503;
+export type ErrorStatusCode =
+    400 |
+    401 |
+    403 |
+    429 |
+    500 |
+    503;
 
 /**
  * Type of error.
  */
-export type ErrorType = 
-'app-config-error'|
-'app-id-error'|
-'api-key-invalid'|
-'api-key-missing'|
-'api-key-revoked'|
-'incorrect-auth-credentials'|
-'internal-server-error'|
-'invalid-data-property'|
-'invalid-endpoint'|
-'rate-limit-surpassed'|
-'unknown-error'|
-'user-id-invalid';
+export type ErrorType =
+    'app-config-error' |
+    'app-id-error' |
+    'api-key-invalid' |
+    'api-key-missing' |
+    'api-key-revoked' |
+    'incorrect-auth-credentials' |
+    'internal-server-error' |
+    'invalid-data-property' |
+    'invalid-endpoint' |
+    'rate-limit-surpassed' |
+    'unknown-error' |
+    'user-id-invalid';
 
 /**
  * Error response map
@@ -5443,18 +5442,18 @@ export type AsyncErrorType = 'customer-write-failed';
  * Data to correct an async error. Used async tasks such as stripe customer creation.
  */
 export interface AsyncError extends
-Identifiable, ProjectScoped {
+    Identifiable, ProjectScoped {
 
     /**
      * Body of data
      */
     body: AsyncErrorBody;
-    
+
     /**
      * Message
      */
     message: string;
-    
+
     /**
      * Object name
      */
@@ -5464,7 +5463,7 @@ Identifiable, ProjectScoped {
      * Number of attempts at correcting error.
      */
     num_retries: number;
-    
+
     /**
      * Name of project where error occurred for convenience
      */
@@ -5489,7 +5488,7 @@ export async function handleSuccess(
     res: any
 ): Promise<void> {
     try {
-        res.header('Content-Type','application/json');
+        res.header('Content-Type', 'application/json');
         res.status(200).send(JSON.stringify(response_body));
         const api_request_id = randString();
         const ip_address_obj = req.headers['x-forwarded-for'] || req.connection.remoteAddress || '';
@@ -5555,9 +5554,9 @@ export async function handleSuccess(
 export async function queryOrganizationByAPIKey(db: any, decodedAPIKey: string) {
     try {
         const organization_query_snapshot = await db
-        .collection('entities')
-        .where('api_key', '==', decodedAPIKey)
-        .get();
+            .collection('entities')
+            .where('api_key', '==', decodedAPIKey)
+            .get();
         if (organization_query_snapshot.empty) {
             throw 'organization_query_snapshot.empty';
         }
@@ -5633,7 +5632,7 @@ export function getDecodedAuthHeader(req: any) {
     return '';
 }
 
-export function handleArrayUpdates(admin: any, docUpdates: any, fields: string[], updateParams: any, updateObj: any) {                
+export function handleArrayUpdates(admin: any, docUpdates: any, fields: string[], updateParams: any, updateObj: any) {
     Object.assign(docUpdates, updateParams);
     for (const array_field of fields) {
         const append_field = `append_${array_field}`;
@@ -5649,14 +5648,14 @@ export function handleArrayUpdates(admin: any, docUpdates: any, fields: string[]
             docUpdates[array_field] = admin.firestore.FieldValue.arrayRemove(
                 ...[...updateParams[remove_field]]
             );
-        } 
+        }
         const result_arr = [...updateObj[array_field]
-        .filter((_r: string) => {
-            if (updateParams[remove_field] === undefined) {
-                return true;
-            }
-            return !updateParams[remove_field].includes(_r);
-        })];
+            .filter((_r: string) => {
+                if (updateParams[remove_field] === undefined) {
+                    return true;
+                }
+                return !updateParams[remove_field].includes(_r);
+            })];
         if (updateParams[append_field] !== undefined) {
             for (const _a of updateParams[append_field]) {
                 if (!result_arr.includes(_a)) {
@@ -5701,63 +5700,63 @@ export const APIRequestBase = 'https://api.appdrop.com';
  * Identifies which endpoint this request targeted.
  */
 export type APIRequestEndpoint =
-'v1/customers/:stripeCustomerId/bankAccounts/:stripeCustomerType' |
-'v1/customers/:stripeCustomerId/cards/:stripeCustomerType' |
-'v1/customers/:stripeCustomerId/orders/:orderId/charges/:stripeCustomerType' |
-'v1/customers/:stripeCustomerId/orders/:orderId/refunds' |
-'v1/customers/:stripeCustomerId/subscriptions/:stripeCustomerType' |
-'v1/customers/:stripeCustomerId/subscriptions/:subscriptionId/:stripeCustomerType'|
-'v1/customers/:stripeCustomerId/verifyBankAccount/:stripeCustomerType' |
-'v1/entities/:entityId' |
-'v1/initAppState/cloud' |
-'v1/initAppState/ecommerce' |
-'v1/initAppState/marketplace' |
-'v1/projects' |
-'v1/projects/:projectId' |
-'v1/projects/:projectId/apps' |
-'v1/projects/:projectId/apps/:appId' |
-'v1/projects/:projectId/apps/:appId/config' |
-'v1/projects/:projectId/inAppPurchases' |
-'v1/projects/:projectId/inAppPurchases/:inAppPurchaseId' |
-'v1/projects/:projectId/posts' |
-'v1/projects/:projectId/posts/:postId' |
-'v1/projects/:projectId/promos' |
-'v1/projects/:projectId/promos/:promoId' |
-'v1/projects/:projectId/retrieveUserSecurityQuestion' |
-'v1/projects/:projectId/syncPrintfulProducts' |
-'v1/projects/:projectId/threads' |
-'v1/projects/:projectId/threads/:threadId' |
-'v1/projects/:projectId/tickets' |
-'v1/projects/:projectId/users' |
-'v1/projects/:projectId/users/:userId' |
-'v1/projects/:projectId/users/:userId/requestUserPasswordReset' |
-'v1/projects/:projectId/users/:userId/authenticateUser' |
-'v1/projects/:projectId/users/:userId/orders' |
-'v1/projects/:projectId/users/:userId/orders/:orderId' |
-'v1/projects/:projectId/users/:userId/orders/:orderId/cancel' |
-'v1/projects/:projectId/users/:userId/orders/:orderId/confirm' |
-'v1/projectTemplates' |
-'v1/projectTemplates/:projectTemplateId';
+    'v1/customers/:stripeCustomerId/bankAccounts/:stripeCustomerType' |
+    'v1/customers/:stripeCustomerId/cards/:stripeCustomerType' |
+    'v1/customers/:stripeCustomerId/orders/:orderId/charges/:stripeCustomerType' |
+    'v1/customers/:stripeCustomerId/orders/:orderId/refunds' |
+    'v1/customers/:stripeCustomerId/subscriptions/:stripeCustomerType' |
+    'v1/customers/:stripeCustomerId/subscriptions/:subscriptionId/:stripeCustomerType' |
+    'v1/customers/:stripeCustomerId/verifyBankAccount/:stripeCustomerType' |
+    'v1/entities/:entityId' |
+    'v1/initAppState/cloud' |
+    'v1/initAppState/ecommerce' |
+    'v1/initAppState/marketplace' |
+    'v1/projects' |
+    'v1/projects/:projectId' |
+    'v1/projects/:projectId/apps' |
+    'v1/projects/:projectId/apps/:appId' |
+    'v1/projects/:projectId/apps/:appId/config' |
+    'v1/projects/:projectId/inAppPurchases' |
+    'v1/projects/:projectId/inAppPurchases/:inAppPurchaseId' |
+    'v1/projects/:projectId/posts' |
+    'v1/projects/:projectId/posts/:postId' |
+    'v1/projects/:projectId/promos' |
+    'v1/projects/:projectId/promos/:promoId' |
+    'v1/projects/:projectId/retrieveUserSecurityQuestion' |
+    'v1/projects/:projectId/syncPrintfulProducts' |
+    'v1/projects/:projectId/threads' |
+    'v1/projects/:projectId/threads/:threadId' |
+    'v1/projects/:projectId/tickets' |
+    'v1/projects/:projectId/users' |
+    'v1/projects/:projectId/users/:userId' |
+    'v1/projects/:projectId/users/:userId/requestUserPasswordReset' |
+    'v1/projects/:projectId/users/:userId/authenticateUser' |
+    'v1/projects/:projectId/users/:userId/orders' |
+    'v1/projects/:projectId/users/:userId/orders/:orderId' |
+    'v1/projects/:projectId/users/:userId/orders/:orderId/cancel' |
+    'v1/projects/:projectId/users/:userId/orders/:orderId/confirm' |
+    'v1/projectTemplates' |
+    'v1/projectTemplates/:projectTemplateId';
 
 /**
  * Type of stripe customer
  */
-export type StripeCustomerType = 'entities'|'users';
+export type StripeCustomerType = 'entities' | 'users';
 
 /**
  * Identifies the HTTP method this request used.
  */
 export type APIRequestMethod = 'DELETE' |
-'GET'|
-'PATCH'|
-'POST' |
-'PUT';
+    'GET' |
+    'PATCH' |
+    'POST' |
+    'PUT';
 
 /**
  * Request Data for for App Initialization
  */
 export interface InitAppParams {
-    
+
     /**
      * Id of the ProjectUser initializing the app.
      */
@@ -5769,7 +5768,7 @@ export interface InitAppParams {
  * Server response body for App Initialization
  */
 export interface InitAppResponseBody {
-    
+
     /**
      * App information. Critical for constructing the share url and review url 
      * from the app id / package name.
@@ -5785,11 +5784,11 @@ export interface InitAppResponseBody {
      * Minted project users. Key is ID
      */
     users: {
-        
-        [key: string]: ProjectUser
-        
+
+        [key: string]: ProjectUser;
+
     };
-    
+
     /**
      * Minted id of the new or returning project user
      */
@@ -5800,7 +5799,7 @@ export interface InitAppResponseBody {
 /**
  * Request Data for for Cloud App Initialization
  */
-export interface InitCloudAppParams extends InitAppParams  {
+export interface InitCloudAppParams extends InitAppParams {
 
     /**
      * Id of entity (returning) or an empty string (guest)
@@ -5818,7 +5817,7 @@ export interface InitCloudAppParams extends InitAppParams  {
  * Server response body for Cloud App Initialization
  */
 export interface InitCloudAppResponseBody extends InitAppResponseBody {
-    
+
     /**
      * Map of all Apps
      */
@@ -5845,10 +5844,21 @@ export interface InitCloudAppResponseBody extends InitAppResponseBody {
     /**
      * Orders created by this entity's Ecommerce project users.
      */
-     orders: {
+    orders: {
 
         [key: string]: Order;
-    
+
+    };
+
+    /**
+      * Map of Posts
+      * 
+      * Key is the `id` of the Post 
+      */
+    posts: {
+
+        [key: string]: Post;
+
     };
 
     /**
@@ -5870,11 +5880,11 @@ export interface InitCloudAppResponseBody extends InitAppResponseBody {
      * Map of this projects owned by this Organizations
      */
     projects: {
-    
+
         [key: string]: Project;
-    
+
     };
-    
+
     /**
      * Map of all the Appdrop project templates. Key is the id.
      */
@@ -5883,16 +5893,38 @@ export interface InitCloudAppResponseBody extends InitAppResponseBody {
         [key: string]: ProjectTemplate;
 
     };
-    
+
     /**
      * Active store promos owned by this entity
      */
     promos: {
 
         [key: string]: Promo;
-    
+
     };
-    
+
+    /**
+      * Map of Remote Assets
+      * 
+      * Key is the `id` of the RemoteAsset
+     */
+    remote_assets: {
+
+        [key: string]: RemoteAsset;
+
+    };
+
+    /**
+     * Map of Threads
+     * 
+     * Key is the `id` of the Thread
+     */
+    threads: {
+
+        [key: string]: Thread;
+
+    };
+
     /**
      * Map of all the minted project users in the scope of this Entity. Key is the id.
      * 
@@ -5900,9 +5932,9 @@ export interface InitCloudAppResponseBody extends InitAppResponseBody {
      * end-users of the Projects created by this user's Entit(y/ies).
      */
     users: {
-        
+
         [key: string]: ProjectUser;
-        
+
     };
 
 }
@@ -5916,7 +5948,7 @@ export interface ECommerceProject extends CreateECommerceProjectParams, Project 
     /**
      * Map of urls for this project.
      */
-     urls: ECommerceProjectUrlMapParams;
+    urls: ECommerceProjectUrlMapParams;
 
 }
 
@@ -5951,13 +5983,13 @@ export const DEFAULT_ECOMMERCE_PROJECT: ECommerceProject = {
     }
 };
 
-export interface ECommerceProjectUrlMapParams extends CreateECommerceProjectUrlMapParams {}
+export interface ECommerceProjectUrlMapParams extends CreateECommerceProjectUrlMapParams { }
 
 /**
  * Params to create an ECommerce Project.
  */
 export interface CreateECommerceProjectParams extends CreateProjectParams {
-    
+
     /**
      * Ids of the Products no longer available in this store. Used to filter
      * out products that are not purchaseable.
@@ -5974,7 +6006,7 @@ export interface CreateECommerceProjectParams extends CreateProjectParams {
      * Method of Fulfillment
      */
     fulfillment_method: FulfillmentMethod;
-    
+
     /**
      * Printful API Key hooked to store.
      */
@@ -5984,13 +6016,13 @@ export interface CreateECommerceProjectParams extends CreateProjectParams {
      * Map of urls for this project.
      */
     urls: CreateECommerceProjectUrlMapParams;
-    
+
 }
 
 /**
  * Method of Fulfillment
  */
-export type FulfillmentMethod = 'printful'|'manual';
+export type FulfillmentMethod = 'printful' | 'manual';
 
 export interface CreateECommerceProjectUrlMapParams extends CreateProjectUrlMapParams {
 
@@ -6014,7 +6046,7 @@ export interface UpdateECommerceProjectUrlMapParams extends UpdateProjectUrlMapP
      * 
      * Example: https://yourappname.com/returns
      */
-     returns?: string;
+    returns?: string;
 
 }
 
@@ -6022,7 +6054,7 @@ export interface UpdateECommerceProjectUrlMapParams extends UpdateProjectUrlMapP
  * Params to update an ECommerce Project
  */
 export interface UpdateECommerceProjectParams extends UpdateProjectParams {
-    
+
     /**
      * Printful API Key
      */
@@ -6033,7 +6065,7 @@ export interface UpdateECommerceProjectParams extends UpdateProjectParams {
 /**
  * End-user for an E-Commerce App.
  */
-export interface ECommerceProjectUser extends CreateECommerceProjectUserParams, ProjectUser {}
+export interface ECommerceProjectUser extends CreateECommerceProjectUserParams, ProjectUser { }
 
 export interface CreateECommerceProjectUserParams extends CreateProjectUserParams {
 
@@ -6041,7 +6073,7 @@ export interface CreateECommerceProjectUserParams extends CreateProjectUserParam
      * Ids of the user's favorited products.
      */
     favorite_product_ids: string[];
-    
+
     /**
      * User's Financial details.
      */
@@ -6055,7 +6087,7 @@ export interface UpdateECommerceProjectUserParams extends UpdateProjectUserParam
      * Ids of Favorite Products to append to the `favorite_product_ids` array
      */
     append_favorite_product_ids?: string[];
-    
+
     /**
      * User's Financial details.
      */
@@ -6112,12 +6144,12 @@ export const DEFAULT_ECOMMERCE_USER: ECommerceProjectUser = {
 /**
  * Request Data for for ECommerce App Initialization
  */
-export interface InitEcommerceAppParams extends InitAppParams  {}
+export interface InitEcommerceAppParams extends InitAppParams { }
 
 /**
  * Server response body for ECommerce App Initialization
  */
- export interface InitEcommerceAppResponseBody extends InitAppResponseBody {
+export interface InitEcommerceAppResponseBody extends InitAppResponseBody {
 
     /**
      * Orders owned by this project user.
@@ -6125,7 +6157,7 @@ export interface InitEcommerceAppParams extends InitAppParams  {}
     orders: {
 
         [key: string]: Order;
-    
+
     };
 
     /**
@@ -6134,16 +6166,16 @@ export interface InitEcommerceAppParams extends InitAppParams  {}
     products: {
 
         [key: string]: Product;
-    
+
     };
-    
+
     /**
      * Active store promos
      */
     promos: {
 
         [key: string]: Promo;
-    
+
     };
 
     /**
@@ -6155,9 +6187,9 @@ export interface InitEcommerceAppParams extends InitAppParams  {}
      * Minted project users. Key is ID
      */
     users: {
-        
-        [key: string]: ECommerceProjectUser
-        
+
+        [key: string]: ECommerceProjectUser;
+
     };
 
 }
@@ -6165,12 +6197,12 @@ export interface InitEcommerceAppParams extends InitAppParams  {}
 /**
  * A promotional for an order
  */
- export interface Promo extends CreatePromoParams, Identifiable, ProjectScoped  {
+export interface Promo extends CreatePromoParams, Identifiable, ProjectScoped {
 
     /**
      * Object name
      */
-     object: 'promo';
+    object: 'promo';
 
 }
 
@@ -6204,12 +6236,12 @@ export interface CreatePromoParams extends UpdatePromoParams {
      * Example: `APPDROP-FAMILY`
      */
     code: string;
-    
+
     /**
      * User facing description of the code
      */
     description: string;
-    
+
     /**
      * When the promo becomes inactive.
      */
@@ -6220,7 +6252,7 @@ export interface CreatePromoParams extends UpdatePromoParams {
      * 
      * `null` if the promo is evergreen
      */
-    max_num_redemptions: number|null;
+    max_num_redemptions: number | null;
 
     /**
      * Mininum size of the cart before this promo is accepted.
@@ -6228,7 +6260,7 @@ export interface CreatePromoParams extends UpdatePromoParams {
      * `0` if the promo does not have a min. order size.
      */
     min_subtotal_cents: number;
-    
+
     /**
      * Number of times this promo has been used.
      */
@@ -6268,12 +6300,12 @@ export interface UpdatePromoParams {
      * User facing code for redemption
      */
     code?: string;
-    
+
     /**
      * User facing description of the code
      */
     description?: string;
-    
+
     /**
      * When the promo becomes inactive.
      */
@@ -6284,7 +6316,7 @@ export interface UpdatePromoParams {
      * 
      * `null` if the promo is evergreen
      */
-    max_num_redemptions?: number|null;
+    max_num_redemptions?: number | null;
 
     /**
      * Mininum size of the cart before this promo is accepted.
@@ -6292,7 +6324,7 @@ export interface UpdatePromoParams {
      * `0` if the promo does not have a min. order size.
      */
     min_subtotal_cents?: number;
-    
+
     /**
      * Number of times this promo has been used.
      */
@@ -6326,14 +6358,14 @@ export interface UpdatePromoParams {
 /**
  * Type of promotional
  */
- export type PromoType = 'store_credit'|'free_shipping'|'percentage';
+export type PromoType = 'store_credit' | 'free_shipping' | 'percentage';
 
 /**
  * Marketplace Project supporting a creators and consumers
  */
- export interface MarketplaceProject extends 
- CreateMarketplaceProjectParams, Project,
- ProjectInAppPurchases, ProjectInterests {
+export interface MarketplaceProject extends
+    CreateMarketplaceProjectParams, Project,
+    ProjectInAppPurchases, ProjectInterests {
 
     /**
      * Map of IAPs
@@ -6360,7 +6392,7 @@ export interface UpdatePromoParams {
     /**
      * Map of urls for this project.
      */
-     urls: MarketplaceProjectUrlMapParams;
+    urls: MarketplaceProjectUrlMapParams;
 
 }
 
@@ -6398,16 +6430,15 @@ export const DEFAULT_MARKETPLACE_PROJECT: MarketplaceProject = {
     }
 };
 
-export interface MarketplaceProjectUrlMapParams extends CreateMarketplaceProjectUrlMapParams {}
+export interface MarketplaceProjectUrlMapParams extends CreateMarketplaceProjectUrlMapParams { }
 
 /**
  * Params to create a Marketplace Project.
  */
-export interface CreateMarketplaceProjectParams extends 
-CreateProjectParams, 
-CreateProjectInAppPurchasesParams,
-CreateProjectInterestsParams
-{
+export interface CreateMarketplaceProjectParams extends
+    CreateProjectParams,
+    CreateProjectInAppPurchasesParams,
+    CreateProjectInterestsParams {
 
     /**
      * Base API for FCM fetch. No trailing slash.
@@ -6422,26 +6453,26 @@ CreateProjectInterestsParams
      * Example: 'host', 'business', 'organizer'
      */
     creator_name_singular: string;
-    
+
     /**
      * How to refer to creators in this marketplace
      * 
      * Example: 'hosts', 'businesses', 'organizers'
      */
     creator_name_plural: string;
-    
-     /**
-      * How to refer to a consumer in this marketplace
-      * 
-      * Example: 'guest', 'member', 'user'
-      */
+
+    /**
+     * How to refer to a consumer in this marketplace
+     * 
+     * Example: 'guest', 'member', 'user'
+     */
     consumer_name_singular: string;
-     
-     /**
-      * How to refer to consumers in this marketplace
-      * 
-      * Example: 'guests', 'members', 'users'
-      */
+
+    /**
+     * How to refer to consumers in this marketplace
+     * 
+     * Example: 'guests', 'members', 'users'
+     */
     consumer_name_plural: string;
 
     /**
@@ -6455,21 +6486,21 @@ CreateProjectInterestsParams
      * Map of urls for this project.
      */
     urls: CreateMarketplaceProjectUrlMapParams;
-    
+
 }
 
-export interface CreateMarketplaceProjectUrlMapParams extends CreateProjectUrlMapParams {}
+export interface CreateMarketplaceProjectUrlMapParams extends CreateProjectUrlMapParams { }
 
-export interface UpdateMarketplaceProjectUrlMapParams extends UpdateProjectUrlMapParams {}
+export interface UpdateMarketplaceProjectUrlMapParams extends UpdateProjectUrlMapParams { }
 
 
 
 /**
  * Params to update a Marketplace Project
  */
-export interface UpdateMarketplaceProjectParams extends 
-UpdateProjectParams, UpdateProjectInAppPurchaseParams,
-UpdateProjectInterestsParams {
+export interface UpdateMarketplaceProjectParams extends
+    UpdateProjectParams, UpdateProjectInAppPurchaseParams,
+    UpdateProjectInterestsParams {
 
     /**
      * Base API for FCM fetch. No trailing slash.
@@ -6484,21 +6515,21 @@ UpdateProjectInterestsParams {
      * Example: 'host', 'business', 'organizer'
      */
     creator_name_singular?: string;
-    
+
     /**
      * How to refer to creators in this marketplace
      * 
      * Example: 'hosts', 'businesses', 'organizers'
      */
     creator_name_plural?: string;
-    
+
     /**
      * How to refer to a consumer in this marketplace
      * 
      * Example: 'guest', 'member', 'user'
      */
     consumer_name_singular?: string;
-    
+
     /**
      * How to refer to consumers in this marketplace
      * 
@@ -6518,7 +6549,7 @@ UpdateProjectInterestsParams {
 /**
  * Map of Interests
  */
- export interface ProjectInterests {
+export interface ProjectInterests {
 
     /**
      * Map of Interests
@@ -6531,40 +6562,40 @@ UpdateProjectInterestsParams {
 
     };
 
- }
-
- /**
- * Params to create map of Interests
- */
-export interface CreateProjectInterestsParams {
-    
-    /**
-     * Map of Interests
-     * 
-     * Key is the `id` of the Interest
-     */
-     interests: {
-        
-        [key: string]: CreateInterestParams;
-        
-    };
-    
 }
 
 /**
- * Params to update map of Interests
- */
-export interface UpdateProjectInterestsParams {
-    
+* Params to create map of Interests
+*/
+export interface CreateProjectInterestsParams {
+
     /**
      * Map of Interests
      * 
      * Key is the `id` of the Interest
      */
     interests: {
-    
+
+        [key: string]: CreateInterestParams;
+
+    };
+
+}
+
+/**
+ * Params to update map of Interests
+ */
+export interface UpdateProjectInterestsParams {
+
+    /**
+     * Map of Interests
+     * 
+     * Key is the `id` of the Interest
+     */
+    interests: {
+
         [key: string]: UpdateInterestParams;
-    
+
     };
 
 }
@@ -6607,7 +6638,7 @@ export interface CreateInterestParams {
  * Params to update interest
  */
 export interface UpdateInterestParams {
-    
+
     /**
      * Community status
      */
@@ -6628,53 +6659,53 @@ export interface UpdateInterestParams {
 /**
  * Map of IAPs
  */
- export interface ProjectInAppPurchases {
-    
+export interface ProjectInAppPurchases {
+
     /**
      * Map of IAPs
      * 
      * Key is the `id` of the IAP
      */
     in_app_purchases: {
-        
+
         [key: string]: InAppPurchase;
-        
+
     };
-    
+
 }
 
 /**
  * Params to create map of IAPs
  */
 export interface CreateProjectInAppPurchasesParams {
-    
+
     /**
      * Map of IAPs
      * 
      * Key is the `id` of the IAP
      */
     in_app_purchases: {
-        
+
         [key: string]: CreateInAppPurchaseParams;
-        
+
     };
-    
+
 }
 
 /**
  * Params to update map of IAPs
  */
 export interface UpdateProjectInAppPurchaseParams {
-    
+
     /**
      * Map of IAPs
      * 
      * Key is the `id` of the IAP
      */
     in_app_purchases: {
-    
+
         [key: string]: UpdateInAppPurchaseParams;
-    
+
     };
 
 }
@@ -6688,34 +6719,34 @@ export interface InAppPurchase extends CreateInAppPurchaseParams, Identifiable {
      * Object name
      */
     object: 'in_app_purchase';
-    
+
 }
 
 /**
  * Params to create an IAP
  */
 export interface CreateInAppPurchaseParams extends UpdateInAppPurchaseParams {
-    
+
     /**
      * Whether or not this IAP is available for consumption
      */
     active: boolean;
-    
+
     /**
      * Type of IAP
      */
     iap_type: InAppPurchaseType;
-    
+
     /**
      * Platform
      */
     platform: PlatformType;
-    
+
     /**
      * Cost of IAP
      */
     price_cents: number;
-    
+
     /**
      * Id of the product on App Store or Play Store
      */
@@ -6724,20 +6755,20 @@ export interface CreateInAppPurchaseParams extends UpdateInAppPurchaseParams {
     /**
      * Renewal period
      */
-    renews: 'monthly'|BillingInterval|null;
-    
+    renews: 'monthly' | BillingInterval | null;
+
 }
 
 /**
  * Type of IAP
  */
-export type InAppPurchaseType = 'consumable'|'nonconsumable';
+export type InAppPurchaseType = 'consumable' | 'nonconsumable';
 
 /**
  * Params to update an IAP
  */
 export interface UpdateInAppPurchaseParams {
-    
+
     /**
      * Whether or not this IAP is available for consumption
      */
@@ -6748,12 +6779,12 @@ export interface UpdateInAppPurchaseParams {
 /**
  * User for an Marketplace App.
  */
-export interface MarketplaceProjectUser extends CreateMarketplaceProjectUserParams, ProjectUser {}
+export interface MarketplaceProjectUser extends CreateMarketplaceProjectUserParams, ProjectUser { }
 
 /**
  * Initial value for Marketplace user.
  */
- export const DEFAULT_MARKETPLACE_USER: MarketplaceProjectUser = {
+export const DEFAULT_MARKETPLACE_USER: MarketplaceProjectUser = {
     address: {
         address1: '',
         address2: '',
@@ -6767,7 +6798,7 @@ export interface MarketplaceProjectUser extends CreateMarketplaceProjectUserPara
     bio: '',
     blocked_member_ids: [],
     community_status: 'approved',
-	cover_asset_id: '',
+    cover_asset_id: '',
     created_at: {
         _nanoseconds: 0,
         _seconds: 0
@@ -6781,7 +6812,7 @@ export interface MarketplaceProjectUser extends CreateMarketplaceProjectUserPara
     id: '',
     interest_ids: [],
     lat: DEFAULT_LATITUDE,
-    long: DEFAULT_LONGITUDE, 
+    long: DEFAULT_LONGITUDE,
     livemode: true,
     metadata: {},
     name: '',
@@ -6803,10 +6834,10 @@ export interface MarketplaceProjectUser extends CreateMarketplaceProjectUserPara
 /**
  * Params to create a marketplace user
  */
-export interface CreateMarketplaceProjectUserParams extends 
-ContainsAvatar, ContainsCover,
-ContainsSocial, CreateProjectUserParams {
-    
+export interface CreateMarketplaceProjectUserParams extends
+    ContainsAvatar, ContainsCover,
+    ContainsSocial, CreateProjectUserParams {
+
     /**
      * String with the days of the week this user is interested in events
      * 
@@ -6820,7 +6851,7 @@ ContainsSocial, CreateProjectUserParams {
      * Typically, Marketplace users utilize IAPs.
      */
     financial_details: FinancialDetails;
-  
+
     /**
      * Ids of the user's interests
      */
@@ -6829,13 +6860,13 @@ ContainsSocial, CreateProjectUserParams {
     /**
      * Number of miles for the map filter to expand or null if no filter
      */
-    num_miles_filter: number|null;
+    num_miles_filter: number | null;
 
     /**
      * Role of user
      */
     role: MarketplaceProjectUserRole;
-    
+
 }
 
 /**
@@ -6877,7 +6908,7 @@ export interface ContainsCover {
 /**
  * Params to update a cover image
  */
- export interface UpdateContainsCoverParams {
+export interface UpdateContainsCoverParams {
 
     /**
      * Id of the remote asset for the cover
@@ -6910,23 +6941,23 @@ export interface ContainsSocial {
      * Ids of the users blocked
      */
     blocked_member_ids: string[];
-    
+
     /**
      * Community status
      */
     community_status: CommunityStatus;
-    
+
     /**
      * Username
      */
     username: string;
-    
+
 }
 
 /**
  * Community status. Editable only by admins.
  */
-export type CommunityStatus = 'approved'|'deactivated';
+export type CommunityStatus = 'approved' | 'deactivated';
 export const APPROVED_COMMUNITY_STATUS: CommunityStatus = 'approved';
 export const DISAPPROVED_COMMUNITY_STATUS: CommunityStatus = 'deactivated';
 
@@ -6934,7 +6965,7 @@ export const DISAPPROVED_COMMUNITY_STATUS: CommunityStatus = 'deactivated';
  * Params to update social props
  */
 export interface UpdateContainsSocialParams {
-    
+
     /**
      * Ids of users to append to the `blocked_member_ids` array
      */
@@ -6964,40 +6995,40 @@ export interface UpdateContainsSocialParams {
 /**
  * Role of user
  */
-export type MarketplaceProjectUserRole = 'consumer'|'creator';
+export type MarketplaceProjectUserRole = 'consumer' | 'creator';
 
 /**
  * Params to update a marketplace user
  */
-export interface UpdateMarketplaceProjectUserParams extends 
-UpdateContainsAvatarParams, UpdateContainsCoverParams,
-UpdateContainsSocialParams, UpdateProjectUserParams {
-    
+export interface UpdateMarketplaceProjectUserParams extends
+    UpdateContainsAvatarParams, UpdateContainsCoverParams,
+    UpdateContainsSocialParams, UpdateProjectUserParams {
+
     /**
      * Ids of users to append to the `interest_ids` array
      */
     append_interest_ids?: string[];
-     
-     /**
-      * String with the days of the week this user is interested in events
-      * 
-      * `'035'` means Sunday, Wednesday and Friday
-      */
+
+    /**
+     * String with the days of the week this user is interested in events
+     * 
+     * `'035'` means Sunday, Wednesday and Friday
+     */
     available_days?: string;
-    
+
     /**
      * User's Financial details.
      */
     financial_details?: UpdateFinancialDetailsParams;
-    
+
     /**
       * Number of miles for the map filter to expand or null if no filter
       */
-    num_miles_filter?: number|null;
-     
-     /**
-      * Ids of users to remove from the `interest_ids` array
-      */
+    num_miles_filter?: number | null;
+
+    /**
+     * Ids of users to remove from the `interest_ids` array
+     */
     remove_interest_ids?: string[];
 
     /**
@@ -7022,18 +7053,18 @@ export interface Post extends CreatePostParams, Identifiable {
 /**
  * Params to create a post
  */
-export interface CreatePostParams extends 
-CreateMappableParams, ProjectScoped,
-Publishable, UpdatePostParams {
+export interface CreatePostParams extends
+    CreateMappableParams, ProjectScoped,
+    Publishable, UpdatePostParams {
 
     /**
      * Latitude
      */
     lat: number;
 
-     /**
-     * Longitude
-     */
+    /**
+    * Longitude
+    */
     long: number;
 
     /**
@@ -7051,7 +7082,7 @@ Publishable, UpdatePostParams {
      * or, if public, an empty string
      */
     thread_id: string;
-    
+
 }
 
 /**
@@ -7063,23 +7094,23 @@ export interface Publishable {
      * Ids of the user who created the post
      */
     creator_id: string;
-    
+
 }
 
 /**
  * Status
  */
-export type PostStatus = 'draft'|'deleted'|'live';
+export type PostStatus = 'draft' | 'deleted' | 'live';
 
 /**
  * Type of post
  */
-export type PostType = 
-'event'|
-'listing'|
-'message'|
-'reaction'|
-'status_update';
+export type PostType =
+    'event' |
+    'listing' |
+    'message' |
+    'reaction' |
+    'status_update';
 
 /**
  * Params to update a Post
@@ -7097,7 +7128,7 @@ export interface UpdatePostParams extends UpdateMappableParams {
  * Event
  */
 export interface EventPost extends Post, CreateEventPostParams {
-    
+
     /**
      * Type of post
      */
@@ -7134,16 +7165,16 @@ export const DEFAULT_EVENT_POST: EventPost = {
 /**
  * Params to create an Event
  */
-export interface CreateEventPostParams extends 
-ContainsAddress, ContainsCover,
-ContainsSocial, CreatePostParams, 
-Manageable, Titled {
+export interface CreateEventPostParams extends
+    ContainsAddress, ContainsCover,
+    ContainsSocial, CreatePostParams,
+    Manageable, Titled {
 
     /**
      * Ids of the members attending the event
      */
     attending_member_ids: string[];
-    
+
 }
 
 /**
@@ -7155,7 +7186,7 @@ export interface ContainsAddress {
      * Address of the event or, if no physical address, a description
      * such as a Zoom room join link
      */
-    address: Address|string;
+    address: Address | string;
 
 }
 
@@ -7174,8 +7205,8 @@ export interface Manageable {
 /**
  * Titled object
  */
- export interface Titled {
-    
+export interface Titled {
+
     /**
      * Title of the object
      */
@@ -7186,17 +7217,17 @@ export interface Manageable {
 /**
  * Params to update an Event
  */
-export interface UpdateEventPostParams extends 
-UpdateContainsAddressParams,
-UpdateContainsCoverParams,
-UpdateContainsSocialParams, UpdateManageableParams,
-UpdatePostParams, UpdateTitledParams {
-    
+export interface UpdateEventPostParams extends
+    UpdateContainsAddressParams,
+    UpdateContainsCoverParams,
+    UpdateContainsSocialParams, UpdateManageableParams,
+    UpdatePostParams, UpdateTitledParams {
+
     /**
      * Ids to append to the `attending_member_ids` array
      */
     append_attending_member_ids?: string[];
-    
+
     /**
      * Ids to remove from the `attending_member_ids` array
      */
@@ -7210,7 +7241,7 @@ export interface UpdateContainsAddressParams {
      * Physical address or, if no physical address, a description
      * such as a Zoom room join link
      */
-    address?: Address|string;
+    address?: Address | string;
 
 }
 
@@ -7246,8 +7277,8 @@ export interface UpdateTitledParams {
 /**
  * Listing
  */
- export interface ListingPost extends Post, CreateListingPostParams {
-    
+export interface ListingPost extends Post, CreateListingPostParams {
+
     /**
      * Type of post
      */
@@ -7284,24 +7315,24 @@ export const DEFAULT_LISTING_POST: ListingPost = {
 /**
  * Params to create a listing
  */
-export interface CreateListingPostParams extends 
-ContainsAddress, ContainsCover,
-ContainsRemoteAssets, ContainsSocial,
-CreatePostParams, Manageable, Titled {}
+export interface CreateListingPostParams extends
+    ContainsAddress, ContainsCover,
+    ContainsRemoteAssets, ContainsSocial,
+    CreatePostParams, Manageable, Titled { }
 
 /**
  * Params to update a listing
  */
 export interface UpdateListingPostParams extends
-UpdateContainsAddressParams, UpdateContainsRemoteAssetsParams,
-UpdateContainsSocialParams, UpdateManageableParams,
-UpdatePostParams, UpdateTitledParams {}
+    UpdateContainsAddressParams, UpdateContainsRemoteAssetsParams,
+    UpdateContainsSocialParams, UpdateManageableParams,
+    UpdatePostParams, UpdateTitledParams { }
 
 /**
  * Message
  */
- export interface MessagePost extends Post, CreateMessagePostParams {
-    
+export interface MessagePost extends Post, CreateMessagePostParams {
+
     /**
      * Type of post
      */
@@ -7331,13 +7362,13 @@ export const DEFAULT_MESSAGE_POST: MessagePost = {
 /**
  * Params to create a message
  */
-export interface CreateMessagePostParams extends 
-Bodied, ContainsRemoteAssets, CreatePostParams {}
+export interface CreateMessagePostParams extends
+    Bodied, ContainsRemoteAssets, CreatePostParams { }
 
 /**
  * Body properties
  */
- export interface Bodied {
+export interface Bodied {
 
     /**
      * Body
@@ -7350,13 +7381,13 @@ Bodied, ContainsRemoteAssets, CreatePostParams {}
  * Params to update a message
  */
 export interface UpdateMessagePostParams extends
-UpdateBodiedParams, UpdateContainsRemoteAssetsParams,
-UpdatePostParams {}
+    UpdateBodiedParams, UpdateContainsRemoteAssetsParams,
+    UpdatePostParams { }
 
 /**
  * Params to update body
  */
- export interface UpdateBodiedParams {
+export interface UpdateBodiedParams {
 
     /**
      * Body
@@ -7368,9 +7399,9 @@ UpdatePostParams {}
 /**
  * Reaction
  */
- export interface ReactionPost extends
- CreateReactionPostParams, Post {
-    
+export interface ReactionPost extends
+    CreateReactionPostParams, Post {
+
     /**
      * Type of post
      */
@@ -7402,8 +7433,8 @@ export const DEFAULT_REACTION_POST: ReactionPost = {
 /**
  * Params to create a reaction
  */
-export interface CreateReactionPostParams extends 
-Bodied, ContainsRemoteAssets, CreatePostParams {
+export interface CreateReactionPostParams extends
+    Bodied, ContainsRemoteAssets, CreatePostParams {
 
     /**
      * Type of reaction
@@ -7420,22 +7451,22 @@ Bodied, ContainsRemoteAssets, CreatePostParams {
 /**
  * Type of reaction
  */
-export type ReactionType = 
-'anger'|
-'attending_event'|
-'clap'|
-'comment'|
-'laugh'|
-'like'|
-'love'|
-'not_attending_event';
+export type ReactionType =
+    'anger' |
+    'attending_event' |
+    'clap' |
+    'comment' |
+    'laugh' |
+    'like' |
+    'love' |
+    'not_attending_event';
 
 /**
  * Params to update a reaction
  */
 export interface UpdateReactionPostParams extends
-UpdateBodiedParams, UpdateContainsRemoteAssetsParams,
-UpdatePostParams {
+    UpdateBodiedParams, UpdateContainsRemoteAssetsParams,
+    UpdatePostParams {
 
     /**
      * Type of reaction
@@ -7447,9 +7478,9 @@ UpdatePostParams {
 /**
  * Status Update
  */
- export interface StatusUpdatePost extends
- CreateStatusUpdatePostParams, Post {
-    
+export interface StatusUpdatePost extends
+    CreateStatusUpdatePostParams, Post {
+
     /**
      * Type of post
      */
@@ -7479,15 +7510,15 @@ export const DEFAULT_STATUS_UPDATE_POST: StatusUpdatePost = {
 /**
  * Params to create a status_update
  */
-export interface CreateStatusUpdatePostParams extends 
-Bodied, ContainsRemoteAssets, CreatePostParams {}
+export interface CreateStatusUpdatePostParams extends
+    Bodied, ContainsRemoteAssets, CreatePostParams { }
 
 /**
  * Params to update a status_update
  */
 export interface UpdateStatusUpdatePostParams extends
-UpdateBodiedParams, UpdateContainsRemoteAssetsParams,
-UpdatePostParams {}
+    UpdateBodiedParams, UpdateContainsRemoteAssetsParams,
+    UpdatePostParams { }
 
 
 /**
@@ -7499,10 +7530,10 @@ export interface Thread extends CreateThreadParams, Identifiable {
       * Timestamp of the latest post
       */
     latest_post_at: Timestamped;
-     
-     /**
-      * Caption of the latest post
-      */
+
+    /**
+     * Caption of the latest post
+     */
     latest_post_body: string;
 
     /**
@@ -7539,19 +7570,19 @@ export const DEFAULT_THREAD: Thread = {
 /**
  * Params to create a thread
  */
-export interface CreateThreadParams extends 
-ContainsAvatar, ContainsCover,
-ContainsSocial, CreateMappableParams, 
-Manageable, ProjectScoped, Publishable, Titled {
+export interface CreateThreadParams extends
+    ContainsAvatar, ContainsCover,
+    ContainsSocial, CreateMappableParams,
+    Manageable, ProjectScoped, Publishable, Titled {
 
     /**
      * Latitude
      */
     lat: number;
 
-     /**
-     * Longitude
-     */
+    /**
+    * Longitude
+    */
     long: number;
 
     /**
@@ -7561,12 +7592,12 @@ Manageable, ProjectScoped, Publishable, Titled {
      * a superset of both `pending_member_ids` and `admin_ids`
      */
     member_ids: string[];
-    
+
     /**
      * Ids of the members invited to the thread
      */
     pending_member_ids: string[];
-    
+
     /**
      * Type of thread
      */
@@ -7577,15 +7608,15 @@ Manageable, ProjectScoped, Publishable, Titled {
 /**
  * Type of thread
  */
-export type ThreadType = 'direct_message'|'group';
+export type ThreadType = 'direct_message' | 'group';
 
 /**
  * Params to update a thread
  */
 export interface UpdateThreadParams
-extends UpdateContainsAvatarParams, UpdateContainsCoverParams,
-UpdateContainsSocialParams, UpdateManageableParams,
-UpdateMappableParams, UpdateTitledParams {
+    extends UpdateContainsAvatarParams, UpdateContainsCoverParams,
+    UpdateContainsSocialParams, UpdateManageableParams,
+    UpdateMappableParams, UpdateTitledParams {
 
     /**
      * Ids to append to the `member_ids` array
@@ -7602,9 +7633,9 @@ UpdateMappableParams, UpdateTitledParams {
      */
     remove_member_ids?: string[];
 
-     /**
-      * Ids to remove from the `pending_member_ids` array
-      */
+    /**
+     * Ids to remove from the `pending_member_ids` array
+     */
     remove_pending_member_ids?: string[];
 
 }
@@ -7612,78 +7643,78 @@ UpdateMappableParams, UpdateTitledParams {
 /**
  * Request Data for for Marketplace App Initialization
  */
- export interface InitMarketplaceAppParams extends InitAppParams  {}
+export interface InitMarketplaceAppParams extends InitAppParams { }
 
- /**
-  * Server response body for Marketplace App Initialization
-  */
- export interface InitMarketplaceAppResponseBody extends InitAppResponseBody {
+/**
+ * Server response body for Marketplace App Initialization
+ */
+export interface InitMarketplaceAppResponseBody extends InitAppResponseBody {
 
-     /**
-      * Project information. Critical for copyright and support email.
-      */
-     project: MarketplaceProject;
-     
-     /**
-      * Map of Posts
-      * 
-      * Key is the `id` of the Post 
-      */
-     posts: {
-         
-        [key: string]: Post;
-     
-     };
-
-     /**
-      * Map of Remote Assets
-      * 
-      * Key is the `id` of the RemoteAsset
+    /**
+     * Project information. Critical for copyright and support email.
      */
-    remote_assets: {
-    
-        [key: string]: RemoteAsset;
-    
+    project: MarketplaceProject;
+
+    /**
+     * Map of Posts
+     * 
+     * Key is the `id` of the Post 
+     */
+    posts: {
+
+        [key: string]: Post;
+
     };
- 
-     /**
-      * Map of Threads
-      * 
-      * Key is the `id` of the Thread
-      */
-     threads: {
-         
-         [key: string]: Thread;
-         
-     };
- 
-     /**
-      * Minted project users. Key is ID
-      */
-     users: {
-         
-         [key: string]: MarketplaceProjectUser;
-         
-     };
-     
-     /**
-      * Minted id of the new or returning project user
-      */
-     user_id: string;
- 
- }
 
- /**
- * 
- * **************
- * Utils
- * **************
- * 
- */
+    /**
+     * Map of Remote Assets
+     * 
+     * Key is the `id` of the RemoteAsset
+    */
+    remote_assets: {
 
- /**
- * Random string generator. Safe for minting ids.
- */
+        [key: string]: RemoteAsset;
+
+    };
+
+    /**
+     * Map of Threads
+     * 
+     * Key is the `id` of the Thread
+     */
+    threads: {
+
+        [key: string]: Thread;
+
+    };
+
+    /**
+     * Minted project users. Key is ID
+     */
+    users: {
+
+        [key: string]: MarketplaceProjectUser;
+
+    };
+
+    /**
+     * Minted id of the new or returning project user
+     */
+    user_id: string;
+
+}
+
+/**
+* 
+* **************
+* Utils
+* **************
+* 
+*/
+
+/**
+* Random string generator. Safe for minting ids.
+*/
 export function randString(l = -1) {
     let result = "";
     const alphanumeric_characters = "012345789abcdefghijklmnopqrstvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -7700,40 +7731,40 @@ export function randString(l = -1) {
  * Maps month index to its name. `0` is `Jan` or `January`
  */
 export const monthMap = (n: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11, long: boolean) => {
-	switch (n) {
-		case 0:
-			return long ? 'January' : 'Jan';
-		case 1:
-			return long ? 'February' : 'Feb';
-		case 2:
-			return long ? 'March' : 'Mar';
-		case 3:
-			return long ? 'April' : 'Apr';
-		case 4:
-			return long ? 'May' : 'May';
-		case 5:
-			return long ? 'June' : 'Jun';
-		case 6:
-			return long ? 'July' : 'Jul';
-		case 7:
-			return long ? 'August' : 'Aug';
-		case 8:
-			return long ? 'September' : 'Sep';
-		case 9:
-			return long ? 'October' : 'Oct';
-		case 10:
-			return long ? 'November' : 'Nov';
-		case 11:
-			return long ? 'December' : 'Dec';
-		default:
-			throw new Error('invalid month number passed to month_map');
-	}
+    switch (n) {
+        case 0:
+            return long ? 'January' : 'Jan';
+        case 1:
+            return long ? 'February' : 'Feb';
+        case 2:
+            return long ? 'March' : 'Mar';
+        case 3:
+            return long ? 'April' : 'Apr';
+        case 4:
+            return long ? 'May' : 'May';
+        case 5:
+            return long ? 'June' : 'Jun';
+        case 6:
+            return long ? 'July' : 'Jul';
+        case 7:
+            return long ? 'August' : 'Aug';
+        case 8:
+            return long ? 'September' : 'Sep';
+        case 9:
+            return long ? 'October' : 'Oct';
+        case 10:
+            return long ? 'November' : 'Nov';
+        case 11:
+            return long ? 'December' : 'Dec';
+        default:
+            throw new Error('invalid month number passed to month_map');
+    }
 };
 
 /**
  * Returns true if the `s` param is a valid string
  */
-export const validString = (s: string|null|undefined, requires_letters: boolean) => {
+export const validString = (s: string | null | undefined, requires_letters: boolean) => {
     return (
         s !== null &&
         s !== undefined &&
@@ -7773,7 +7804,7 @@ export function secToTime(s: number) {
  * Accepts a unix timestamp in seconds and returns the date. Example: Friday, Mar. 19
  */
 export function secToDate(s: number) {
-    const date = new Date(s*1000);
+    const date = new Date(s * 1000);
     // @ts-ignore
     return `${dayMap(date.getDay())}, ${monthMap(date.getMonth(), false)}. ${date.getDate()}`;
 };
