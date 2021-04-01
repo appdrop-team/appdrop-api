@@ -6330,7 +6330,20 @@ export interface UpdatePromoParams {
 /**
  * Marketplace Project supporting a creators and consumers
  */
- export interface MarketplaceProject extends CreateMarketplaceProjectParams, Project, ProjectInAppPurchases {
+ export interface MarketplaceProject extends 
+ CreateMarketplaceProjectParams, Project,
+ ProjectInAppPurchases, ProjectInterests {
+
+    /**
+     * Map of IAPs
+     * 
+     * Key is the `id` of the IAP
+     */
+    interests: {
+
+        [key: string]: Interest;
+
+    };
 
     /**
      * Map of IAPs.
@@ -6361,6 +6374,7 @@ export const DEFAULT_MARKETPLACE_PROJECT: MarketplaceProject = {
     consumer_name_plural: 'users',
     id: '',
     in_app_purchases: {},
+    interests: {},
     livemode: true,
     object: 'project',
     logo_asset_id: '',
@@ -6386,7 +6400,11 @@ export interface MarketplaceProjectUrlMapParams extends CreateMarketplaceProject
 /**
  * Params to create a Marketplace Project.
  */
-export interface CreateMarketplaceProjectParams extends CreateProjectParams, CreateProjectInAppPurchasesParams {
+export interface CreateMarketplaceProjectParams extends 
+CreateProjectParams, 
+CreateProjectInAppPurchasesParams,
+CreateProjectInterestsParams
+{
 
     /**
      * How to refer to a creator in this marketplace
@@ -6432,7 +6450,9 @@ export interface UpdateMarketplaceProjectUrlMapParams extends UpdateProjectUrlMa
 /**
  * Params to update a Marketplace Project
  */
-export interface UpdateMarketplaceProjectParams extends UpdateProjectParams, UpdateProjectInAppPurchaseParams {
+export interface UpdateMarketplaceProjectParams extends 
+UpdateProjectParams, UpdateProjectInAppPurchaseParams,
+UpdateProjectInterestsParams {
 
     /**
      * How to refer to a creator in this marketplace
@@ -6461,6 +6481,100 @@ export interface UpdateMarketplaceProjectParams extends UpdateProjectParams, Upd
      * Example: 'guests', 'members', 'users'
      */
     consumer_name_plural?: string;
+
+}
+
+/**
+ * Map of Interests
+ */
+ export interface ProjectInterests {
+
+    /**
+     * Map of Interests
+     * 
+     * Key is the `id` of the Interest
+     */
+    interests: {
+
+        [key: string]: Interest;
+
+    };
+
+ }
+
+ /**
+ * Params to create map of Interests
+ */
+export interface CreateProjectInterestsParams {
+    
+    /**
+     * Map of Interests
+     * 
+     * Key is the `id` of the Interest
+     */
+     interests: {
+        
+        [key: string]: CreateInterestParams;
+        
+    };
+    
+}
+
+/**
+ * Params to update map of Interests
+ */
+export interface UpdateProjectInterestsParams {
+    
+    /**
+     * Map of Interests
+     * 
+     * Key is the `id` of the Interest
+     */
+    interests: {
+    
+        [key: string]: UpdateInterestParams;
+    
+    };
+
+}
+
+/**
+ * User interest, e.g. Politics
+ */
+export interface Interest extends CreateInterestParams, Identifiable {
+
+    /**
+     * Object name
+     */
+    object: 'interest';
+
+}
+
+export interface CreateInterestParams {
+
+    /**
+     * Community status
+     */
+    community_status: CommunityStatus;
+
+     /**
+      * Name
+      */
+    name: string;
+
+}
+
+export interface UpdateInterestParams {
+    
+    /**
+     * Community status
+     */
+    community_status?: CommunityStatus;
+
+    /**
+     * Name
+     */
+    name?: string;
 
 }
 
@@ -6601,6 +6715,7 @@ export interface MarketplaceProjectUser extends CreateMarketplaceProjectUserPara
         zip: '',
         state_code: ''
     },
+    available_days: '0123456',
     avatar_asset_id: '',
     bio: '',
     blocked_member_ids: [],
@@ -6617,11 +6732,13 @@ export interface MarketplaceProjectUser extends CreateMarketplaceProjectUserPara
     },
     fcm_token: '',
     id: '',
+    interest_ids: [],
     lat: DEFAULT_LATITUDE,
     long: DEFAULT_LONGITUDE, 
     livemode: true,
     metadata: {},
     name: '',
+    num_miles_filter: null,
     object: 'user',
     role: 'consumer',
     password: '',
@@ -6644,11 +6761,28 @@ ContainsAvatar, ContainsCover,
 ContainsSocial, CreateProjectUserParams {
     
     /**
+     * String with the days of the week this user is interested in events
+     * 
+     * `'035'` means Sunday, Wednesday and Friday
+     */
+    available_days: string;
+
+    /**
      * User's Financial details.
      * 
      * Typically, Marketplace users utilize IAPs.
      */
     financial_details: FinancialDetails;
+  
+    /**
+     * Ids of the user's interests
+     */
+    interest_ids: string[];
+
+    /**
+     * Number of miles for the map filter to expand or null if no filter
+     */
+    num_miles_filter: number|null;
 
     /**
      * Role of user
@@ -6746,6 +6880,8 @@ export interface ContainsSocial {
  * Community status. Editable only by admins.
  */
 export type CommunityStatus = 'approved'|'deactivated';
+export const APPROVED_COMMUNITY_STATUS: CommunityStatus = 'approved';
+export const DISAPPROVED_COMMUNITY_STATUS: CommunityStatus = 'deactivated';
 
 /**
  * Params to update social props
@@ -6766,7 +6902,7 @@ export interface UpdateContainsSocialParams {
      * Community status
      */
     community_status?: CommunityStatus;
-    
+
     /**
      * Ids of users to remove from the `blocked_member_ids` array
      */
@@ -6791,9 +6927,31 @@ UpdateContainsAvatarParams, UpdateContainsCoverParams,
 UpdateContainsSocialParams, UpdateProjectUserParams {
     
     /**
+     * Ids of users to append to the `interest_ids` array
+     */
+    append_interest_ids?: string[];
+     
+     /**
+      * String with the days of the week this user is interested in events
+      * 
+      * `'035'` means Sunday, Wednesday and Friday
+      */
+    available_days?: string;
+    
+    /**
      * User's Financial details.
      */
     financial_details?: UpdateFinancialDetailsParams;
+    
+    /**
+      * Number of miles for the map filter to expand or null if no filter
+      */
+    num_miles_filter?: number|null;
+     
+     /**
+      * Ids of users to remove from the `interest_ids` array
+      */
+    remove_interest_ids?: string[];
 
     /**
      * Role of user
