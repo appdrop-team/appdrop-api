@@ -445,7 +445,8 @@ export interface AuthenticateUserParams {
 /**
  * Auth operations
  */
-export type AuthenticationType = 'sign_in'|'sign_up'|'firebase_social';
+export type AuthenticationType = 'sign_in'|'sign_up'|'firebase_auth';
+export const FIREBASE_EMAIL_AUTH = 'FIREBASE_EMAIL_AUTH';
 export const FIREBASE_APPLE_AUTH = 'FIREBASE_APPLE_AUTH';
 export const FIREBASE_GOOGLE_AUTH = 'FIREBASE_GOOGLE_AUTH';
 export const FIREBASE_FACEBOOK_AUTH = 'FIREBASE_FACEBOOK_AUTH';
@@ -6565,9 +6566,9 @@ export interface CreateInterestParams {
      */
     index: number;
 
-     /**
-      * Name
-      */
+    /**
+     * Name
+     */
     name: string;
 
 }
