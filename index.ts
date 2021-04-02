@@ -6417,6 +6417,7 @@ export const DEFAULT_MARKETPLACE_PROJECT: MarketplaceProject = {
     template_id: '',
     organization_id: '',
     project_type: 'marketplace',
+    storage_bucket_base_url: '',
     support_email: '',
     urls: {
         facebook: '',
@@ -6474,6 +6475,13 @@ export interface CreateMarketplaceProjectParams extends
      * Example: 'guests', 'members', 'users'
      */
     consumer_name_plural: string;
+
+    /**
+     * Storage bucket base url
+     * 
+     * gs://xyz...
+     */
+    storage_bucket_base_url: string;
 
     /**
      * Google client id.
@@ -6536,6 +6544,13 @@ export interface UpdateMarketplaceProjectParams extends
      * Example: 'guests', 'members', 'users'
      */
     consumer_name_plural?: string;
+
+    /**
+     * Storage bucket base url
+     * 
+     * gs://xyz...
+     */
+    storage_bucket_base_url?: string;
 
     /**
      * Google client id.
