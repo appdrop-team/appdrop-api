@@ -6937,7 +6937,7 @@ export interface UpdateContainsCoverParams {
 /**
  * Height dimensions of cover image
  */
-export const COVER_IMAGE_HEIGHT = 352;
+export const COVER_IMAGE_HEIGHT = 525;
 
 /**
  * Width dimensions of cover image
