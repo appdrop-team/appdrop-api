@@ -5722,6 +5722,8 @@ export type APIRequestEndpoint =
     'v1/projects/:projectId/posts/:postId' |
     'v1/projects/:projectId/promos' |
     'v1/projects/:projectId/promos/:promoId' |
+    'v1/projects/:projectId/remoteAssets' |
+    'v1/projects/:projectId/remoteAssets/:remoteAssetId' |
     'v1/projects/:projectId/retrieveUserSecurityQuestion' |
     'v1/projects/:projectId/syncPrintfulProducts' |
     'v1/projects/:projectId/threads' |
