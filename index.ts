@@ -6153,6 +6153,8 @@ export const DEFAULT_ECOMMERCE_PROJECT: ECommerceProject = {
     template_id: '',
     organization_id: '',
     project_type: 'ecommerce',
+    max_return_days: null,
+    min_return_cents: null,
     support_email: '',
     urls: {
         facebook: '',
@@ -6192,6 +6194,16 @@ export interface CreateECommerceProjectParams extends CreateProjectParams {
     fulfillment_method: FulfillmentMethod;
 
     /**
+     * Max number of days that can elapse before return not available
+     */
+    max_return_days: number|null;
+    
+    /**
+     * Minimum subtotal size after promotions needed to be eligible for returns
+     */
+    min_return_cents: number|null;
+
+    /**
      * Printful API Key hooked to store.
      */
     printful_api_key: string;
@@ -6208,19 +6220,27 @@ export interface CreateECommerceProjectParams extends CreateProjectParams {
  */
 export type FulfillmentMethod = 'printful' | 'manual';
 
+/**
+ * Map of urls for this project.
+ */
 export interface CreateECommerceProjectUrlMapParams extends CreateProjectUrlMapParams {
 
     /**
-     * Privacy Policy
+     * Return policy
      * 
      * Example: https://appdrop.com/apps/your-app-name/returns
      * 
      * Example: https://yourappname.com/returns
+     * 
+     * Empty string if default return policy
      */
     returns: string;
 
 }
 
+/**
+ * Map of urls for this project.
+ */
 export interface UpdateECommerceProjectUrlMapParams extends UpdateProjectUrlMapParams {
 
     /**
@@ -6243,6 +6263,21 @@ export interface UpdateECommerceProjectParams extends UpdateProjectParams {
      * Printful API Key
      */
     printful_api_key?: string;
+
+    /**
+     * Max number of days that can elapse before return not available
+     */
+    max_return_days?: number|null;
+    
+     /**
+      * Minimum subtotal size after promotions needed to be eligible for returns
+      */
+    min_return_cents?: number|null;
+
+    /**
+     * Map of urls for this project.
+     */
+    urls?: UpdateECommerceProjectUrlMapParams;
 
 }
 
