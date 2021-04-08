@@ -1936,7 +1936,7 @@ export interface UpdateFinancialDetailsParams {
      * 
      * Key is the InAppPurchaseReceipt `id`
      */
-    in_app_purchase_receipts: {
+    in_app_purchase_receipts?: {
 
         [key: string]: UpdateInAppPurchaseReceiptParams;
 
@@ -1961,6 +1961,9 @@ export interface InAppPurchaseReceipt extends CreateInAppPurchaseReceiptParams, 
 
 }
 
+/**
+ * Params to create an IAP receipt
+ */
 export interface CreateInAppPurchaseReceiptParams extends UpdateInAppPurchaseReceiptParams {
 
     /**
@@ -1991,14 +1994,32 @@ export interface CreateInAppPurchaseReceiptParams extends UpdateInAppPurchaseRec
     ios_transaction_receipt: string;
 
 }
+
+/**
+ * Params to update an IAP receipt
+ */
 export interface UpdateInAppPurchaseReceiptParams {
 
+    /**
+     * Subscription id for Android IAP receipts
+     */
     android_purchase_token?: string;
 
+    /**
+     * `true` if this receipt points to an active subscription.
+     * 
+     * `false` otherwise
+     */
     android_subscription_id?: string;
 
+    /**
+     * Id of the IAP that the user purchased.
+     */
     auto_renewing?: boolean;
 
+    /**
+     * Transaction receipt for iOS IAPs
+     */
     ios_transaction_receipt?: string;
 
 }
@@ -2036,6 +2057,30 @@ export interface EntityFinancialDetails extends CreateEntityFinancialDetailsPara
 export interface CreateEntityFinancialDetailsParams extends CreateFinancialDetailsParams {
 
     /**
+     * Bank account
+     */
+    bank_account: CreateBankAccountParams | null;
+
+    /**
+     * Invoice payment method
+     */
+    billing_method: BillingMethod;
+
+     /**
+      * Type of account credit. Used to calculate free trial
+      */
+    credit_type: CreditType|null;
+
+    /**
+     * A map of the invoices for Business organizations & Enterprises
+     */
+    invoices: {
+
+        [key: string]: Invoice;
+
+    };
+
+    /**
      * Net Sales that the Organization has accumulated during the current 
      * payout period scheduled to be remitted by Appdrop on the first day of the 
      * month. The unit is the smallest unit of the Organization's currency.
@@ -2046,11 +2091,13 @@ export interface CreateEntityFinancialDetailsParams extends CreateFinancialDetai
 
     /**
      * The entity's Stripe subscription object.
-     * 
-     * Note – Pro plan organizations with add-ons get a wildcard Stripe
-     * price following their selections during strategy session calls.
      */
-    stripe_subscription: Subscription | null;
+    subscription: Subscription | null;
+
+    /**
+     * Tier
+     */
+    tier: OrganizationTier;
 
 }
 
@@ -2059,6 +2106,30 @@ export interface CreateEntityFinancialDetailsParams extends CreateFinancialDetai
  */
 export interface UpdateEntityFinancialDetailsParams extends UpdateFinancialDetailsParams {
 
+    /**
+     * Bank account
+     */
+    bank_account?: UpdateBankAccountParams;
+
+    /**
+     * Invoice payment method
+     */
+    billing_method?: BillingMethod;
+
+     /**
+      * Type of account credit. Used to calculate free trial
+      */
+    credit_type?: CreditType|null;
+
+    /**
+     * A map of the invoices for Business organizations & Enterprises
+     */
+    invoices?: {
+
+        [key: string]: UpdateInvoiceParams;
+
+    };
+    
     /**
      * Net Sales that the Organization has accumulated during the current 
      * payout period scheduled to be remitted by Appdrop on the first day of the 
@@ -2074,14 +2145,14 @@ export interface UpdateEntityFinancialDetailsParams extends UpdateFinancialDetai
      * Note – Starter & Pro plan organizations with add-ons get a wildcard Stripe
      * price following their selections during strategy session calls.
      */
-    stripe_subscription?: Subscription | null;
+    subscription?: Subscription | null;
+
+    /**
+     * Tier
+     */
+    tier?: OrganizationTier;
 
 }
-
-/**
- * Invoice renewal interval.
- */
-export type BillingInterval = 'quarterly' | 'annually';
 
 /**
  * Invoice payment method.
@@ -2089,18 +2160,90 @@ export type BillingInterval = 'quarterly' | 'annually';
  * Note: Enterprises and Organizations paying for Appdrop plans using a credit
  * card incur an additional 5% processing fee.
  */
-export type BillingMethod = 'card';
+export type BillingMethod = 'card'|'wire';
 
 /**
- * Enterprise tier.
+ * Types of account credits: $200 in Appdrop credits
+ * 
+ * Equates to 2 free months of Appdrop Pro
  */
-export type EnterpriseTier = 'large' | 'medium' | 'small';
+export type CreditType = 200;
 
 /**
  * Organization tier.
  */
-export type OrganizationTier = 'business' | 'enterprise' | 'pro' | 'starter';
+export type OrganizationTier = 'business' | 'enterprise' | 'pro';
 
+/**
+ * Invoice
+ */
+export interface Invoice extends CreateInvoiceParams, Identifiable {
+
+    /**
+     * Object name
+     */
+    object: 'invoice';
+
+}
+
+/**
+ * Params to create an invoice
+ */
+export interface CreateInvoiceParams extends UpdateInvoiceParams {
+
+    /**
+     * Description of each line item covered in the invoice
+     */
+     description: string;
+
+     /**
+      * Date that invoice is due
+      */
+     due: Timestamped;
+     
+     /**
+      * Date that invoice was paid
+      */
+     paid: Timestamped;
+ 
+     /**
+      * Price of product. The unit is the smallest unit of the Organization's currency.
+      * 
+      * USD Example: 10050 indicates $100.50
+      */
+     price: number;
+
+}
+
+/**
+ * Params to update an invoice
+ */
+export interface UpdateInvoiceParams {
+
+    /**
+     * Description of each line item covered in the invoice
+     */
+    description?: string;
+
+    /**
+     * Date that invoice is due
+     */
+    due?: Timestamped;
+    
+    /**
+     * Date that invoice was paid
+     */
+    paid?: Timestamped;
+
+    /**
+     * Price of product. The unit is the smallest unit of the Organization's currency.
+     * 
+     * USD Example: 10050 indicates $100.50
+     */
+    price?: number;
+
+
+}
 
 /**
  * Price of Appdrop services.
@@ -2122,82 +2265,25 @@ export interface Price {
 }
 
 /**
- * Map of the Stripe product ids for each enterprise tier.
+ * Map of the Stripe price ids for each organization tier.
  */
-export const ENTERPRISE_PRICE_MAP: {
-    [key in EnterpriseTier]: {
-        [key in BillingInterval]?: Price;
+export const ORGANIZATION_PRICE_MAP: {
+    [key in OrganizationTier]?: {
+        [key in BillingInterval]: Price;
     }
 } = {
-    large: {
-        annually: {
-            price: 1000000,
-            stripe_price_id: 'enterprise_large_annually'
-        }
-    },
-    medium: {
-        annually: {
-            price: 500000,
-            stripe_price_id: 'enterprise_medium_annually'
-        }
-    },
-    small: {
-        annually: {
-            price: 300000,
-            stripe_price_id: 'enterprise_small_annually'
+    pro: {
+        monthly: {
+            price: 9900,
+            stripe_price_id: 'organization_pro_monthly'
         }
     }
 };
 
 /**
- * Map of the Stripe price ids for each organization tier.
+ * Invoice renewal interval.
  */
-export const ORGANIZATION_PRICE_MAP: {
-    [key in OrganizationTier]: {
-        [key in BillingInterval]: Price;
-    }
-} = {
-    business: {
-        annually: {
-            price: 898800,
-            stripe_price_id: 'organization_business_annually'
-        },
-        quarterly: {
-            price: 269700,
-            stripe_price_id: 'organization_business_quarterly'
-        }
-    },
-    enterprise: {
-        annually: {
-            price: 0,
-            stripe_price_id: 'organization_enterprise_annually'
-        },
-        quarterly: {
-            price: 0,
-            stripe_price_id: 'organization_enterprise_quarterly'
-        }
-    },
-    pro: {
-        annually: {
-            price: 358800,
-            stripe_price_id: 'organization_pro_annually'
-        },
-        quarterly: {
-            price: 104700,
-            stripe_price_id: 'organization_pro_quarterly'
-        }
-    },
-    starter: {
-        annually: {
-            price: 118800,
-            stripe_price_id: 'organization_starter_annually'
-        },
-        quarterly: {
-            price: 35700,
-            stripe_price_id: 'organization_starter_quarterly'
-        }
-    }
-};
+ export type BillingInterval = 'monthly';
 
 /**
  * Stripe customer
@@ -2490,9 +2576,88 @@ export interface CreateCustomerSourceParams {
 }
 
 /**
+ * Entity bank account
+ */
+export interface BankAccount extends CreateBankAccountParams {}
+
+/**
+ * Params to create an entity Bank Account
+ */
+export interface CreateBankAccountParams extends UpdateBankAccountParams {
+
+    /**
+     * The name of the person or business that owns the bank account.
+     */
+    account_holder_name: string;
+
+    /**
+     * Account number for the bank account.
+     */
+    account_number: string;
+
+    /**
+     * Bank account address
+     */
+    address: Address;
+
+    /**
+     * The type of entity that holds the account. This can be either `individual` or `company`.
+     */
+    account_holder_type: BankAccountHolderType;
+    
+    /**
+     * The routing transit number for the bank account.
+     */
+    routing_number: string;
+
+}
+
+/**
+ * Params to update an entity Bank Account
+ */
+export interface UpdateBankAccountParams  {
+
+    /**
+     * The name of the person or business that owns the bank account.
+     */
+    account_holder_name?: string;
+
+    /**
+     * Account number for the bank account.
+     */
+    account_number?: string;
+
+    /**
+     * The type of entity that holds the account. This can be either `individual` or `company`.
+     */
+    account_holder_type?: BankAccountHolderType;
+    
+    /**
+     * Address of Bank Account
+     */
+    address?: Address;
+
+    /**
+     * The routing transit number for the bank account.
+     */
+    routing_number?: string;
+
+}
+
+/**
+ * Type of Bank Account. Required.
+ */
+export type BankAccountHolderType = 'company'|'individual';
+
+/**
  * Stripe Subscription object
  */
 export interface Subscription extends CreateSubscriptionParams {
+
+    /**
+     * Boolean indicating whether this subscription should cancel at the end of the current period.
+     */
+    cancel_at_period_end: boolean;
 
     /**
      * Timestamp
@@ -2503,6 +2668,11 @@ export interface Subscription extends CreateSubscriptionParams {
      * Subscription id
      */
     id: string;
+
+    /**
+     * Subscription item
+     */
+    items: SubscriptionItem[]
 
     /**
      * Object name.
@@ -2525,11 +2695,6 @@ export interface Subscription extends CreateSubscriptionParams {
 export interface CreateSubscriptionParams extends UpdateSubscriptionParams {
 
     /**
-     * Boolean indicating whether this subscription should cancel at the end of the current period.
-     */
-    cancel_at_period_end: boolean;
-
-    /**
      * Customer id
      */
     customer: string;
@@ -2537,24 +2702,36 @@ export interface CreateSubscriptionParams extends UpdateSubscriptionParams {
     /**
      * Subscription item
      */
-    items: SubscriptionItem[];
+    items: CreateSubscriptionItemParams[];
 
 }
 
 /**
  * Subscription item
  */
-export interface SubscriptionItem {
+export interface SubscriptionItem extends CreateSubscriptionItemParams {
 
     /**
      * id of the subscription item.
      */
     id: string;
 
+}
+
+/**
+ * Params to create a subscription item
+ */
+export interface CreateSubscriptionItemParams {
+
     /**
      * The ID of the price object.
      */
     price: string;
+
+    /**
+     * Special value to start billing immediately
+     */
+    trial_end: 'now';
 
 }
 
@@ -2567,11 +2744,6 @@ export interface UpdateSubscriptionParams {
      * Boolean indicating whether this subscription should cancel at the end of the current period.
      */
     cancel_at_period_end?: boolean;
-
-    /**
-     * Subscription item
-     */
-    items?: SubscriptionItem[];
 
 }
 
@@ -3074,10 +3246,15 @@ export const DEFAULT_ENTERPRISE: Enterprise = {
     },
     entity_type: 'enterprise',
     financial_details: {
+        bank_account: null,
+        billing_method: 'wire',
+        credit_type: null,
         card: null,
         in_app_purchase_receipts: {},
+        invoices: {},
         payout_balance: 0,
-        stripe_subscription: null,
+        subscription: null,
+        tier: 'enterprise'
     },
     id: '',
     livemode: true,
@@ -3163,10 +3340,15 @@ export const DEFAULT_ORGANIZATION: Organization = {
     },
     entity_type: 'organization',
     financial_details: {
+        bank_account: null,
+        billing_method: 'card',
+        credit_type: null,
         card: null,
         in_app_purchase_receipts: {},
+        invoices: {},
         payout_balance: 0,
-        stripe_subscription: null,
+        subscription: null,
+        tier: 'pro'
     },
     id: '',
     livemode: true,
@@ -6772,7 +6954,7 @@ export interface CreateInAppPurchaseParams extends UpdateInAppPurchaseParams {
     /**
      * Renewal period
      */
-    renews: 'monthly' | BillingInterval | null;
+    renews: 'monthly' | 'quarterly' | 'annually' | null;
 
 }
 
@@ -7865,4 +8047,13 @@ export const getCancellationUrlIOS = () => 'https://apps.apple.com/account/subsc
  * @param iap_sku Sku of the IAP, example: monthly_pro
  * @returns link to cancel subscription
  */
-export const getCancellationUrlAndroid = (android_package_name: string, iap_sku: string) => `https://play.google.com/store/account/subscriptions?package=${android_package_name}&sku=${iap_sku}`;
+export const getCancellationUrlAndroid = 
+(android_package_name: string, iap_sku: string) => 
+`https://play.google.com/store/account/subscriptions?package=${android_package_name}&sku=${iap_sku}`;
+
+export const capitalizeFirstLetter = (s: string) => s.length === 0 ? '' : (
+    s[0].toUpperCase() + `${s}`.slice(1, `${s}`.length)
+);
+
+export const getArticle = (s: string, capitalize: boolean) => ['a','e','i','o','u'].includes(s[0]) ?
+(capitalize ? 'An': 'an'):(capitalize ? 'A':'a');
