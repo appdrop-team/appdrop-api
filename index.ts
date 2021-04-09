@@ -2090,9 +2090,15 @@ export interface CreateEntityFinancialDetailsParams extends CreateFinancialDetai
     payout_balance: number;
 
     /**
+     * @deprecated
+     */
+    stripe_subscription?: any;
+
+    /**
      * The entity's Stripe subscription object.
      */
     subscription: Subscription | null;
+
 
     /**
      * Tier
@@ -3746,6 +3752,11 @@ export interface OrderItem extends CreateOrderItemParams {
     external_id: number | null;
 
     /**
+     * @deprecated
+     */
+    files?: any;
+
+    /**
      * Unique identifier.
      */
     id: number;
@@ -3754,6 +3765,11 @@ export interface OrderItem extends CreateOrderItemParams {
      * Item name
      */
     name: string;
+
+    /**
+     * @deprecated
+     */
+    options?: any;
 
     /**
      * Important flag determining whether the item is in or out of stock.
@@ -3770,7 +3786,7 @@ export interface OrderItem extends CreateOrderItemParams {
     /**
      * Printful production price
      */
-    price: number;
+    price: string|number;
 
     /**
      * Underlying Product information.
@@ -3846,12 +3862,22 @@ export interface UpdateOrderItemParams {
 /**
  * Order Recipient
  */
-export interface OrderRecipient extends CreateOrderRecipientParams { }
+export interface OrderRecipient extends CreateOrderRecipientParams {}
 
 /**
  * Params to generate an Order recipient
  */
 export interface CreateOrderRecipientParams extends Address {
+
+    /**
+     * @deprecated
+     */
+    company?: any;
+    
+    /**
+     * @deprecated
+     */
+    country_name?: any;
 
     /**
      * Recipient email.
@@ -3862,6 +3888,16 @@ export interface CreateOrderRecipientParams extends Address {
      * Recipient name.
      */
     name: string;
+
+    /**
+     * @deprecated
+     */
+    phone?: any;
+    
+    /**
+     * @deprecated
+     */
+    state_name?: any;
 
 }
 
@@ -4314,7 +4350,7 @@ export interface FileBase {
     /**
      * File type
      */
-    type: VariantFileType;
+    type: VariantFileType|string;
 
     /**
      * Width in px
@@ -4538,7 +4574,12 @@ export interface CreateProjectTemplateParams extends UpdateProjectTemplateParams
     /**
      * Branded cover photo of the template
      */
-    cover_photo: RemoteAsset | null;
+    cover_asset: RemoteAsset | null;
+    
+    /**
+     * @deprecated
+     */
+    cover_photo?: any;
 
     /**
      * Description of template
@@ -4768,6 +4809,11 @@ export interface CreateProjectParams extends
      * The name of this Project. Example: My Cool App
      */
     name: string;
+
+    /**
+     * @deprecated
+     */
+    logo_asset?: any;
 
     /**
      * The Id of the Project logo Asset.
@@ -6026,7 +6072,7 @@ export interface InitCloudAppResponseBody extends InitAppResponseBody {
     entity_id: string;
 
     /**
-     * Orders created by this entity's Ecommerce project users.
+     * Orders created by this entity's ECommerce project users.
      */
     orders: {
 
@@ -6046,7 +6092,7 @@ export interface InitCloudAppResponseBody extends InitAppResponseBody {
     };
 
     /**
-     * Products owned by this entity's Ecommerce projects
+     * Products owned by this entity's ECommerce projects
      */
     products: {
 
@@ -6136,6 +6182,9 @@ export interface ECommerceProject extends CreateECommerceProjectParams, Project 
 
 }
 
+export const DEFAULT_MAX_RETURN_DAYS = 30;
+export const DEFAULT_MIN_RETURN_CENTS = 5000;
+
 export const DEFAULT_ECOMMERCE_PROJECT: ECommerceProject = {
     app_ids: [],
     asset_ids: [],
@@ -6153,8 +6202,8 @@ export const DEFAULT_ECOMMERCE_PROJECT: ECommerceProject = {
     template_id: '',
     organization_id: '',
     project_type: 'ecommerce',
-    max_return_days: null,
-    min_return_cents: null,
+    max_return_days: 30,
+    min_return_cents: 5000,
     support_email: '',
     urls: {
         facebook: '',
@@ -6363,12 +6412,12 @@ export const DEFAULT_ECOMMERCE_USER: ECommerceProjectUser = {
 /**
  * Request Data for for ECommerce App Initialization
  */
-export interface InitEcommerceAppParams extends InitAppParams { }
+export interface InitECommerceAppParams extends InitAppParams { }
 
 /**
  * Server response body for ECommerce App Initialization
  */
-export interface InitEcommerceAppResponseBody extends InitAppResponseBody {
+export interface InitECommerceAppResponseBody extends InitAppResponseBody {
 
     /**
      * Orders owned by this project user.
