@@ -4741,6 +4741,11 @@ export interface CreateVersionParams extends UpdateVersionParams {
 export interface UpdateVersionParams {
 
     /**
+     * Url of the zip file
+     */
+    download_url: string;
+
+    /**
      * Brief description of the features and functionality introduced in this version.
      */
     version_description?: string;
