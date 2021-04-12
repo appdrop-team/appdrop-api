@@ -6114,6 +6114,11 @@ export interface InitCloudAppResponseBody extends InitAppResponseBody {
     };
 
     /**
+     * Pretty ids already taken
+     */
+    project_pretty_ids: string[];
+
+    /**
      * If Enterprise:
      * 
      * Map of the projects owned by the Organizations in the workspace
