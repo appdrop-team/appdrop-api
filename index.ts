@@ -4795,6 +4795,8 @@ export const DEFAULT_PROJECT: Project = {
     }
 };
 
+export const DEMO_PROJECT_ID = 'DEMO_PROJECT_ID';
+
 /**
  * Params to generate a project
  */
