@@ -4779,6 +4779,7 @@ export const DEFAULT_PROJECT: Project = {
     name: '',
     object: 'project',
     organization_id: '',
+    pretty_id: '',
     support_email: '',
     template_id: '',
     project_type: 'cloud',
@@ -4834,6 +4835,11 @@ export interface CreateProjectParams extends
      * Type of project
      */
     project_type: ProjectType;
+
+    /**
+     * Id used for pretty links e.g. mikes-tees used in appdrop.com/company/mikes-tees
+     */
+    pretty_id: string;
 
     /**
      * Email displayed to end users for Support requests.
@@ -6206,6 +6212,7 @@ export const DEFAULT_ECOMMERCE_PROJECT: ECommerceProject = {
     name: '',
     template_id: '',
     organization_id: '',
+    pretty_id: '',
     project_type: 'ecommerce',
     max_return_days: 30,
     min_return_cents: 5000,
@@ -6687,10 +6694,11 @@ export const DEFAULT_MARKETPLACE_PROJECT: MarketplaceProject = {
     object: 'project',
     logo_asset_id: '',
     name: '',
-    template_id: '',
     organization_id: '',
+    pretty_id: '',
     project_type: 'marketplace',
     storage_bucket_base_url: '',
+    template_id: '',
     support_email: '',
     urls: {
         facebook: '',
