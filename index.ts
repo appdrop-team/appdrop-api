@@ -225,6 +225,11 @@ export interface CreateUserParams extends CreateMappableParams, UpdateUserParams
     address: Address;
 
     /**
+     * Timestamp that the user's account was created
+     */
+    authenticated_at: Timestamped;
+
+    /**
      * The user's email address.
      */
     email: string;
@@ -5041,6 +5046,7 @@ export const DEFAULT_CLOUD_USER: ProjectUser = {
         zip: '',
         state_code: ''
     },
+    authenticated_at: null,
     created_at: {
         _nanoseconds: 0,
         _seconds: 0
@@ -6399,6 +6405,7 @@ export const DEFAULT_ECOMMERCE_USER: ECommerceProjectUser = {
         zip: '',
         state_code: ''
     },
+    authenticated_at: null,
     created_at: {
         _nanoseconds: 0,
         _seconds: 0
@@ -7096,6 +7103,7 @@ export const DEFAULT_MARKETPLACE_USER: MarketplaceProjectUser = {
         zip: '',
         state_code: ''
     },
+    authenticated_at: null,
     available_days: '0123456',
     avatar_asset_id: '',
     bio: '',
