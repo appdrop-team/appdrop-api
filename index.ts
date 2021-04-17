@@ -7270,7 +7270,7 @@ export interface ContainsSocial {
  */
 export type CommunityStatus = 'approved' | 'pending' | 'deactivated';
 export const APPROVED_COMMUNITY_STATUS: CommunityStatus = 'approved';
-export const PENDING_COMMUNITY_STATUS: CommunityStatus = 'approved';
+export const PENDING_COMMUNITY_STATUS: CommunityStatus = 'pending';
 export const DISAPPROVED_COMMUNITY_STATUS: CommunityStatus = 'deactivated';
 
 /**
