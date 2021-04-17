@@ -7268,8 +7268,9 @@ export interface ContainsSocial {
 /**
  * Community status. Editable only by admins.
  */
-export type CommunityStatus = 'approved' | 'deactivated';
+export type CommunityStatus = 'approved' | 'pending' | 'deactivated';
 export const APPROVED_COMMUNITY_STATUS: CommunityStatus = 'approved';
+export const PENDING_COMMUNITY_STATUS: CommunityStatus = 'approved';
 export const DISAPPROVED_COMMUNITY_STATUS: CommunityStatus = 'deactivated';
 
 /**
