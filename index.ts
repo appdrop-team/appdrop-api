@@ -3175,7 +3175,7 @@ export interface CreateEntityParams extends UpdateEntityParams {
     name: string;
 
     /**
-     * The id of the User that owns the Enterprise.
+     * The id of the User that owns the Entity.
      */
     owner_id: string;
 
@@ -3186,7 +3186,7 @@ export interface CreateEntityParams extends UpdateEntityParams {
 
     /**
      * This array contains the ids of each User with read and write access
-     * to the Enterprise.
+     * to the Entity.
      */
     team_member_ids: string[];
 
