@@ -445,6 +445,23 @@ export interface AuthenticateUserParams {
      */
     password: string;
 
+    /**
+     * Role for marketplace
+     */
+    role?: MarketplaceProjectUserRole
+
+}
+
+/**
+ * Params to authenticate a marketplace user.
+ */
+export interface AuthenticateMarketplaceUserParams {
+
+    /**
+     * Role for marketplace
+     */
+    role: MarketplaceProjectUserRole;
+
 }
 
 /**
