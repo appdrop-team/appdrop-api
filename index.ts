@@ -310,6 +310,11 @@ export interface CreateUserParams extends CreateMappableParams, UpdateUserParams
      */
     security_question: string;
 
+    /**
+     * Timezone of the user
+     */
+    timezone: Timezone;
+
 }
 
 /**
@@ -338,6 +343,13 @@ export const DEFAULT_LATITUDE = 37.78825;
 export const DEFAULT_LONGITUDE = -122.4324;
 export const DEFAULT_LATITUDE_DELTA = 0.0922;
 export const DEFAULT_LONGITUDE_DELTA = 0.0421;
+
+export type Timezone = 
+'America/New_York'|
+'America/Chicago'|
+'America/Denver'|
+'America/Los_Angeles';
+export const DEFAULT_TIMEZONE: Timezone = 'America/Los_Angeles';
 
 /**
  * Params to update a user.
@@ -1858,13 +1870,12 @@ export const COUNTRIES: {
 };
 
 /**
- * Time mechanics
+ * Time object
  */
-export type Timestamped = FirebaseFirestore.Timestamp |
-{
+export interface SimpleTimestamp {
 
     /**
-     * Nanoseconds since the Unix epoch.
+     * Nanoseconds since the Unix epoch (UTC+0)
      */
     _nanoseconds: number;
 
@@ -1873,8 +1884,12 @@ export type Timestamped = FirebaseFirestore.Timestamp |
      */
     _seconds: number;
 
-} |
-    null;
+}
+
+/**
+ * Time mechanics
+ */
+export type Timestamped = FirebaseFirestore.Timestamp | SimpleTimestamp | null;
 
 /**
  * Identity mechanics
@@ -4795,9 +4810,11 @@ export const DEFAULT_PROJECT: Project = {
     asset_ids: [],
     copyright: '',
     created_at: null,
+    email_signups: [],
     id: '',
     logo_asset_id: '',
     livemode: true,
+    mailchimp_config: null,
     name: '',
     object: 'project',
     organization_id: '',
@@ -4834,6 +4851,16 @@ export interface CreateProjectParams extends
      * Public name displayed to Users. Defaults to the name of the Organization that published the template.
      */
     copyright: string;
+
+    /**
+     * Email data of interested users
+     */
+    email_signups: string[];
+
+    /**
+     * Mailchimp config object
+     */
+    mailchimp_config: MailchimpConfig | null;
 
     /**
      * The name of this Project. Example: My Cool App
@@ -4879,6 +4906,28 @@ export interface CreateProjectParams extends
      * Map of urls for this project.
      */
     urls: CreateProjectUrlMapParams;
+
+}
+
+/**
+ * Params for mailchimp newsletter
+ */
+export interface MailchimpConfig {
+
+    /**
+     * Account API Key
+     */
+    api_key: string;
+
+    /**
+     * Id of the audience that the new users should be added to
+     */
+    audience_id: string;
+
+    /**
+     * Mailchimp server. Ex: `us7`
+     */
+    server: string;
 
 }
 
@@ -4951,11 +5000,21 @@ export interface UpdateProjectParams extends
      * Ids of Apps to append to the `app_ids` array
      */
     append_app_ids?: string[];
+    
+    /**
+     * Ids of Apps to append to the `email_signups` array
+     */
+    append_email_signups?: string[];
 
     /**
      * The Id of the Project logo Asset.
      */
     logo_asset_id?: string;
+
+    /**
+     * Mailchimp config object
+     */
+    mailchimp_config?: MailchimpConfig | null;
 
     /**
      * The name of this Project. Example: My Cool App
@@ -4966,6 +5025,11 @@ export interface UpdateProjectParams extends
      * Ids of Apps to remove from the `app_ids` array
      */
     remove_app_ids?: string[];
+    
+    /**
+     * Ids of Apps to remove from the `email_signups` array
+     */
+    remove_email_signups?: string[];
 
     /**
      * Email displayed to end users for Support requests.
@@ -5086,6 +5150,7 @@ export const DEFAULT_CLOUD_USER: ProjectUser = {
     security_answer: '',
     security_answer_salt: '',
     security_answer_hash: '',
+    timezone: DEFAULT_TIMEZONE
 };
 
 /**
@@ -6233,19 +6298,21 @@ export const DEFAULT_ECOMMERCE_PROJECT: ECommerceProject = {
     created_at: null,
     deleted_product_ids: [],
     deleted_sync_variant_ids: [],
+    email_signups: [],
     fulfillment_method: 'printful',
     id: '',
     livemode: true,
-    object: 'project',
-    printful_api_key: '',
     logo_asset_id: '',
+    max_return_days: 30,
+    mailchimp_config: null,
+    min_return_cents: 5000,
     name: '',
+    object: 'project',
+    pretty_id: '',
+    printful_api_key: '',
+    project_type: 'ecommerce',
     template_id: '',
     organization_id: '',
-    pretty_id: '',
-    project_type: 'ecommerce',
-    max_return_days: 30,
-    min_return_cents: 5000,
     support_email: '',
     urls: {
         facebook: '',
@@ -6450,6 +6517,7 @@ export const DEFAULT_ECOMMERCE_USER: ECommerceProjectUser = {
     security_answer: '',
     security_answer_salt: '',
     security_answer_hash: '',
+    timezone: DEFAULT_TIMEZONE
 };
 
 /**
@@ -6717,11 +6785,13 @@ export const DEFAULT_MARKETPLACE_PROJECT: MarketplaceProject = {
     creator_name_plural: 'businesses',
     consumer_name_singular: 'user',
     consumer_name_plural: 'users',
+    email_signups: [],
     google_web_client_id: '',
     id: '',
     in_app_purchases: {},
     interests: {},
     livemode: true,
+    mailchimp_config: null,
     object: 'project',
     logo_asset_id: '',
     name: '',
@@ -7156,6 +7226,7 @@ export const DEFAULT_MARKETPLACE_USER: MarketplaceProjectUser = {
     security_answer: '',
     security_answer_salt: '',
     security_answer_hash: '',
+    timezone: DEFAULT_TIMEZONE,
     username: ''
 };
 
@@ -7688,6 +7759,14 @@ export const DEFAULT_MESSAGE_POST: MessagePost = {
     thread_id: ''
 };
 
+// Fix this. Make a special type of message post for joins and exits or
+// expand the thread API
+
+// idea: special body values that trigger custom message UIs
+// const JOINED_THREAD_BODY = '-JOINED-THREAD-'
+// const EXITED_THREAD_BODY = '-EXITED-THREAD-'
+// const RENAMED_THREAD_BODY = '-RENAMED-THREAD-'
+
 /**
  * Params to create a message
  */
@@ -7856,16 +7935,6 @@ export interface UpdateStatusUpdatePostParams extends
 export interface Thread extends CreateThreadParams, Identifiable {
 
     /**
-      * Timestamp of the latest post
-      */
-    latest_post_at: Timestamped;
-
-    /**
-     * Caption of the latest post
-     */
-    latest_post_body: string;
-
-    /**
      * Object name
      */
     object: 'thread';
@@ -7873,6 +7942,7 @@ export interface Thread extends CreateThreadParams, Identifiable {
 }
 
 export const DEFAULT_THREAD: Thread = {
+    activity: {},
     admin_ids: [],
     avatar_asset_id: '',
     bio: '',
@@ -7882,8 +7952,6 @@ export const DEFAULT_THREAD: Thread = {
     creator_id: '',
     cover_asset_id: '',
     id: '',
-    latest_post_at: null,
-    latest_post_body: '',
     lat: DEFAULT_LATITUDE,
     livemode: true,
     long: DEFAULT_LONGITUDE,
@@ -7903,6 +7971,17 @@ export interface CreateThreadParams extends
     ContainsAvatar, ContainsCover,
     ContainsSocial, CreateMappableParams,
     Manageable, ProjectScoped, Publishable, Titled {
+
+    /**
+     * Activity in thread
+     * 
+     * Key is user id
+     */
+    activity: {
+
+        [key: string]: ThreadActivity;
+    
+    };
 
     /**
      * Latitude
@@ -7935,6 +8014,24 @@ export interface CreateThreadParams extends
 }
 
 /**
+ * User activity in thread
+ */
+export interface ThreadActivity {
+    
+    /**
+     * When user first joined (or, if private, accepted invite)
+     */
+    joined_at: Timestamped;
+    
+    /**
+     * When the user last opened the thread
+     */
+    opened_at: Timestamped;
+
+}
+
+
+/**
  * Type of thread
  */
 export type ThreadType = 'direct_message' | 'group';
@@ -7946,6 +8043,17 @@ export interface UpdateThreadParams
     extends UpdateContainsAvatarParams, UpdateContainsCoverParams,
     UpdateContainsSocialParams, UpdateManageableParams,
     UpdateMappableParams, UpdateTitledParams {
+
+    /**
+     * Activity in thread
+     * 
+     * Key is user id
+     */
+    activity?: {
+
+        [key: string]: UpdateThreadActivityParams;
+    
+    };
 
     /**
      * Ids to append to the `member_ids` array
@@ -7966,6 +8074,23 @@ export interface UpdateThreadParams
      * Ids to remove from the `pending_member_ids` array
      */
     remove_pending_member_ids?: string[];
+
+}
+
+/**
+ * User activity in thread
+ */
+ export interface UpdateThreadActivityParams {
+    
+    /**
+     * When user first joined (or, if private, accepted invite)
+     */
+    joined_at?: Timestamped;
+    
+    /**
+     * When the user last opened the thread
+     */
+    opened_at?: Timestamped;
 
 }
 
