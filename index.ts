@@ -6863,6 +6863,7 @@ export const DEFAULT_MARKETPLACE_PROJECT: MarketplaceProject = {
   consumer_name_plural: 'users',
   email_signups: [],
   google_web_client_id: '',
+  google_geocoding_api_key: '',
   id: '',
   in_app_purchases: {},
   interests: {},
@@ -6947,6 +6948,11 @@ export interface CreateMarketplaceProjectParams extends
    * Used for Continue with Google.
    */
   google_web_client_id: string;
+  
+  /**
+   * Google geocoding API Key
+   */
+  google_geocoding_api_key: string;
 
   /**
    * Map of urls for this project.
@@ -7016,6 +7022,11 @@ export interface UpdateMarketplaceProjectParams extends
    * Used for Continue with Google.
    */
   google_web_client_id?: string;
+
+  /**
+   * Google geocoding API Key
+   */
+  google_geocoding_api_key?: string;
 
 }
 
@@ -7631,6 +7642,7 @@ export const DEFAULT_EVENT_POST: EventPost = {
   cover_asset_id: '',
   created_at: null,
   creator_id: '',
+  date: null,
   id: '',
   lat: DEFAULT_LATITUDE,
   livemode: true,
@@ -7648,7 +7660,7 @@ export const DEFAULT_EVENT_POST: EventPost = {
  * Params to create an Event
  */
 export interface CreateEventPostParams extends
-  ContainsAddress, ContainsCover,
+  ContainsAddress, ContainsCover, ContainsDates,
   ContainsSocial, CreatePostParams,
   Manageable, Titled {
 
@@ -7670,6 +7682,18 @@ export interface ContainsAddress {
    */
   address: Address | string;
 
+}
+
+/**
+ * Date properties
+ */
+export interface ContainsDates {
+
+  /**
+   * Date
+   */
+  date: Timestamped;
+  
 }
 
 /**
@@ -7701,7 +7725,7 @@ export interface Titled {
  */
 export interface UpdateEventPostParams extends
   UpdateContainsAddressParams,
-  UpdateContainsCoverParams,
+  UpdateContainsCoverParams, UpdateContainsDateParams,
   UpdateContainsSocialParams, UpdateManageableParams,
   UpdatePostParams, UpdateTitledParams {
 
@@ -7717,6 +7741,9 @@ export interface UpdateEventPostParams extends
 
 }
 
+/**
+ * Params to update address properties
+ */
 export interface UpdateContainsAddressParams {
 
   /**
@@ -7724,6 +7751,18 @@ export interface UpdateContainsAddressParams {
    * such as a Zoom room join link
    */
   address?: Address | string;
+
+}
+
+/**
+ * Params to update date properties
+ */
+export interface UpdateContainsDateParams {
+
+  /**
+   * Date
+   */
+  date?: Timestamped;
 
 }
 
