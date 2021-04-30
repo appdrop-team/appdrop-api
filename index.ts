@@ -230,6 +230,11 @@ export interface CreateUserParams extends CreateMappableParams, UpdateUserParams
   authenticated_at: Timestamped;
 
   /**
+   * Name displayed on profile
+   */
+  display_name: string;
+
+  /**
    * The user's email address.
    */
   email: string;
@@ -5196,6 +5201,7 @@ export const DEFAULT_CLOUD_USER: ProjectUser = {
     _nanoseconds: 0,
     _seconds: 0
   },
+  display_name: '',
   email: '',
   fcm_token: '',
   id: '',
@@ -6564,6 +6570,7 @@ export const DEFAULT_ECOMMERCE_USER: ECommerceProjectUser = {
     _nanoseconds: 0,
     _seconds: 0
   },
+  display_name: '',
   email: '',
   favorite_product_ids: [],
   financial_details: {
@@ -7288,6 +7295,7 @@ export const DEFAULT_MARKETPLACE_USER: MarketplaceProjectUser = {
     _nanoseconds: 0,
     _seconds: 0
   },
+  display_name: '',
   email: '',
   financial_details: {
     card: null,
