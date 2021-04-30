@@ -31,6 +31,7 @@ export interface RemoteAsset extends CreateRemoteAssetParams, Identifiable {
  */
 export const DEFAULT_REMOTE_ASSET: RemoteAsset = {
   asset_type: 'avatar',
+  bytes: 0,
   created_at: null,
   creator_id: '',
   id: '',
@@ -57,6 +58,11 @@ export interface CreateRemoteAssetParams extends
    * Type of asset
    */
   asset_type: AssetType;
+
+  /**
+   * Number of bytes. `1024` means `1KB`
+   */
+  bytes: number;
 
   /**
    * Index of the asset in a collage
@@ -135,6 +141,11 @@ export const REMOTE_ASSET_THUMBNAIL_URL_PENDING = 'REMOTE_ASSET_THUMBNAIL_URL_PE
  * Params to update a remote asset 
  */
 export interface UpdateRemoteAssetParams {
+
+  /**
+   * Number of bytes. `1024` means `1KB`
+   */
+  bytes?: number;
 
   /**
    * Index of the asset in a collage
