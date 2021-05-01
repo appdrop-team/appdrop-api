@@ -138,6 +138,11 @@ export type MimeType =
 export const REMOTE_ASSET_THUMBNAIL_URL_PENDING = 'REMOTE_ASSET_THUMBNAIL_URL_PENDING';
 
 /**
+ * Fallback image
+ */
+export const FALLBACK_IMAGE_URL = 'https://firebasestorage.googleapis.com/v0/b/appdrop-v1.appspot.com/o/templates%2FqnAkvmAZnGQFtI7i7CfZbKQUrLNB4ITgz%2Fimage-fallback.png?alt=media&token=952d9528-0009-46c7-876e-ac5d8409e219';
+
+/**
  * Params to update a remote asset 
  */
 export interface UpdateRemoteAssetParams {
@@ -7346,7 +7351,7 @@ export const DEFAULT_MARKETPLACE_USER: MarketplaceProjectUser = {
  * Params to create a marketplace user
  */
 export interface CreateMarketplaceProjectUserParams extends
-  ContainsAvatar, ContainsCover,
+  ContainsAvatar, ContainsCover, ContainsInterests,
   ContainsSocial, CreateProjectUserParams {
 
   /**
@@ -7364,11 +7369,6 @@ export interface CreateMarketplaceProjectUserParams extends
   financial_details: FinancialDetails;
 
   /**
-   * Ids of the user's interests
-   */
-  interest_ids: string[];
-
-  /**
    * Number of miles for the map filter to expand or null if no filter
    */
   num_miles_filter: number | null;
@@ -7377,6 +7377,35 @@ export interface CreateMarketplaceProjectUserParams extends
    * Role of user
    */
   role: MarketplaceProjectUserRole;
+
+}
+
+/**
+ * Params for interest filters
+ */
+export interface ContainsInterests {
+
+  /**
+   * Ids of the interests
+   */
+  interest_ids: string[];
+
+}
+
+/**
+ * Params to update interest filters
+ */
+export interface UpdateContainsInterestsParams {
+
+  /**
+   * Ids of users to append to the `interest_ids` array
+   */
+  append_interest_ids?: string[];
+
+   /**
+    * Ids of users to remove from the `interest_ids` array
+    */
+  remove_interest_ids?: string[];
 
 }
 
@@ -7513,13 +7542,9 @@ export type MarketplaceProjectUserRole = 'consumer' | 'creator';
  * Params to update a marketplace user
  */
 export interface UpdateMarketplaceProjectUserParams extends
-  UpdateContainsAvatarParams, UpdateContainsCoverParams,
+  UpdateContainsAvatarParams, UpdateContainsCoverParams, 
+  UpdateContainsInterestsParams,
   UpdateContainsSocialParams, UpdateProjectUserParams {
-
-  /**
-   * Ids of users to append to the `interest_ids` array
-   */
-  append_interest_ids?: string[];
 
   /**
    * String with the days of the week this user is interested in events
@@ -7537,11 +7562,6 @@ export interface UpdateMarketplaceProjectUserParams extends
     * Number of miles for the map filter to expand or null if no filter
     */
   num_miles_filter?: number | null;
-
-  /**
-   * Ids of users to remove from the `interest_ids` array
-   */
-  remove_interest_ids?: string[];
 
   /**
    * Role of user
@@ -7663,6 +7683,7 @@ export const DEFAULT_EVENT_POST: EventPost = {
   creator_id: '',
   date: null,
   id: '',
+  interest_ids: [],
   lat: DEFAULT_LATITUDE,
   livemode: true,
   long: DEFAULT_LONGITUDE,
@@ -7680,7 +7701,7 @@ export const DEFAULT_EVENT_POST: EventPost = {
  */
 export interface CreateEventPostParams extends
   ContainsAddress, ContainsCover, ContainsDates,
-  ContainsSocial, CreatePostParams,
+  ContainsInterests, ContainsSocial, CreatePostParams,
   Manageable, Titled {
 
   /**
@@ -7744,7 +7765,8 @@ export interface Titled {
  */
 export interface UpdateEventPostParams extends
   UpdateContainsAddressParams,
-  UpdateContainsCoverParams, UpdateContainsDateParams,
+  UpdateContainsCoverParams, UpdateContainsDateParams, 
+  UpdateContainsInterestsParams,
   UpdateContainsSocialParams, UpdateManageableParams,
   UpdatePostParams, UpdateTitledParams {
 
@@ -7840,6 +7862,7 @@ export const DEFAULT_LISTING_POST: ListingPost = {
   creator_id: '',
   blocked_member_ids: [],
   id: '',
+  interest_ids: [],
   title: '',
   lat: DEFAULT_LATITUDE,
   livemode: true,
@@ -7856,7 +7879,7 @@ export const DEFAULT_LISTING_POST: ListingPost = {
  * Params to create a listing
  */
 export interface CreateListingPostParams extends
-  ContainsAddress, ContainsCover,
+  ContainsAddress, ContainsCover, ContainsInterests,
   ContainsRemoteAssets, ContainsSocial,
   CreatePostParams, Manageable, Titled { }
 
@@ -7864,7 +7887,8 @@ export interface CreateListingPostParams extends
  * Params to update a listing
  */
 export interface UpdateListingPostParams extends
-  UpdateContainsAddressParams, UpdateContainsRemoteAssetsParams,
+  UpdateContainsAddressParams, UpdateContainsInterestsParams,
+  UpdateContainsRemoteAssetsParams,
   UpdateContainsSocialParams, UpdateManageableParams,
   UpdatePostParams, UpdateTitledParams { }
 
