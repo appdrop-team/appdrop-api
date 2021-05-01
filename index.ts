@@ -7692,6 +7692,7 @@ export const DEFAULT_EVENT_POST: EventPost = {
   project_id: '',
   status: 'live',
   thread_id: '',
+  time: '',
   title: '',
   username: ''
 };
@@ -7708,6 +7709,11 @@ export interface CreateEventPostParams extends
    * Ids of the members attending the event
    */
   attending_member_ids: string[];
+
+  /**
+   * Time of the event. Examples `12:30PM - 2PM` or `All Day`
+   */
+  time: string;
 
 }
 
@@ -7774,6 +7780,11 @@ export interface UpdateEventPostParams extends
    * Ids to append to the `attending_member_ids` array
    */
   append_attending_member_ids?: string[];
+
+  /**
+   * Time of the event. Examples `12:30PM - 2PM` or `All Day`
+   */
+  time?: string;
 
   /**
    * Ids to remove from the `attending_member_ids` array
