@@ -172,21 +172,59 @@ export interface ContainsRemoteAssets {
 }
 
 /**
+ * Updates to the `` array
+ */
+
+/**
  * Params to update remote assets
  */
 export interface UpdateContainsRemoteAssetsParams {
 
   /**
-   * Ids to append to the `asset_ids` array
+   * Updates to the `asset_ids` array
+   */
+  asset_ids?: ArrayUpdateOperation;
+
+  /**
+   * @deprecated
    */
   append_asset_ids?: string[];
 
   /**
-   * Ids to remove from the `asset_ids` array
+   * @deprecated
    */
   remove_asset_ids?: string[];
 
 }
+
+/**
+ * Append operation
+ */
+export interface ArrayAppendOperation {
+
+  /**
+   * Items to append
+   */
+  append: (string | number)[];
+
+}
+
+/**
+ * Remove operation
+ */
+export interface ArrayRemoveOperation {
+
+  /**
+   * Items to remove
+   */
+  remove: (string | number)[];
+
+}
+
+/**
+ * Reset, append or remove array operation
+ */
+export type ArrayUpdateOperation = (string | number)[] | ArrayAppendOperation | ArrayRemoveOperation;
 
 export const DEFAULT_MAX_NUM_ASSETS: {
   [key: string]: number | null;
@@ -2212,20 +2250,19 @@ export interface CreateEntityFinancialDetailsParams extends CreateFinancialDetai
   payout_balance: number;
 
   /**
-   * @deprecated
-   */
-  stripe_subscription?: any;
-
-  /**
    * The entity's Stripe subscription object.
    */
   subscription: Subscription | null;
-
 
   /**
    * Tier
    */
   tier: OrganizationTier;
+
+  /**
+   * @deprecated
+   */
+  stripe_subscription?: any;
 
 }
 
@@ -3320,16 +3357,6 @@ export type EntityType = 'enterprise' | 'organization';
 export interface UpdateEntityParams {
 
   /**
-   * This array contains the emails to append to the `pending_team_member_emails` array.
-   */
-  append_pending_team_member_emails?: string[];
-
-  /**
-   * This array contains the ids to append to the `team_member_ids` array.
-   */
-  append_team_member_ids?: string[];
-
-  /**
    * The legal name of this Entity.
    */
   name?: string;
@@ -3340,12 +3367,32 @@ export interface UpdateEntityParams {
   owner_id?: string;
 
   /**
-   * This array contains the emails to remove from the `pending_team_member_emails` array.
+   * Updates to the `pending_team_member_emails` array
+   */
+  pending_team_member_emails?: ArrayUpdateOperation;
+
+  /**
+   * Updates to the `team_member_ids` array
+   */
+  team_member_ids?: ArrayUpdateOperation;
+
+  /**
+   * @deprecated
+   */
+  append_pending_team_member_emails?: string[];
+
+  /**
+   * @deprecated
+   */
+  append_team_member_ids?: string[];
+
+  /**
+   * @deprecated
    */
   remove_pending_team_member_emails?: string[];
 
   /**
-   * This array contains the ids to remove from the `team_member_ids` array.
+   * @deprecated
    */
   remove_team_member_ids?: string[];
 
@@ -3420,14 +3467,9 @@ export interface CreateEnterpriseParams extends CreateEntityParams {
 export interface UpdateEnterpriseParams extends UpdateEntityParams {
 
   /**
-   * Ids to append to the `organization_ids` array
+   * Updates to the `organization_ids` array
    */
-  append_organization_ids?: string[];
-
-  /**
-   * Ids to remove from the `organization_ids` array
-   */
-  remove_organization_ids?: string[];
+  organization_ids?: ArrayUpdateOperation;
 
   /**
    * The suffix for valid emails.
@@ -3435,6 +3477,16 @@ export interface UpdateEnterpriseParams extends UpdateEntityParams {
    * Example: `@georgetown.edu`
    */
   workspace_email_suffix?: string;
+
+  /**
+   * @deprecated
+   */
+  append_organization_ids?: string[];
+
+  /**
+   * @deprecated
+   */
+  remove_organization_ids?: string[];
 
 }
 
@@ -3507,17 +3559,17 @@ export interface CreateOrganizationParams extends CreateEntityParams {
 export interface UpdateOrganizationParams extends UpdateEntityParams {
 
   /**
-   * Ids to append to the `project_ids` array
+   * This array includes the id of each Project that this Organization owns.
+   */
+  project_ids?: ArrayUpdateOperation;
+
+  /**
+   * @deprecated
    */
   append_project_ids?: string[];
 
   /**
-   * This array includes the id of each Project that this Organization owns.
-   */
-  project_ids?: string[];
-
-  /**
-   * Ids to remove from the `project_ids` array
+   * @deprecated
    */
   remove_project_ids?: string[];
 
@@ -3874,11 +3926,6 @@ export interface OrderItem extends CreateOrderItemParams {
   external_id: number | null;
 
   /**
-   * @deprecated
-   */
-  files?: any;
-
-  /**
    * Unique identifier.
    */
   id: number;
@@ -3887,11 +3934,6 @@ export interface OrderItem extends CreateOrderItemParams {
    * Item name
    */
   name: string;
-
-  /**
-   * @deprecated
-   */
-  options?: any;
 
   /**
    * Important flag determining whether the item is in or out of stock.
@@ -3934,6 +3976,16 @@ export interface OrderItem extends CreateOrderItemParams {
      * Product name
      */
     name: string;
+
+    /**
+   * @deprecated
+   */
+    files?: any;
+
+    /**
+     * @deprecated
+     */
+    options?: any;
 
   };
 
@@ -3992,16 +4044,6 @@ export interface OrderRecipient extends CreateOrderRecipientParams { }
 export interface CreateOrderRecipientParams extends Address {
 
   /**
-   * @deprecated
-   */
-  company?: any;
-
-  /**
-   * @deprecated
-   */
-  country_name?: any;
-
-  /**
    * Recipient email.
    */
   email: string | null;
@@ -4010,6 +4052,16 @@ export interface CreateOrderRecipientParams extends Address {
    * Recipient name.
    */
   name: string;
+
+  /**
+   * @deprecated
+   */
+  company?: any;
+
+  /**
+   * @deprecated
+   */
+  country_name?: any;
 
   /**
    * @deprecated
@@ -4699,11 +4751,6 @@ export interface CreateProjectTemplateParams extends UpdateProjectTemplateParams
   cover_asset: RemoteAsset | null;
 
   /**
-   * @deprecated
-   */
-  cover_photo?: any;
-
-  /**
    * Description of template
    */
   description: string;
@@ -4733,6 +4780,11 @@ export interface CreateProjectTemplateParams extends UpdateProjectTemplateParams
     [key: string]: CreateVersionParams;
 
   };
+
+  /**
+   * @deprecated
+   */
+  cover_photo?: any;
 
 }
 
@@ -4933,6 +4985,11 @@ export interface CreateProjectParams extends
   app_ids: string[];
 
   /**
+   * Ordered array of remote asset ids
+   */
+  asset_ids: string[];
+
+  /**
    * Public name displayed to Users. Defaults to the name of the Organization that published the template.
    */
   copyright: string;
@@ -4951,11 +5008,6 @@ export interface CreateProjectParams extends
    * The name of this Project. Example: My Cool App
    */
   name: string;
-
-  /**
-   * @deprecated
-   */
-  logo_asset?: any;
 
   /**
    * The Id of the Project logo Asset.
@@ -4991,6 +5043,11 @@ export interface CreateProjectParams extends
    * Map of urls for this project.
    */
   urls: CreateProjectUrlMapParams;
+
+  /**
+   * @deprecated
+   */
+  logo_asset?: any;
 
 }
 
@@ -5082,14 +5139,14 @@ export interface UpdateProjectParams extends
   UpdateContainsRemoteAssetsParams {
 
   /**
-   * Ids of Apps to append to the `app_ids` array
+   * Updates to the `app_ids` array
    */
-  append_app_ids?: string[];
+  app_ids?: ArrayUpdateOperation;
 
   /**
-   * Ids of Apps to append to the `email_signups` array
+   * Updates to the `email_signups` array
    */
-  append_email_signups?: string[];
+  email_signups?: ArrayUpdateOperation;
 
   /**
    * The Id of the Project logo Asset.
@@ -5107,16 +5164,6 @@ export interface UpdateProjectParams extends
   name?: string;
 
   /**
-   * Ids of Apps to remove from the `app_ids` array
-   */
-  remove_app_ids?: string[];
-
-  /**
-   * Ids of Apps to remove from the `email_signups` array
-   */
-  remove_email_signups?: string[];
-
-  /**
    * Email displayed to end users for Support requests.
    */
   support_email?: string;
@@ -5130,6 +5177,26 @@ export interface UpdateProjectParams extends
    * Map of urls for this project.
    */
   urls?: UpdateProjectUrlMapParams;
+
+  /**
+   * @deprecated
+   */
+  append_app_ids?: string[];
+
+  /**
+   * @deprecated
+   */
+  append_email_signups?: string[];
+
+  /**
+   * @deprecated
+   */
+  remove_app_ids?: string[];
+
+  /**
+   * @deprecated
+   */
+  remove_email_signups?: string[];
 
 }
 
@@ -6550,12 +6617,15 @@ export interface CreateECommerceProjectUserParams extends CreateProjectUserParam
 
 }
 
+/**
+ * Params to update an ecomm user
+ */
 export interface UpdateECommerceProjectUserParams extends UpdateProjectUserParams {
 
   /**
-   * Ids of Favorite Products to append to the `favorite_product_ids` array
+   * Updates to the `favorite_product_ids` array
    */
-  append_favorite_product_ids?: string[];
+  favorite_product_ids?: ArrayUpdateOperation;
 
   /**
    * User's Financial details.
@@ -6563,7 +6633,12 @@ export interface UpdateECommerceProjectUserParams extends UpdateProjectUserParam
   financial_details?: UpdateFinancialDetailsParams;
 
   /**
-   * Ids of Favorite Products to remove from the `favorite_product_ids` array
+   * @deprecated
+   */
+  append_favorite_product_ids?: string[];
+
+  /**
+   * @deprecated
    */
   remove_favorite_product_ids?: string[];
 
@@ -6971,7 +7046,7 @@ export interface CreateMarketplaceProjectParams extends
    * Used for Continue with Google.
    */
   google_web_client_id: string;
-  
+
   /**
    * Google geocoding API Key
    */
@@ -7398,13 +7473,18 @@ export interface ContainsInterests {
 export interface UpdateContainsInterestsParams {
 
   /**
-   * Ids of users to append to the `interest_ids` array
+   * Updates to the `interest_ids` array
+   */
+  interest_ids?: ArrayUpdateOperation;
+
+  /**
+   * @deprecated
    */
   append_interest_ids?: string[];
 
-   /**
-    * Ids of users to remove from the `interest_ids` array
-    */
+  /**
+   * @deprecated
+   */
   remove_interest_ids?: string[];
 
 }
@@ -7508,14 +7588,14 @@ export const DISAPPROVED_COMMUNITY_STATUS: CommunityStatus = 'deactivated';
 export interface UpdateContainsSocialParams {
 
   /**
-   * Ids of users to append to the `blocked_member_ids` array
-   */
-  append_blocked_member_ids?: string[];
-
-  /**
    * Bio
    */
   bio?: string;
+
+  /**
+   * Updates to the `blocked_member_ids` array
+   */
+  blocked_member_ids?: ArrayUpdateOperation;
 
   /**
    * Community status
@@ -7523,14 +7603,20 @@ export interface UpdateContainsSocialParams {
   community_status?: CommunityStatus;
 
   /**
-   * Ids of users to remove from the `blocked_member_ids` array
-   */
-  remove_blocked_member_ids?: string[];
-
-  /**
    * Username
    */
   username?: string;
+
+  /**
+   * @deprecated
+   */
+  append_blocked_member_ids?: string[];
+
+  /**
+   * @deprecated
+   */
+  remove_blocked_member_ids?: string[];
+
 }
 
 /**
@@ -7542,7 +7628,7 @@ export type MarketplaceProjectUserRole = 'consumer' | 'creator';
  * Params to update a marketplace user
  */
 export interface UpdateMarketplaceProjectUserParams extends
-  UpdateContainsAvatarParams, UpdateContainsCoverParams, 
+  UpdateContainsAvatarParams, UpdateContainsCoverParams,
   UpdateContainsInterestsParams,
   UpdateContainsSocialParams, UpdateProjectUserParams {
 
@@ -7739,7 +7825,7 @@ export interface ContainsDates {
    * Date
    */
   date: Timestamped;
-  
+
 }
 
 /**
@@ -7771,15 +7857,15 @@ export interface Titled {
  */
 export interface UpdateEventPostParams extends
   UpdateContainsAddressParams,
-  UpdateContainsCoverParams, UpdateContainsDateParams, 
+  UpdateContainsCoverParams, UpdateContainsDateParams,
   UpdateContainsInterestsParams,
   UpdateContainsSocialParams, UpdateManageableParams,
   UpdatePostParams, UpdateTitledParams {
 
   /**
-   * Ids to append to the `attending_member_ids` array
+   * Updates to the `attending_member_ids` array
    */
-  append_attending_member_ids?: string[];
+  attending_member_ids?: ArrayUpdateOperation;
 
   /**
    * Time of the event. Examples `12:30PM - 2PM` or `All Day`
@@ -7787,7 +7873,12 @@ export interface UpdateEventPostParams extends
   time?: string;
 
   /**
-   * Ids to remove from the `attending_member_ids` array
+   * @deprecated
+   */
+  append_attending_member_ids?: string[];
+
+  /**
+   * @deprecated
    */
   remove_attending_member_ids?: string[];
 
@@ -7824,12 +7915,17 @@ export interface UpdateContainsDateParams {
 export interface UpdateManageableParams {
 
   /**
-   * Ids to append to the `admin_ids` array
+   * Updates to the `admin_ids` array
+   */
+  admin_ids?: ArrayUpdateOperation;
+
+  /**
+   * @deprecated
    */
   append_admin_ids?: string[];
 
   /**
-   * Ids to remove from the `admin_ids` array
+   * @deprecated
    */
   remove_admin_ids?: string[];
 
@@ -8231,22 +8327,32 @@ export interface UpdateThreadParams
   };
 
   /**
-   * Ids to append to the `member_ids` array
+   * Updates to the `member_ids` array
+   */
+  member_ids?: ArrayUpdateOperation;
+
+  /**
+   * Updates to the `pending_member_ids` array
+   */
+  pending_member_ids?: ArrayUpdateOperation;
+
+  /**
+   * @deprecated
    */
   append_member_ids?: string[];
 
   /**
-   * Ids to append to the `pending_member_ids` array
+   * @deprecated
    */
   append_pending_member_ids?: string[];
 
   /**
-   * Ids to remove from the `member_ids` array
+   * @deprecated
    */
   remove_member_ids?: string[];
 
   /**
-   * Ids to remove from the `pending_member_ids` array
+   * @deprecated
    */
   remove_pending_member_ids?: string[];
 
