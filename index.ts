@@ -488,6 +488,11 @@ export interface UpdateUserParams extends UpdateMappableParams {
   address?: Address;
 
   /**
+   * Name displayed on profile
+   */
+  display_name?: string;
+
+  /**
    * The user's email address.
    */
   email?: string;
