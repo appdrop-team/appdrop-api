@@ -6068,17 +6068,17 @@ export async function handleSuccess(
           .filter((_r: string) => !params_['remove'].includes(_r))];
           prevObj[f] = next_arr;
         }
+        return;
       }
       else if (!Array.isArray(params_[f])) {
         prevObj[f] = {
           ...prevObj[f],
           ...params_[f]
         }
+        return;
       }
     }
-    else {
-      prevObj[f] = params_[f];
-    }
+    prevObj[f] = params_[f];
   });
 }
 
