@@ -6044,30 +6044,40 @@ export async function handleSuccess(
  */
  export function handleArrayUpdates(admin: any, params_: any, prevObj: any) {
   Object.keys(params_)
-  .filter(
-    f =>
+  .forEach(f => {
+    if (
       params_[f] !== null
       && typeof params_[f] === 'object'
-      && ['append', 'remove'].includes(Object.keys(params_[f])[0])
-  )
-  .forEach(array_field => {
-    if (params_[array_field]['append']) {
-      params_[array_field] = admin.firestore.FieldValue.arrayUnion(
-        ...[...params_[array_field]]
-      );
-      for (const _a of params_['append']) {
-        if (!prevObj[array_field].includes(_a)) {
-          prevObj[array_field].push(_a);
+    ) {
+      if (['append', 'remove'].includes(Object.keys(params_[f])[0])) {
+        if (params_[f]['append']) {
+          params_[f] = admin.firestore.FieldValue.arrayUnion(
+            ...[...params_[f]]
+          );
+          for (const _a of params_['append']) {
+            if (!prevObj[f].includes(_a)) {
+              prevObj[f].push(_a);
+            }
+          }
+        }
+        else if (params_[f]['remove']) {
+          params_[f] = admin.firestore.FieldValue.arrayRemove(
+            ...[...params_[f]]
+          );
+          const next_arr = [...prevObj[f]
+          .filter((_r: string) => !params_['remove'].includes(_r))];
+          prevObj[f] = next_arr;
+        }
+      }
+      else if (!Array.isArray(params_[f])) {
+        prevObj[f] = {
+          ...prevObj[f],
+          ...params_[f]
         }
       }
     }
-    else if (params_[array_field]['remove']) {
-      params_[array_field] = admin.firestore.FieldValue.arrayRemove(
-        ...[...params_[array_field]]
-      );
-      const next_arr = [...prevObj[array_field]
-      .filter((_r: string) => !params_['remove'].includes(_r))];
-      prevObj[array_field] = next_arr;
+    else {
+      prevObj[f] = params_[f];
     }
   });
 }
