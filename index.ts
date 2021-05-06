@@ -6039,6 +6039,42 @@ export async function handleSuccess(
   }
 }
 
+/**
+ * Updates array objects
+ */
+ export function handleArrayUpdates(admin: any, params_: any, prevObj: any) {
+  Object.keys(params_)
+  .filter(
+    f =>
+      params_[f] !== null
+      && typeof params_[f] === 'object'
+      && ['append', 'remove'].includes(Object.keys(params_[f])[0])
+  )
+  .forEach(array_field => {
+    if (params_[array_field]['append']) {
+      params_[array_field] = admin.firestore.FieldValue.arrayUnion(
+        ...[...params_[array_field]]
+      );
+      for (const _a of params_['append']) {
+        if (!prevObj[array_field].includes(_a)) {
+          prevObj[array_field].push(_a);
+        }
+      }
+    }
+    else if (params_[array_field]['remove']) {
+      params_[array_field] = admin.firestore.FieldValue.arrayRemove(
+        ...[...params_[array_field]]
+      );
+      const next_arr = [...prevObj[array_field]
+      .filter((_r: string) => !params_['remove'].includes(_r))];
+      prevObj[array_field] = next_arr;
+    }
+  });
+}
+
+/**
+ * Organization query
+ */
 export async function queryOrganizationByAPIKey(db: any, decodedAPIKey: string) {
   try {
     const organization_query_snapshot = await db
@@ -6118,51 +6154,6 @@ export function getDecodedAuthHeader(req: any) {
     }
   }
   return '';
-}
-
-/**
- * @deprecated
- */
-export function handleArrayUpdates(
-  // admin: any, docUpdates: any, fields: string[], updateParams: any, updateObj: any
-) {
-  console.error('handleArrayUpdates is deprecated');
-  /*
-    Object.assign(docUpdates, updateParams);
-    for (const array_field of fields) {
-      const append_field = `append_${array_field}`;
-      const remove_field = `remove_${array_field}`;
-      delete docUpdates[append_field];
-      delete docUpdates[remove_field];
-      if (updateParams[append_field] !== undefined) {
-        docUpdates[array_field] = admin.firestore.FieldValue.arrayUnion(
-          ...[...updateParams[append_field]]
-        );
-      }
-      if (updateParams[remove_field] !== undefined) {
-        docUpdates[array_field] = admin.firestore.FieldValue.arrayRemove(
-          ...[...updateParams[remove_field]]
-        );
-      }
-      const result_arr = [...updateObj[array_field]
-        .filter((_r: string) => {
-          if (updateParams[remove_field] === undefined) {
-            return true;
-          }
-          return !updateParams[remove_field].includes(_r);
-        })];
-      if (updateParams[append_field] !== undefined) {
-        for (const _a of updateParams[append_field]) {
-          if (!result_arr.includes(_a)) {
-            result_arr.push(_a);
-          }
-        }
-      }
-      updateObj[array_field] = [...result_arr];
-      delete updateParams[append_field];
-      delete updateParams[remove_field];
-    }
-  */
 }
 
 /**
