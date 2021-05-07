@@ -294,11 +294,6 @@ export interface CreateUserParams extends CreateMappableParams, UpdateUserParams
   email: string;
 
   /**
-   * The user's fcm token for push notifications.
-   */
-  fcm_token: string;
-
-  /**
    * Id of the user.
    */
   id: string;
@@ -368,6 +363,11 @@ export interface CreateUserParams extends CreateMappableParams, UpdateUserParams
    * Security question for password resets or an empty string.
    */
   security_question: string;
+
+  /**
+   * FCM tokens of the device(s) where the user is signed in.
+   */
+  signed_in_devices_fcm_tokens: string[];
 
   /**
    * Timezone of the user
@@ -498,7 +498,7 @@ export interface UpdateUserParams extends UpdateMappableParams {
   email?: string;
 
   /**
-   * The user's fcm token for push notifications.
+   * @deprecated
    */
   fcm_token?: string;
 
@@ -547,6 +547,11 @@ export interface UpdateUserParams extends UpdateMappableParams {
    * Security question for password resets or an empty string.
    */
   security_question?: string;
+
+  /**
+   * Updates to the `signed_in_devices_fcm_tokens` array
+   */
+  signed_in_devices_fcm_tokens?: ArrayUpdateOperation;
 
 }
 
@@ -5291,7 +5296,6 @@ export const DEFAULT_CLOUD_USER: ProjectUser = {
   },
   display_name: '',
   email: '',
-  fcm_token: '',
   id: '',
   lat: DEFAULT_LATITUDE,
   long: DEFAULT_LONGITUDE,
@@ -5314,6 +5318,7 @@ export const DEFAULT_CLOUD_USER: ProjectUser = {
   security_answer: '',
   security_answer_salt: '',
   security_answer_hash: '',
+  signed_in_devices_fcm_tokens: [],
   timezone: DEFAULT_TIMEZONE
 };
 
@@ -6682,7 +6687,6 @@ export const DEFAULT_ECOMMERCE_USER: ECommerceProjectUser = {
     card: null,
     in_app_purchase_receipts: {}
   },
-  fcm_token: '',
   id: '',
   lat: DEFAULT_LATITUDE,
   long: DEFAULT_LONGITUDE,
@@ -6705,6 +6709,7 @@ export const DEFAULT_ECOMMERCE_USER: ECommerceProjectUser = {
   security_answer: '',
   security_answer_salt: '',
   security_answer_hash: '',
+  signed_in_devices_fcm_tokens: [],
   timezone: DEFAULT_TIMEZONE
 };
 
@@ -7228,6 +7233,15 @@ export interface CreateInterestParams {
    */
   name: string;
 
+  /**
+   * Metadata.
+   */
+  metadata: {
+    type: string;
+    tags: string[];
+    [key: string]: any;
+  }
+
 }
 
 /**
@@ -7249,6 +7263,15 @@ export interface UpdateInterestParams {
    * Name
    */
   name?: string;
+
+  /**
+   * Metadata.
+   */
+   metadata: {
+    type: string;
+    tags: string[];
+    [key: string]: any;
+  }
 
 }
 
@@ -7406,7 +7429,6 @@ export const DEFAULT_MARKETPLACE_USER: MarketplaceProjectUser = {
     card: null,
     in_app_purchase_receipts: {},
   },
-  fcm_token: '',
   id: '',
   interest_ids: [],
   lat: DEFAULT_LATITUDE,
@@ -7432,6 +7454,7 @@ export const DEFAULT_MARKETPLACE_USER: MarketplaceProjectUser = {
   security_answer: '',
   security_answer_salt: '',
   security_answer_hash: '',
+  signed_in_devices_fcm_tokens: [],
   timezone: DEFAULT_TIMEZONE,
   username: ''
 };
