@@ -365,9 +365,13 @@ export interface CreateUserParams extends CreateMappableParams, UpdateUserParams
   security_question: string;
 
   /**
-   * FCM tokens of the device(s) where the user is signed in.
+   * Map of the FCM tokens of the device(s) where the user is signed in. `null` if logged out.
+   * 
+   * Key is the device id with the dot (.) characters purged
    */
-  signed_in_devices_fcm_tokens: string[];
+  signed_in_devices_fcm_tokens: {
+    [key: string]: string|null;
+  };
 
   /**
    * Timezone of the user
@@ -549,9 +553,13 @@ export interface UpdateUserParams extends UpdateMappableParams {
   security_question?: string;
 
   /**
-   * Updates to the `signed_in_devices_fcm_tokens` array
+   * Map of the FCM tokens of the device(s) where the user is signed in. `null` if logged out.
+   * 
+   * Key is the device id with the dot (.) characters purged
    */
-  signed_in_devices_fcm_tokens?: ArrayUpdateOperation;
+  signed_in_devices_fcm_tokens?: {
+    [key: string]: string|null;
+  };
 
 }
 
@@ -5318,7 +5326,7 @@ export const DEFAULT_CLOUD_USER: ProjectUser = {
   security_answer: '',
   security_answer_salt: '',
   security_answer_hash: '',
-  signed_in_devices_fcm_tokens: [],
+  signed_in_devices_fcm_tokens: {},
   timezone: DEFAULT_TIMEZONE
 };
 
@@ -6709,7 +6717,7 @@ export const DEFAULT_ECOMMERCE_USER: ECommerceProjectUser = {
   security_answer: '',
   security_answer_salt: '',
   security_answer_hash: '',
-  signed_in_devices_fcm_tokens: [],
+  signed_in_devices_fcm_tokens: {},
   timezone: DEFAULT_TIMEZONE
 };
 
@@ -7454,7 +7462,7 @@ export const DEFAULT_MARKETPLACE_USER: MarketplaceProjectUser = {
   security_answer: '',
   security_answer_salt: '',
   security_answer_hash: '',
-  signed_in_devices_fcm_tokens: [],
+  signed_in_devices_fcm_tokens: {},
   timezone: DEFAULT_TIMEZONE,
   username: ''
 };
