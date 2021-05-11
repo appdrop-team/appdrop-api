@@ -5355,9 +5355,16 @@ export interface App extends CreateAppParams, Identifiable {
 
 }
 
-
+/**
+ * Params to create an app
+ */
 export interface CreateAppParams extends
   ProjectScoped, UpdateAppParams {
+  
+  /**
+   * Id of the minimum stable version
+   */
+  minimum_version_id: string;
 
   /**
    * The name of this App. Example: MyCoolApp iOS or MyCoolApp Web
@@ -5376,9 +5383,17 @@ export interface CreateAppParams extends
 
 }
 
+/**
+ * Params to update an app
+ */
 export interface UpdateAppParams {
 
   /**
+   * Id of the minimum stable version
+   */
+  minimum_version_id?: string;
+
+   /**
    * The name of this App. Example: MyCoolApp iOS or MyCoolApp Web
    */
   name?: string;
@@ -5422,6 +5437,7 @@ export const DEFAULT_ANDROID_APP: AppAndroid = {
   created_at: null,
   id: '',
   livemode: true,
+  minimum_version_id: '',
   name: '',
   object: 'app',
   platform: 'android',
@@ -5470,6 +5486,7 @@ export const DEFAULT_IOS_APP: AppIOS = {
   ios_app_id: '',
   ios_bundle_id: '',
   livemode: true,
+  minimum_version_id: '',
   name: '',
   object: 'app',
   platform: 'ios',
@@ -5530,6 +5547,7 @@ export const DEFAULT_WEB_APP: AppWeb = {
   domain_name: '',
   id: '',
   livemode: true,
+  minimum_version_id: '',
   name: '',
   object: 'app',
   platform: 'web',
@@ -7813,6 +7831,7 @@ export const DEFAULT_EVENT_POST: EventPost = {
   created_at: null,
   creator_id: '',
   date: null,
+  end_time: null,
   id: '',
   interest_ids: [],
   lat: DEFAULT_LATITUDE,
@@ -7822,8 +7841,8 @@ export const DEFAULT_EVENT_POST: EventPost = {
   post_type: 'event',
   project_id: '',
   status: 'live',
+  start_time: null,
   thread_id: '',
-  time: '',
   title: '',
   username: ''
 };
@@ -7842,9 +7861,18 @@ export interface CreateEventPostParams extends
   attending_member_ids: string[];
 
   /**
-   * Time of the event. Examples `12:30PM - 2PM` or `All Day`
+   * End time of the event.
+   * 
+   * `null` if end time not provided
+   * 
+   * `all_day` if all day event
    */
-  time: string;
+  end_time: Timestamped|'all_day';
+  
+  /**
+   * Start time of the event. Valid timestamp is required.
+   */
+  start_time: Timestamped;
 
 }
 
@@ -8508,9 +8536,21 @@ export function randString(l = -1) {
 }
 
 /**
+ * Returns true if the `s` param is a valid string
+ */
+ export const validString = (s: string | null | undefined, requires_letters: boolean) => {
+  return (
+    s !== null &&
+    s !== undefined &&
+    typeof s === 'string' &&
+    (!requires_letters || s.length > 0)
+  );
+};
+
+/**
  * Maps month index to its name. `0` is `Jan` or `January`
  */
-export const monthMap = (n: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11, long: boolean) => {
+export const monthMap = (n: number, long: boolean) => {
   switch (n) {
     case 0:
       return long ? 'January' : 'Jan';
@@ -8542,51 +8582,58 @@ export const monthMap = (n: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11, lon
 };
 
 /**
- * Returns true if the `s` param is a valid string
- */
-export const validString = (s: string | null | undefined, requires_letters: boolean) => {
-  return (
-    s !== null &&
-    s !== undefined &&
-    typeof s === 'string' &&
-    (!requires_letters || s.length > 0)
-  );
-};
-
-/**
  * Accepts an integer [0,6] and returns the english name of that day. 
  * 
  * `0` is `Sunday`
  * 
  * `1` is `Monday` and so on
  */
-export function dayMap(n: number) {
+export function dayMap(n: number, long: boolean) {
   switch (n) {
-    case 0: return 'Sunday';
-    case 1: return 'Monday';
-    case 2: return 'Tuesday';
-    case 3: return 'Wednesday';
-    case 4: return 'Thursday';
-    case 5: return 'Friday';
-    case 6: return 'Saturday';
+    case 0: return long ? 'Sunday' : 'Sun.';
+    case 1: return long ? 'Monday' : 'Mon.';
+    case 2: return long ? 'Tuesday' : 'Tues.';
+    case 3: return long ? 'Wednesday' : 'Wed.';
+    case 4: return long ? 'Thursday' : 'Thurs.';
+    case 5: return long ? 'Friday' : 'Fri.';
+    case 6: return long ? 'Saturday' : 'Sat.';
     default: throw new Error('invalid day number');
   }
 }
 
 /**
- * Accepts a unix timestamp in seconds and returns the time. Example: 07:30
+ * Accepts a unix timestamp in seconds and returns the time. Example: 6:28 AM
  */
 export function secToTime(s: number) {
-  return new Date(s * 1000).toISOString().substr(14, 5);
+  return new Date(s * 1000).toLocaleTimeString('en', { hour: 'numeric', minute: '2-digit' });
 };
 
 /**
- * Accepts a unix timestamp in seconds and returns the date. Example: Friday, Mar. 19
+ * Date formats
  */
-export function secToDate(s: number) {
-  const date = new Date(s * 1000);
-  // @ts-ignore
-  return `${dayMap(date.getDay())}, ${monthMap(date.getMonth(), false)}. ${date.getDate()}`;
+export type DateFormat = 'full'|'mm/dd/yy';
+
+/**
+ * Accepts a unix timestamp in seconds and returns the date.
+ * 
+ * Examples:
+ * 
+ * www, mmm. dd means Friday, Mar. 19
+ * 
+ * mm/dd/yy means 5/9/21
+ */
+export function secToDate(s: number, f: DateFormat) {
+  const d = new Date(s * 1000);
+  const day_num = d.getDay();
+  const month_num = d.getMonth();
+  const date_num = d.getDate();
+  const year_num = d.getFullYear();
+  if (f === 'full') {
+    return `${dayMap(day_num, true)}, ${monthMap(month_num, false)}. ${date_num}`;
+  }
+  else if (f === 'mm/dd/yy') {
+    return `${month_num + 1}/${date_num}/${year_num.toString().slice(2,4)}`;
+  }
 };
 
 /**
