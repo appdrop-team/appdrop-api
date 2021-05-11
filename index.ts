@@ -7830,7 +7830,6 @@ export const DEFAULT_EVENT_POST: EventPost = {
   cover_asset_id: '',
   created_at: null,
   creator_id: '',
-  date: null,
   end_time: null,
   id: '',
   interest_ids: [],
@@ -7860,20 +7859,6 @@ export interface CreateEventPostParams extends
    */
   attending_member_ids: string[];
 
-  /**
-   * End time of the event.
-   * 
-   * `null` if end time not provided
-   * 
-   * `all_day` if all day event
-   */
-  end_time: Timestamped|'all_day';
-  
-  /**
-   * Start time of the event. Valid timestamp is required.
-   */
-  start_time: Timestamped;
-
 }
 
 /**
@@ -7895,9 +7880,18 @@ export interface ContainsAddress {
 export interface ContainsDates {
 
   /**
-   * Date
+   * End time of the event.
+   * 
+   * `null` if end time not provided
+   * 
+   * `all_day` if all day event
    */
-  date: Timestamped;
+  end_time: Timestamped|'all_day';
+  
+   /**
+    * Start time of the event. Valid timestamp is required.
+    */
+  start_time: Timestamped;
 
 }
 
@@ -7941,11 +7935,6 @@ export interface UpdateEventPostParams extends
   attending_member_ids?: ArrayUpdateOperation;
 
   /**
-   * Time of the event. Examples `12:30PM - 2PM` or `All Day`
-   */
-  time?: string;
-
-  /**
    * @deprecated
    */
   append_attending_member_ids?: string[];
@@ -7976,9 +7965,18 @@ export interface UpdateContainsAddressParams {
 export interface UpdateContainsDateParams {
 
   /**
-   * Date
+   * End time of the event.
+   * 
+   * `null` if end time not provided
+   * 
+   * `all_day` if all day event
    */
-  date?: Timestamped;
+  end_time?: Timestamped|'all_day';
+  
+   /**
+    * Start time of the event. Valid timestamp is required.
+    */
+  start_time?: Timestamped;
 
 }
 
