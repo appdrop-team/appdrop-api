@@ -6087,22 +6087,28 @@ export async function handleSuccess(
     ) {
       if (['append', 'remove'].includes(Object.keys(params_[f])[0])) {
         if (params_[f]['append']) {
-          params_[f] = admin.firestore.FieldValue.arrayUnion(
-            ...[...params_[f]]
-          );
-          for (const _a of params_['append']) {
-            if (!prevObj[f].includes(_a)) {
-              prevObj[f].push(_a);
+          const append_arr = [...params_[f]['append']];
+          if (append_arr.length > 0) {
+            params_[f] = admin.firestore.FieldValue.arrayUnion(
+              ...append_arr
+            );
+            for (const _a of append_arr) {
+              if (!prevObj[f].includes(_a)) {
+                prevObj[f].push(_a);
+              }
             }
           }
         }
         else if (params_[f]['remove']) {
-          params_[f] = admin.firestore.FieldValue.arrayRemove(
-            ...[...params_[f]]
-          );
-          const next_arr = [...prevObj[f]
-          .filter((_r: string) => !params_['remove'].includes(_r))];
-          prevObj[f] = next_arr;
+          const remove_arr = [...params_[f]['remove']];
+          if (remove_arr.length > 0) {
+            params_[f] = admin.firestore.FieldValue.arrayRemove(
+              ...remove_arr
+            );
+            const next_arr = [...prevObj[f]
+            .filter((_r: string) => !remove_arr.includes(_r))];
+            prevObj[f] = next_arr;
+          }
         }
         return;
       }
