@@ -254,6 +254,9 @@ export interface User extends CreateUserParams, Identifiable, Mappable {
 
 }
 
+/**
+ * @deprecated
+ */
 export const SECURITY_QUESTIONS_ARR = [
   'What was the house number and street name you lived in as a child?',
   'What were the last four digits of your childhood telephone number?',
@@ -340,29 +343,14 @@ export interface CreateUserParams extends CreateMappableParams, UpdateUserParams
   password_salt: string;
 
   /**
+   * Id of the user's password reset or an empty string.
+   */
+  password_reset_id: string;
+
+  /**
    * The user's phone number.
    */
   phone: string;
-
-  /**
-   * Security answer for password resets or an empty string. Encrypted before storage.
-   */
-  security_answer: string;
-
-  /**
-   * Security answer encrypted for password resets encrypted or an empty string.
-   */
-  security_answer_hash: string;
-
-  /**
-   * Security answer salt for password resets or an empty string.
-   */
-  security_answer_salt: string;
-
-  /**
-   * Security question for password resets or an empty string.
-   */
-  security_question: string;
 
   /**
    * Map of the FCM tokens of the device(s) where the user is signed in. `null` if logged out.
@@ -377,6 +365,34 @@ export interface CreateUserParams extends CreateMappableParams, UpdateUserParams
    * Timezone of the user
    */
   timezone: Timezone;
+
+  /**
+   * @deprecated
+   * 
+   * Security answer for password resets or an empty string. Encrypted before storage.
+   */
+   security_answer?: string;
+
+   /**
+    * @deprecated
+    * 
+    * Security answer encrypted for password resets encrypted or an empty string.
+    */
+   security_answer_hash?: string;
+ 
+   /**
+    * @deprecated
+    * 
+    * Security answer salt for password resets or an empty string.
+    */
+   security_answer_salt?: string;
+ 
+   /**
+    * @deprecated
+    * 
+    * Security question for password resets or an empty string.
+    */
+   security_question?: string;
 
 }
 
@@ -538,21 +554,6 @@ export interface UpdateUserParams extends UpdateMappableParams {
   phone?: string;
 
   /**
-   * Security answer for password resets or an empty string. Encrypted before storage.
-   */
-  security_answer?: string;
-
-  /**
-   * Security answer for password resets encrypted or an empty string.
-   */
-  security_answer_hash?: string;
-
-  /**
-   * Security question for password resets or an empty string.
-   */
-  security_question?: string;
-
-  /**
    * Map of the FCM tokens of the device(s) where the user is signed in. `null` if logged out.
    * 
    * Key is the device id with the dot (.) characters purged
@@ -560,6 +561,27 @@ export interface UpdateUserParams extends UpdateMappableParams {
   signed_in_devices_fcm_tokens?: {
     [key: string]: string|null;
   };
+
+  /**
+   * @deprecated
+   * 
+   * Security answer for password resets or an empty string. Encrypted before storage.
+   */
+  security_answer?: string;
+
+  /**
+   * @deprecated
+   * 
+   * Security answer for password resets encrypted or an empty string.
+   */
+  security_answer_hash?: string;
+
+  /**
+   * @deprecated
+   * 
+   * Security question for password resets or an empty string.
+   */
+  security_question?: string;
 
 }
 
@@ -599,6 +621,11 @@ export interface AuthenticateUserParams {
   password: string;
 
   /**
+   * Id of the password reset
+   */
+  reset_pass_id?: string;
+  
+  /**
    * Role for marketplace
    */
   role?: MarketplaceProjectUserRole;
@@ -620,15 +647,54 @@ export interface AuthenticateMarketplaceUserParams {
 /**
  * Auth operations
  */
-export type AuthenticationType = 'sign_in' | 'sign_up' | 'firebase_auth';
+export type AuthenticationType = 'sign_in' | 'sign_up' | 'reset_pass' | 'firebase_auth';
 export const FIREBASE_EMAIL_AUTH = 'FIREBASE_EMAIL_AUTH';
 export const FIREBASE_APPLE_AUTH = 'FIREBASE_APPLE_AUTH';
 export const FIREBASE_GOOGLE_AUTH = 'FIREBASE_GOOGLE_AUTH';
 export const FIREBASE_FACEBOOK_AUTH = 'FIREBASE_FACEBOOK_AUTH';
 export const FIREBASE_PHONE_AUTH = 'FIREBASE_PHONE_AUTH';
 
+/**
+ * Password reset object
+ */
+export interface PasswordReset extends Identifiable {
+
+  /**
+   * Object name
+   */
+  object: 'password_reset';
+
+}
 
 /**
+ * Params to create a password reset
+ */
+export interface CreatePasswordResetParams extends UpdatePasswordResetParams {
+  
+  expires: Timestamped;
+
+  project_id: string;
+  
+  user_id: string;
+
+}
+
+/**
+ * Params to update a password reset
+ */
+export interface UpdatePasswordResetParams {
+
+  /**
+   * Time the reset expires
+   */
+  expires?: Timestamped;
+
+}
+
+
+/**
+ * @deprecated
+ * 
  * Params to exchange an email address for a User object which includes 
  * the `security_question` and `security_answer_hash` property to display 
  * to the resetting user. If either of these properties is an 
@@ -645,6 +711,8 @@ export interface RetrieveUserSecurityQuestionParams {
 }
 
 /**
+ * @deprecated
+ * 
  * Params to exchange a security answer for authentication
  */
 export interface RequestUserPasswordResetParams {
@@ -5319,13 +5387,10 @@ export const DEFAULT_CLOUD_USER: ProjectUser = {
   object: 'user',
   password: '',
   password_hash: '',
+  password_reset_id: '',
   password_salt: '',
   phone: '',
   project_id: '',
-  security_question: '',
-  security_answer: '',
-  security_answer_salt: '',
-  security_answer_hash: '',
   signed_in_devices_fcm_tokens: {},
   timezone: DEFAULT_TIMEZONE
 };
@@ -6270,7 +6335,7 @@ export type APIRequestEndpoint =
   'v1/projects/:projectId/tickets' |
   'v1/projects/:projectId/users' |
   'v1/projects/:projectId/users/:userId' |
-  'v1/projects/:projectId/users/:userId/requestUserPasswordReset' |
+  'v1/projects/:projectId/users/:userId/sendPasswordResetEmail' |
   'v1/projects/:projectId/users/:userId/authenticateUser' |
   'v1/projects/:projectId/users/:userId/orders' |
   'v1/projects/:projectId/users/:userId/orders/:orderId' |
@@ -6734,13 +6799,10 @@ export const DEFAULT_ECOMMERCE_USER: ECommerceProjectUser = {
   object: 'user',
   password: '',
   password_hash: '',
+  password_reset_id: '',
   password_salt: '',
   phone: '',
   project_id: '',
-  security_question: '',
-  security_answer: '',
-  security_answer_salt: '',
-  security_answer_hash: '',
   signed_in_devices_fcm_tokens: {},
   timezone: DEFAULT_TIMEZONE
 };
@@ -7479,13 +7541,10 @@ export const DEFAULT_MARKETPLACE_USER: MarketplaceProjectUser = {
   role: 'consumer',
   password: '',
   password_hash: '',
+  password_reset_id: '',
   password_salt: '',
   phone: '',
   project_id: '',
-  security_question: '',
-  security_answer: '',
-  security_answer_salt: '',
-  security_answer_hash: '',
   signed_in_devices_fcm_tokens: {},
   timezone: DEFAULT_TIMEZONE,
   username: ''
