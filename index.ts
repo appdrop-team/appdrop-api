@@ -671,10 +671,19 @@ export interface PasswordReset extends Identifiable {
  */
 export interface CreatePasswordResetParams extends UpdatePasswordResetParams {
   
+  /**
+   * Time the reset expires
+   */
   expires: Timestamped;
 
+  /**
+   * Project id
+   */
   project_id: string;
   
+  /**
+   * User id
+   */
   user_id: string;
 
 }
