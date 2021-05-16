@@ -657,7 +657,7 @@ export const FIREBASE_PHONE_AUTH = 'FIREBASE_PHONE_AUTH';
 /**
  * Password reset object
  */
-export interface PasswordReset extends Identifiable {
+export interface PasswordReset extends CreatePasswordResetParams, Identifiable {
 
   /**
    * Object name
