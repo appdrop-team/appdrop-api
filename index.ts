@@ -700,6 +700,50 @@ export interface UpdatePasswordResetParams {
 
 }
 
+/**
+ * Params to send a password reset email
+ */
+export interface SendPasswordResetEmailParams {
+
+  /**
+   * Email recipient
+   */
+  email: string;
+
+  /**
+   * Project Id
+   */
+  project_id: string;
+
+  /**
+   * Role for marketplace
+   */
+  role?: string;
+
+}
+
+/**
+ * Params to send a password reset email
+ */
+export interface SendMarketplacePasswordResetEmailParams extends SendPasswordResetEmailParams {
+
+  /**
+   * Email recipient
+   */
+  email: string;
+
+  /**
+   * Project Id
+   */
+  project_id: string;
+
+  /**
+   * Role for marketplace
+   */
+  role: string;
+
+}
+
 
 /**
  * @deprecated
@@ -5820,8 +5864,7 @@ export type APIRequestBodyData =
   CreateUserParams |
   InitAppParams |
   RequestReturnParams |
-  RequestUserPasswordResetParams |
-  RetrieveUserSecurityQuestionParams |
+  SendPasswordResetEmailParams |
   SyncPrintfulProductsParams |
   UpdateInAppPurchaseParams |
   UpdateOrderParams |
@@ -5884,6 +5927,7 @@ export type APIResponseBody =
   Entity |
   InitAppResponseBody |
   InAppPurchase |
+  PasswordReset |
   Post |
   Product |
   Project |
