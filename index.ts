@@ -747,19 +747,26 @@ export interface SendPasswordResetEmailParams {
 export interface SendMarketplacePasswordResetEmailParams extends SendPasswordResetEmailParams {
 
   /**
-   * Email recipient
-   */
-  email: string;
-
-  /**
-   * Project Id
-   */
-  project_id: string;
-
-  /**
    * Role for marketplace
    */
   role: string;
+
+}
+
+/**
+ * Params to send a password reset verification code
+ */
+export interface SendPasswordResetVerificationCodeParams {
+  
+  /**
+   * Id of the password reset
+   */
+  password_reset_id: string;
+
+  /**
+   * Verification code from email
+   */
+  verification_code: string;
 
 }
 
@@ -5884,6 +5891,7 @@ export type APIRequestBodyData =
   InitAppParams |
   RequestReturnParams |
   SendPasswordResetEmailParams |
+  SendPasswordResetVerificationCodeParams |
   SyncPrintfulProductsParams |
   UpdateInAppPurchaseParams |
   UpdateOrderParams |
@@ -6408,6 +6416,7 @@ export type APIRequestEndpoint =
   'v1/projects/:projectId/users' |
   'v1/projects/:projectId/users/:userId' |
   'v1/projects/:projectId/users/:userId/sendPasswordResetEmail' |
+  'v1/projects/:projectId/users/:userId/sendPasswordResetVerificationCode' |
   'v1/projects/:projectId/users/:userId/authenticateUser' |
   'v1/projects/:projectId/users/:userId/orders' |
   'v1/projects/:projectId/users/:userId/orders/:orderId' |
