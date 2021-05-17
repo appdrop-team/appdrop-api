@@ -667,6 +667,20 @@ export interface PasswordReset extends CreatePasswordResetParams, Identifiable {
 }
 
 /**
+ * Password reset
+ */
+export const DEFAULT_PASSWORD_RESET: PasswordReset = {
+  created_at: null,
+  expires: null,
+  id: '',
+  livemode: true,
+  object: 'password_reset',
+  project_id: '',
+  user_id: '',
+  verification_code: ''
+};
+
+/**
  * Params to create a password reset
  */
 export interface CreatePasswordResetParams extends UpdatePasswordResetParams {
@@ -680,11 +694,16 @@ export interface CreatePasswordResetParams extends UpdatePasswordResetParams {
    * Project id
    */
   project_id: string;
-  
+
   /**
    * User id
    */
   user_id: string;
+  
+  /**
+   * 6-digit reset code
+   */
+  verification_code: string;
 
 }
 
