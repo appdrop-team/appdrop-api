@@ -399,7 +399,7 @@ export interface CreateUserParams extends CreateMappableParams, UpdateUserParams
 /**
  * Data for each signed in device
  */
-interface SignedInDeviceData extends UpdateSignedInDeviceDataParams {
+export interface SignedInDeviceData extends UpdateSignedInDeviceDataParams {
 
   /**
    * Whether user is logged in
@@ -484,7 +484,7 @@ export const DEFAULT_SIGNED_IN_DEVICE_DATA: SignedInDeviceData = {
 /**
  * Data for each signed in device
  */
-interface UpdateSignedInDeviceDataParams {
+export interface UpdateSignedInDeviceDataParams {
 
   /**
    * Whether user is logged in
