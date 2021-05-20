@@ -353,12 +353,12 @@ export interface CreateUserParams extends CreateMappableParams, UpdateUserParams
   phone: string;
 
   /**
-   * Map of the FCM tokens of the device(s) where the user is signed in. `null` if logged out.
+   * Map of the data for the device(s) where the user is signed in
    * 
    * Key is the device id with the dot (.) characters purged
    */
-  signed_in_devices_fcm_tokens: {
-    [key: string]: string|null;
+  signed_in_devices: {
+    [key: string]: SignedInDeviceData;
   };
 
   /**
@@ -371,30 +371,189 @@ export interface CreateUserParams extends CreateMappableParams, UpdateUserParams
    * 
    * Security answer for password resets or an empty string. Encrypted before storage.
    */
-   security_answer?: string;
+  security_answer?: string;
 
-   /**
-    * @deprecated
-    * 
-    * Security answer encrypted for password resets encrypted or an empty string.
-    */
-   security_answer_hash?: string;
- 
-   /**
-    * @deprecated
-    * 
-    * Security answer salt for password resets or an empty string.
-    */
-   security_answer_salt?: string;
- 
-   /**
-    * @deprecated
-    * 
-    * Security question for password resets or an empty string.
-    */
-   security_question?: string;
+  /**
+   * @deprecated
+   * 
+   * Security answer encrypted for password resets encrypted or an empty string.
+   */
+  security_answer_hash?: string;
+
+  /**
+   * @deprecated
+   * 
+   * Security answer salt for password resets or an empty string.
+   */
+  security_answer_salt?: string;
+
+  /**
+   * @deprecated
+   * 
+   * Security question for password resets or an empty string.
+   */
+  security_question?: string;
 
 }
+
+/**
+ * Data for each signed in device
+ */
+interface SignedInDeviceData extends UpdateSignedInDeviceDataParams {
+
+  /**
+   * Whether user is logged in
+   */
+  authenticated: boolean;
+
+  /**
+   * Unique device id
+   */
+  device_id: string;
+
+  /**
+   * Name of the device e.g. `iPhone 8`
+   */
+  device_name: string;
+
+  /**
+   * Push token
+   */
+  push_token: string;
+
+  /**
+   * Platform
+   */
+  platform: PlatformType;
+
+  /**
+   * Permissions
+   */
+  permissions: {
+
+    /**
+    * Camera access
+    */
+    camera: PermissionsStatus;
+
+    /**
+    * Camera roll access
+    */
+    camera_roll: PermissionsStatus;
+
+    /**
+    * Contacts access
+    */
+    contacts: PermissionsStatus;
+
+    /**
+    * Location access
+    */
+    location: PermissionsStatus;
+
+    /**
+    * Microphone access
+    */
+    microphone: PermissionsStatus;
+
+    /**
+    * Push access
+    */
+    push: PermissionsStatus;
+
+  };
+
+}
+
+export const DEFAULT_SIGNED_IN_DEVICE_DATA: SignedInDeviceData = {
+  authenticated: false,
+  device_id: '',
+  device_name: '',
+  permissions: {
+    camera: 'not_requested',
+    camera_roll: 'not_requested',
+    microphone: 'not_requested',
+    contacts: 'not_requested',
+    push: 'not_requested',
+    location: 'not_requested',
+  },
+  platform: 'ios',
+  push_token: '',
+};
+
+/**
+ * Data for each signed in device
+ */
+interface UpdateSignedInDeviceDataParams {
+
+  /**
+   * Whether user is logged in
+   */
+  authenticated?: boolean;
+
+  /**
+   * Unique device id
+   */
+  device_id?: string;
+
+  /**
+   * Name of the device e.g. `iPhone 8`
+   */
+  device_name?: string;
+
+  /**
+   * Push token
+   */
+  push_token?: string;
+
+  /**
+   * Platform
+   */
+  platform?: PlatformType;
+
+  /**
+   * Permissions
+   */
+  permissions?: {
+
+    /**
+     * Camera access
+     */
+    camera?: PermissionsStatus;
+
+    /**
+     * Camera roll access
+     */
+    camera_roll?: PermissionsStatus;
+
+    /**
+     * Contacts access
+     */
+    contacts?: PermissionsStatus;
+
+    /**
+     * Location access
+     */
+    location?: PermissionsStatus;
+
+    /**
+     * Microphone access
+     */
+    microphone?: PermissionsStatus;
+
+    /**
+     * Push access
+     */
+    push?: PermissionsStatus;
+
+  };
+
+}
+
+/**
+ * Status of device permission
+ */
+export type PermissionsStatus = 'not_requested' | 'denied' | 'approved';
 
 /**
  * Name
@@ -518,11 +677,6 @@ export interface UpdateUserParams extends UpdateMappableParams {
   email?: string;
 
   /**
-   * @deprecated
-   */
-  fcm_token?: string;
-
-  /**
    * Set of [key-value pairs] that you can attach to an object. 
    * This can be useful for storing additional information about the 
    * object in a structured format.
@@ -554,12 +708,30 @@ export interface UpdateUserParams extends UpdateMappableParams {
   phone?: string;
 
   /**
+   * Map of the push notification tokens of the device(s) where the user is signed in. `null` if logged out.
+   * 
+   * Key is the device id with the dot (.) characters purged
+   */
+  signed_in_devices?: {
+
+    [key: string]: UpdateSignedInDeviceDataParams;
+
+  };
+
+  /**
+   * @deprecated
+   */
+  fcm_token?: string;
+
+  /**
+   * @deprecated
+   * 
    * Map of the FCM tokens of the device(s) where the user is signed in. `null` if logged out.
    * 
    * Key is the device id with the dot (.) characters purged
    */
   signed_in_devices_fcm_tokens?: {
-    [key: string]: string|null;
+    [key: string]: string | null;
   };
 
   /**
@@ -624,7 +796,7 @@ export interface AuthenticateUserParams {
    * Id of the password reset
    */
   reset_pass_id?: string;
-  
+
   /**
    * Role for marketplace
    */
@@ -684,7 +856,7 @@ export const DEFAULT_PASSWORD_RESET: PasswordReset = {
  * Params to create a password reset
  */
 export interface CreatePasswordResetParams extends UpdatePasswordResetParams {
-  
+
   /**
    * Time the reset expires
    */
@@ -699,7 +871,7 @@ export interface CreatePasswordResetParams extends UpdatePasswordResetParams {
    * User id
    */
   user_id: string;
-  
+
   /**
    * 6-digit reset code
    */
@@ -757,7 +929,7 @@ export interface SendMarketplacePasswordResetEmailParams extends SendPasswordRes
  * Params to send a password reset verification code
  */
 export interface SendPasswordResetVerificationCodeParams {
-  
+
   /**
    * Id of the password reset
    */
@@ -2472,7 +2644,7 @@ export interface UpdateEntityFinancialDetailsParams extends UpdateFinancialDetai
   /**
    * The id of the entity's Stripe subscription object.
    * 
-   * Note – Starter & Pro plan organizations with add-ons get a wildcard Stripe
+   * Note – Pro plan organizations with add-ons get a wildcard Stripe
    * price following their selections during strategy session calls.
    */
   subscription?: Subscription | null;
@@ -2497,12 +2669,12 @@ export type BillingMethod = 'card' | 'wire';
  * 
  * Equates to 2 free months of Appdrop Pro
  */
-export type CreditType = 200;
+export type CreditType = 200|300;
 
 /**
  * Organization tier.
  */
-export type OrganizationTier = 'business' | 'enterprise' | 'pro';
+export type OrganizationTier = 'business' | 'enterprise' | 'pro' | 'starter';
 
 /**
  * Invoice
@@ -2519,7 +2691,7 @@ export interface Invoice extends CreateInvoiceParams, Identifiable {
 /**
  * Params to create an invoice
  */
-export interface CreateInvoiceParams extends UpdateInvoiceParams {
+export interface CreateInvoiceParams extends Price, UpdateInvoiceParams {
 
   /**
    * Description of each line item covered in the invoice
@@ -2532,6 +2704,11 @@ export interface CreateInvoiceParams extends UpdateInvoiceParams {
   due: Timestamped;
 
   /**
+   * ID of the charge
+   */
+  charge: string | null;
+
+  /**
    * Date that invoice was paid
    */
   paid: Timestamped;
@@ -2542,13 +2719,28 @@ export interface CreateInvoiceParams extends UpdateInvoiceParams {
    * USD Example: 10050 indicates $100.50
    */
   price: number;
+   
+  /**
+   * Product sold
+   */
+  product: AppdropProduct | null;
+
+  /**
+   * Price Id in Stripe dashboard
+   */
+  stripe_price_id: string | null;
 
 }
 
 /**
  * Params to update an invoice
  */
-export interface UpdateInvoiceParams {
+export interface UpdateInvoiceParams extends UpdatePriceParams {
+
+  /**
+   * ID of the charge
+   */
+  charge?: string | null;
 
   /**
    * Description of each line item covered in the invoice
@@ -2566,19 +2758,16 @@ export interface UpdateInvoiceParams {
   paid?: Timestamped;
 
   /**
-   * Price of product. The unit is the smallest unit of the Organization's currency.
-   * 
-   * USD Example: 10050 indicates $100.50
+   * Product sold
    */
-  price?: number;
-
+  product?: UpdateAppdropProductParams | null;
 
 }
 
 /**
  * Price of Appdrop services.
  */
-export interface Price {
+export interface Price extends UpdatePriceParams {
 
   /**
    * Price of product. The unit is the smallest unit of the Organization's currency.
@@ -2590,7 +2779,26 @@ export interface Price {
   /**
    * Price Id in Stripe dashboard
    */
-  stripe_price_id: string;
+  stripe_price_id: string | null;
+
+}
+
+/**
+ * Price of Appdrop services.
+ */
+export interface UpdatePriceParams {
+
+  /**
+   * Price of product. The unit is the smallest unit of the Organization's currency.
+   * 
+   * USD Example: 10050 indicates $100.50
+   */
+  price?: number;
+
+  /**
+   * Price Id in Stripe dashboard
+   */
+  stripe_price_id?: string | null;
 
 }
 
@@ -4903,7 +5111,29 @@ export interface ProjectTemplate extends CreateProjectTemplateParams, Identifiab
 
 }
 
-export interface CreateProjectTemplateParams extends UpdateProjectTemplateParams, CreateVersionHistoryParams {
+/**
+ * Project template
+ */
+export const DEFAULT_PROJECT_TEMPLATE: ProjectTemplate = {
+  copyright: '',
+  cover_asset: null,
+  created_at: null,
+  description: '',
+  git_repo: '',
+  id: '',
+  livemode: true,
+  name: '',
+  project_type: 'ecommerce',
+  object: 'project_template',
+  version_history: {},
+};
+
+/**
+ * Params to create a project template
+ */
+export interface CreateProjectTemplateParams extends 
+CreateVersionHistoryParams,
+UpdateProjectTemplateParams {
 
   /**
    * Company that published the template.
@@ -4954,17 +5184,311 @@ export interface CreateProjectTemplateParams extends UpdateProjectTemplateParams
 }
 
 /**
+ * Appdrop product for purchase
+ */
+interface AppdropProduct extends CreateAppdropProductParams, Identifiable {
+
+  /**
+   * Object name
+   */
+  object: 'product';
+
+}
+
+/**
+ * Appdrop product
+ */
+export const DEFAULT_APPDROP_PROJECT: AppdropProduct = {
+  active: true,
+  asset_ids: [],
+  bio: '',
+  blocked_member_ids: [],
+  caption: '',
+  community_status: 'approved',
+  created_at: null,
+  description: '',
+  display_name: '',
+  id: '',
+  images: [],
+  livemode: true,
+  metadata: {},
+  name: '',
+  package_dimensions: null,
+  type: 'good',
+  shippable: null,
+  statement_descriptor: '',
+  object: 'product',
+  unit_label: '',
+  updated_at: null,
+  updated: -1,
+  url: '',
+  username: '',
+};
+
+/**
+ * Params to create an Appdrop product
+ */
+export interface CreateAppdropProductParams extends
+  ContainsSocial, UpdateAppdropProductParams {
+
+  /**
+   * Whether the product is currently available for purchase.
+   */
+  active: boolean;
+
+  /**
+   * A short one-line description of the product, meant to be displayable to the customer. Only applicable to products of `type=good`.
+   */
+  caption: string | null;
+
+  /**
+   * The product's description, meant to be displayable to the customer. Use this field to optionally store a long form explanation of the product being sold for your own rendering purposes.
+   */
+  description: string | null;
+
+  /**
+   * A list asset ids
+   */
+  asset_ids: string[];
+
+  /**
+   * Stripe field
+   * 
+   * A list of up to 8 URLs of images for this product, meant to be displayable to the customer.
+   */
+  images: string[];
+
+  /**
+   * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+   */
+  metadata: {
+    [key: string]: any;
+  };
+
+  /**
+   * The product's name, meant to be displayable to the customer. Whenever this product is sold via a subscription, name will show up on associated invoice line item descriptions.
+   */
+  display_name: string;
+
+  /**
+   * Stripe field
+   * 
+   * The product's name, meant to be displayable to the customer. Whenever this product is sold via a subscription, name will show up on associated invoice line item descriptions.
+   */
+  name: string;
+
+  /**
+   * The dimensions of this product for shipping purposes. A SKU associated with this product can override this value by having its own `package_dimensions`. Only applicable to products of `type=good`.
+   */
+  package_dimensions: ProductPackageDimensions | null;
+
+  /**
+   * Whether this product is a shipped good. Only applicable to products of `type=good`.
+   */
+  shippable: boolean | null;
+
+  /**
+   * Extra information about a product which will appear on your customer's credit card statement. In the case that multiple products are billed at once, the first statement descriptor will be used.
+   */
+  statement_descriptor: string | null;
+
+  /**
+   * The type of the product. The product is either of type `good`, which is eligible for use with Orders and SKUs, or `service`, which is eligible for use with Subscriptions and Plans.
+   */
+  type: ProductType;
+
+  /**
+   * A label that represents units of this product in Stripe and on customers' receipts and invoices. When set, this will be included in associated invoice line item descriptions.
+   */
+  unit_label: string | null;
+
+  /**
+   * Time at which the object was last updated
+   */
+  updated_at: Timestamped;
+
+  /**
+   * Time at which the object was last updated. Measured in seconds since the Unix epoch.
+   */
+  updated: number;
+
+  /**
+   * A URL of a publicly-accessible webpage for this product. Only applicable to products of `type=good`.
+   */
+  url: string | null;
+
+}
+
+/**
+ * Product package dimensions
+ */
+export interface ProductPackageDimensions extends UpdateProductPackageDimensionsParams {
+
+  /**
+   * Height, in inches.
+   */
+  height: number;
+
+  /**
+   * Length, in inches.
+   */
+  length: number;
+
+  /**
+   * Weight, in ounces.
+   */
+  weight: number;
+
+  /**
+   * Width, in inches.
+   */
+  width: number;
+
+}
+
+/**
+ * Type of product
+ */
+type ProductType = 'good' | 'service';
+
+
+/**
+ * Params to update an Appdrop product
+ */
+export interface UpdateAppdropProductParams {
+
+  /**
+   * Whether the product is currently available for purchase.
+   */
+  active?: boolean;
+
+  /**
+   * A short one-line description of the product, meant to be displayable to the customer. Only applicable to products of `type=good`.
+   */
+  caption?: string | null;
+
+  /**
+   * The product's description, meant to be displayable to the customer. Use this field to optionally store a long form explanation of the product being sold for your own rendering purposes.
+   */
+  description?: string | null;
+
+  /**
+   * A list asset ids
+   */
+  asset_ids?: ArrayUpdateOperation;
+
+  /**
+   * Stripe field
+   * 
+   * A list of up to 8 URLs of images for this product, meant to be displayable to the customer.
+   */
+  images?: string[];
+
+  /**
+   * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+   */
+  metadata?: {
+    [key: string]: any;
+  };
+
+  /**
+   * The product's name, meant to be displayable to the customer. Whenever this product is sold via a subscription, name will show up on associated invoice line item descriptions.
+   */
+  display_name?: string;
+
+  /**
+   * Stripe field
+   * 
+   * The product's name, meant to be displayable to the customer. Whenever this product is sold via a subscription, name will show up on associated invoice line item descriptions.
+   */
+  name?: string;
+
+  /**
+   * The dimensions of this product for shipping purposes. A SKU associated with this product can override this value by having its own `package_dimensions`. Only applicable to products of `type=good`.
+   */
+  package_dimensions?: UpdateProductPackageDimensionsParams | null;
+
+  /**
+   * Whether this product is a shipped good. Only applicable to products of `type=good`.
+   */
+  shippable?: boolean | null;
+
+  /**
+   * Extra information about a product which will appear on your customer's credit card statement. In the case that multiple products are billed at once, the first statement descriptor will be used.
+   */
+  statement_descriptor?: string | null;
+
+  /**
+   * The type of the product. The product is either of type `good`, which is eligible for use with Orders and SKUs, or `service`, which is eligible for use with Subscriptions and Plans.
+   */
+  type?: ProductType;
+
+  /**
+   * A label that represents units of this product in Stripe and on customers' receipts and invoices. When set, this will be included in associated invoice line item descriptions.
+   */
+  unit_label?: string | null;
+
+  /**
+   * Time at which the object was last updated. Measured in seconds since the Unix epoch.
+   */
+  updated_at?: Timestamped;
+
+  /**
+   * Time at which the object was last updated. Measured in seconds since the Unix epoch.
+   */
+  updated?: number;
+
+  /**
+   * A URL of a publicly-accessible webpage for this product. Only applicable to products of `type=good`.
+   */
+  url?: string | null;
+
+}
+
+/**
+ * Params to update package dimensions
+ */
+export interface UpdateProductPackageDimensionsParams {
+
+  /**
+   * Height, in inches. Maximum precision is 2 decimal places.
+   */
+  height?: number;
+
+  /**
+   * Length, in inches. Maximum precision is 2 decimal places.
+   */
+  length?: number;
+
+  /**
+   * Weight, in ounces. Maximum precision is 2 decimal places.
+   */
+  weight?: number;
+
+  /**
+   * Width, in inches. Maximum precision is 2 decimal places.
+   */
+  width?: number;
+
+}
+
+/**
  * Type of project
  */
 export type ProjectType =
   'cloud' |
   'ecommerce' |
-  'marketplace';
-// 'social_network'|
-// 'streaming_service'|
-// 'media';
+  'game' |
+  'marketplace' |
+  'social_network' |
+  'streaming_service' |
+  'media';
 
-export interface UpdateProjectTemplateParams extends UpdateVersionHistoryParams {
+/**
+ * Params to update a project template
+ */
+export interface UpdateProjectTemplateParams extends
+UpdateVersionHistoryParams {
 
   /**
    * Company that published the template.
@@ -4982,11 +5506,6 @@ export interface UpdateProjectTemplateParams extends UpdateVersionHistoryParams 
   description?: string;
 
   /**
-   * Download Url for the template code.
-   */
-  git_repo?: string;
-
-  /**
    * Name of the template
    */
   name?: string;
@@ -4994,10 +5513,21 @@ export interface UpdateProjectTemplateParams extends UpdateVersionHistoryParams 
   /**
    * Type of project
    */
+  project_type?: ProjectType;
+
+  /**
+   * @deprecated
+   * 
+   * Type of project
+   */
   project_template_type?: ProjectType;
+
 
 };
 
+/**
+ * Version history
+ */
 export interface VersionHistory extends CreateVersionHistoryParams {
 
   /**
@@ -5021,7 +5551,7 @@ export interface CreateVersionHistoryParams extends UpdateVersionHistoryParams {
   /**
    * Released versions
    * 
-   * @Important – Key is version name. (Server generates ids.)
+   * @Important – Key is version id
    */
   version_history: {
 
@@ -5039,11 +5569,11 @@ export interface UpdateVersionHistoryParams {
   /**
    * Released versions
    * 
-   * Key is version ID generated by the server (if prev version) or version name (if new version)
+   * Key is version ID
    */
   version_history?: {
 
-    [key: string]: CreateVersionParams;
+    [key: string]: UpdateVersionParams;
 
   };
 
@@ -5061,7 +5591,63 @@ export interface Version extends CreateVersionParams, Identifiable {
 
 }
 
-export interface CreateVersionParams extends UpdateVersionParams {
+/**
+ * Params to create a version
+ */
+export interface CreateVersionParams extends 
+NotificationSettings, Price, UpdateVersionParams {
+
+  /**
+   * Canvas, screen and object model
+   */
+  appdrop_ui: AppdropUI;
+
+  /**
+   * Custom user data points for project. Goes in `metadata`
+   */
+  custom_user_properties: {
+    [key: string]: any;
+  };
+
+  /**
+   * Url of the zip file
+   */
+  download_url: string;
+
+  /**
+   * Endpoints that trigger a notification for this app
+   */
+  endpoint_notifications: {
+    [key in APIRequestEndpoint]?: {
+      [key in PushType]?: NotificationCriteria | null;
+    };
+  };
+
+  /**
+   * Price of product. The unit is the smallest unit of the Organization's currency.
+   * 
+   * USD Example: 10050 indicates $100.50
+   */
+  price: number;
+
+  /**
+   * Product sold
+   */
+  product: AppdropProduct | null;
+
+  /**
+   * Price Id in Stripe dashboard
+   */
+  stripe_price_id: string | null;
+  
+  /**
+   * Topics that trigger a notification for this app
+   */
+  topic_notifications: {
+    [key: string]: {
+      [key in PushType]?: NotificationCriteria | null;
+    };
+  };
 
   /**
    * Brief description of the features and functionality introduced in this version.
@@ -5077,17 +5663,528 @@ export interface CreateVersionParams extends UpdateVersionParams {
 
 }
 
-export interface UpdateVersionParams {
+/**
+ * Canvas, screen and object model
+ */
+export interface AppdropUI extends UpdateAppdropUIParams {
+
+  /**
+   * Screens in navigation tree
+   */
+  screens: {
+    [key: string]: AppdropUIScreen;
+  };
+
+  /**
+   * App objects
+   */
+  objects: {
+    [key: string]: AppdropUIObject;
+  };
+
+}
+
+/**
+ * Screen
+ */
+export interface AppdropUIScreen extends
+Identifiable, AppdropUIStylesMap,
+AppdropUIObjectMap, UpdateAppdropUIScreenParams {
+
+  /**
+   * Index to render
+   */
+  index: number;
+
+  /**
+   * Object name
+   */
+  object: 'screen';
+
+  /**
+   * Type of screen
+   */
+  type: ScreenType;
+
+  /**
+   * Screen name, e.g. `Home`
+   */
+  name: string;
+
+  /**
+   * Screen options
+   */
+  options: {
+    [key: string]: any; // fix this. screen options
+  };
+
+  /**
+   * Object map
+   */
+  object_map: {
+
+    /**
+     * Criteria id
+     */
+    [key: string]: AppdropUIObjectSettings;
+  
+  };
+
+  /**
+   * Styles map
+   */
+  styles_map: {
+
+    /**
+     * Criteria id
+     */
+    [key: string]: AppdropUIStyleSettings;
+
+  };
+
+}
+
+/**
+ * Default screen
+ * fix this: extend screen for tabscreen, mapscreen, etc.
+ */
+export const DEFAULT_APPDROP_UI_SCREEN: AppdropUIScreen = {
+  object: 'screen',
+  created_at: null,
+  id: '',
+  index: 0,
+  livemode: true,
+  type: 'default',
+  name: '',
+  object_map: {},
+  options: {},
+  styles_map: {}
+};
+
+/**
+ * Type of screen
+ */
+type ScreenType =
+  'tab' |
+  'stack' |
+  'default' |
+  'image' |
+  'map';
+
+/**
+ * Params to update a screen
+ */
+export interface UpdateAppdropUIScreenParams
+extends UpdateAppdropUIObjectMapParams, UpdateAppdropUIStylesMapParams {
+
+  /**
+   * Index to render
+   */
+  index?: number;
+
+  /**
+   * Type of screen
+   */
+  type?: ScreenType;
+
+  /**
+   * Screen name, e.g. `Home`
+   */
+  name?: string;
+
+  /**
+   * Screen options
+   */
+  options?: {
+    [key: string]: any; // fix this. screen options
+  };
+
+}
+
+/**
+ * Object map
+ */
+export interface AppdropUIObjectMap {
+
+  /**
+   * Objects to render
+   */
+  object_map: {
+
+    /**
+     * Criteria id
+     */
+    [key: string]: AppdropUIObjectSettings;
+  
+  };
+
+}
+
+/**
+ * Params to update an object map
+ */
+export interface UpdateAppdropUIObjectMapParams {
+  /**
+   * Objects to render
+   */
+   object_map?: {
+
+    /**
+     * Criteria id
+     */
+    [key: string]: UpdateAppdropUIObjectSettingsParams;
+  
+  };
+}
+
+/**
+ * Style map
+ */
+export interface AppdropUIStylesMap {
+
+  /**
+   * Styles to render
+   */
+  styles_map: {
+
+    /**
+     * Criteria id
+     */
+    [key: string]: AppdropUIStyleSettings;
+  
+  };
+
+}
+
+/**
+ * Params to update an styles map
+ */
+export interface UpdateAppdropUIStylesMapParams {
+  /**
+   * Styles to render
+   */
+   styles_map?: {
+
+    /**
+     * Criteria id
+     */
+    [key: string]: UpdateAppdropUIStyleSettingsParams;
+  
+  };
+}
+
+/**
+ * Object settings
+ */
+export interface AppdropUIObjectSettings extends Criteria, UpdateAppdropUIObjectSettingsParams {
+
+  /**
+   * Criteria
+   */
+  criteria: {
+    field_path: string[];
+    op: CriteriaOp;
+    value: any;
+  }[];
+
+  /**
+  * Array of objects to render if all criteria true
+  */
+  object_ids: string[];
+
+}
+
+/**
+ * Params to update object settings
+ */
+export interface UpdateAppdropUIObjectSettingsParams extends UpdateCriteriaParams {
+
+  /**
+   * Objects
+   */
+  object_ids?: ArrayUpdateOperation;
+
+}
+
+/**
+ * Style settings
+ */
+export interface AppdropUIStyleSettings extends Criteria, UpdateAppdropUIStyleSettingsParams {
+
+  /**
+   * Criteria
+   */
+  criteria: {
+    field_path: string[];
+    op: CriteriaOp;
+    value: any;
+  }[];
+
+  /**
+  * Array of Nativestrap styles to render if all criteria true
+  */
+  style_ids: string[];
+
+}
+
+/**
+ * Params to update style settings
+ */
+export interface UpdateAppdropUIStyleSettingsParams extends UpdateCriteriaParams {
+
+  /**
+   * Styles
+   */
+  style_ids?: ArrayUpdateOperation;
+
+}
+
+export interface Criteria extends UpdateCriteriaParams {
+
+  /**
+   * Empty array defaults to true, i.e. should trigger a notificaiton
+   * 
+   * Otherwise check each field value pair using the op
+   * 
+   */
+  criteria: {
+    field_path: string[];
+    op: CriteriaOp;
+    value: any;
+  }[];
+
+  /**
+   * Id of the criteria:
+   * 
+   * Endpoint notification: key in APIRequestEndpoint
+   * 
+   * Topic notification: topic name e.g. `reminders`
+   * 
+   * Style: rand string
+   */
+  criteria_id: string;
+
+}
+
+/**
+ * Params to update criteria
+ */
+export interface UpdateCriteriaParams {
+
+  /**
+   * Empty array defaults to true, i.e. should trigger a notificaiton
+   * 
+   * Otherwise check each field value pair using the op
+   * 
+   */
+  criteria?: {
+    field_path: string[];
+    op: CriteriaOp;
+    value: any;
+  }[];
+
+}
+
+/**
+ * UI Object
+ */
+ export interface AppdropUIObject extends 
+  AppdropUIStylesMap, Identifiable, UpdateAppdropUIObjectParams {
+
+  /**
+   * Object name
+   */
+  object: 'object';
+
+  /**
+   * Type of object
+   */
+  type: ObjectType;
+
+  /**
+   * Styles to render
+   */
+  styles_map: {
+
+    /**
+     * Criteria id
+     */
+    [key: string]: AppdropUIStyleSettings;
+  
+  };
+}
+
+export const DEFAULT_APPDROP_UI_OBJECT: AppdropUIObject = {
+  created_at: null,
+  livemode: true,
+  id: '',
+  object: 'object',
+  styles_map: {},
+  type: 'view'
+};
+
+/**
+ * Type of object
+ */
+ type ObjectType = 
+ 'view' |
+ 'image' |
+ 'flatlist' |
+ 'text' |
+ 'touchable_opacity';
+
+export interface AppdropUITextObject extends AppdropUIObject, AppdropUIValuesMap {
+
+  /**
+   * Type of object
+   */
+  type: 'text';
+
+  /**
+   * Values map
+   */
+  values_map: {
+
+    /**
+     * Criteria id
+     */
+    [key: string]: AppdropUIValuesSettings;
+
+  };
+
+}
+
+/**
+ * Value map
+ */
+ export interface AppdropUIValuesMap {
+
+  /**
+   * Values to render
+   */
+  values_map: {
+
+    /**
+     * Criteria id
+     */
+    [key: string]: AppdropUIValuesSettings;
+  
+  };
+
+}
+
+/**
+ * Params to update an values map
+ */
+export interface UpdateAppdropUIValuesMapParams {
+
+  /**
+   * Values to render
+   */
+   values_map?: {
+
+    /**
+     * Criteria id
+     */
+    [key: string]: UpdateAppdropUIValuesSettingsParams;
+  
+  };
+
+}
+
+/**
+ * Value settings
+ */
+ export interface AppdropUIValuesSettings extends Criteria, UpdateAppdropUIValuesSettingsParams {
+
+  /**
+   * Criteria
+   */
+  criteria: {
+    field_path: string[];
+    op: CriteriaOp;
+    value: any;
+  }[];
+
+  /**
+  * Array of Nativestrap values to render if all criteria true
+  */
+  value: string;
+
+}
+
+/**
+ * Params to update value settings
+ */
+export interface UpdateAppdropUIValuesSettingsParams extends UpdateCriteriaParams {
+
+  /**
+   * Values
+   */
+  value?: string;
+
+}
+
+/**
+ * Params to update object
+ */
+export interface UpdateAppdropUIObjectParams extends UpdateAppdropUIStylesMapParams {}
+
+/**
+ * Params to update an app tree
+ */
+export interface UpdateAppdropUIParams {
+
+  screens?: {
+
+    [key: string]: UpdateAppdropUIScreenParams;
+
+  };
+
+  objects?: {
+
+    [key: string]: UpdateAppdropUIObjectParams;
+
+  };
+
+}
+
+export interface UpdateVersionParams extends 
+UpdateNotificationSettingsParams, UpdatePriceParams {
+
+  /**
+   * Canvas, screen and object model
+   */
+  appdrop_ui?: UpdateAppdropUIParams;
+
+  /**
+   * Custom user data points for project. Goes in `metadata`
+   */
+  custom_user_properties?: {
+    [key: string]: any;
+  };
 
   /**
    * Url of the zip file
    */
-  download_url: string;
+  download_url?: string;
+
+  /**
+   * Product sold
+   */
+  product?: UpdateAppdropProductParams | null;
 
   /**
    * Brief description of the features and functionality introduced in this version.
    */
   version_description?: string;
+
+  /**
+   * Public-facing name of version (not the server generated id)
+   * 
+   * Example: `1.0.3`
+   */
+  version_name?: string;
 
 }
 
@@ -5112,6 +6209,7 @@ export const DEFAULT_PROJECT: Project = {
   asset_ids: [],
   copyright: '',
   created_at: null,
+  custom_user_properties: {},
   email_signups: [],
   id: '',
   logo_asset_id: '',
@@ -5158,6 +6256,13 @@ export interface CreateProjectParams extends
    * Public name displayed to Users. Defaults to the name of the Organization that published the template.
    */
   copyright: string;
+
+  /**
+   * Custom user data points for project. Goes in `metadata`
+   */
+  custom_user_properties: {
+    [key: string]: any;
+  };
 
   /**
    * Email data of interested users
@@ -5307,6 +6412,13 @@ export interface UpdateProjectParams extends
    * Updates to the `app_ids` array
    */
   app_ids?: ArrayUpdateOperation;
+
+  /**
+   * Custom user data points for project
+   */
+  custom_user_properties?: {
+    [key: string]: any;
+  };
 
   /**
    * Updates to the `email_signups` array
@@ -5470,7 +6582,7 @@ export const DEFAULT_CLOUD_USER: ProjectUser = {
   password_salt: '',
   phone: '',
   project_id: '',
-  signed_in_devices_fcm_tokens: {},
+  signed_in_devices: {},
   timezone: DEFAULT_TIMEZONE
 };
 
@@ -5485,6 +6597,7 @@ export interface UpdateProjectUserParams extends UpdateUserParams { }
 /**
  * Native app or web app contained in a project
  */
+
 export interface App extends CreateAppParams, Identifiable {
 
   /**
@@ -5497,14 +6610,26 @@ export interface App extends CreateAppParams, Identifiable {
    */
   object: 'app';
 
+  /**
+   * Released versions
+   * 
+   * Key is version ID.
+   */
+  version_history: {
+
+    [key: string]: Version;
+
+  };
+
 }
 
 /**
  * Params to create an app
  */
 export interface CreateAppParams extends
+  CreateVersionHistoryParams,
   ProjectScoped, UpdateAppParams {
-  
+
   /**
    * Id of the minimum stable version
    */
@@ -5525,21 +6650,32 @@ export interface CreateAppParams extends
    */
   project_id: string;
 
+  /**
+   * Released versions
+   * 
+   * Key is version ID.
+   */
+  version_history: {
+
+    [key: string]: CreateVersionParams;
+
+  };
+
 }
 
 /**
  * Params to update an app
  */
-export interface UpdateAppParams {
+export interface UpdateAppParams extends UpdateVersionHistoryParams {
 
   /**
    * Id of the minimum stable version
    */
   minimum_version_id?: string;
 
-   /**
-   * The name of this App. Example: MyCoolApp iOS or MyCoolApp Web
-   */
+  /**
+  * The name of this App. Example: MyCoolApp iOS or MyCoolApp Web
+  */
   name?: string;
 
   /**
@@ -5573,6 +6709,17 @@ export interface AppAndroid extends App, CreateAppAndroidParams {
    */
   platform: 'android';
 
+  /**
+   * Released versions
+   * 
+   * Key is version ID.
+   */
+  version_history: {
+
+    [key: string]: Version;
+
+  };
+
 }
 
 export const DEFAULT_ANDROID_APP: AppAndroid = {
@@ -5585,7 +6732,9 @@ export const DEFAULT_ANDROID_APP: AppAndroid = {
   name: '',
   object: 'app',
   platform: 'android',
-  project_id: ''
+  project_id: '',
+  sha_keys: [],
+  version_history: {}
 };
 
 export interface CreateAppAndroidParams extends CreateAppParams {
@@ -5596,6 +6745,11 @@ export interface CreateAppAndroidParams extends CreateAppParams {
    * Example: com.example
    */
   android_package_name: string;
+
+  /**
+   * SHA-1 and SHA-256 keys
+   */
+  sha_keys: string[];
 
 }
 
@@ -5609,6 +6763,11 @@ export interface UpdateAppAndroidParams extends UpdateAppParams {
    */
   android_package_name?: string;
 
+  /**
+   * SHA-1 and SHA-256 keys
+   */
+  sha_keys?: ArrayUpdateOperation;
+
 }
 
 /**
@@ -5621,23 +6780,55 @@ export interface AppIOS extends App, CreateAppIOSParams {
    */
   platform: 'ios';
 
+  /**
+   * Released versions
+   * 
+   * Key is version ID.
+   */
+  version_history: {
+
+    [key: string]: Version;
+
+  };
+
 }
 
+/**
+ * iOS App
+ */
 export const DEFAULT_IOS_APP: AppIOS = {
   config_url: '',
   created_at: null,
   id: '',
+  ios_apns_key_id: '',
   ios_app_id: '',
   ios_bundle_id: '',
+  ios_team_id: '',
   livemode: true,
   minimum_version_id: '',
   name: '',
   object: 'app',
   platform: 'ios',
-  project_id: ''
+  project_id: '',
+  version_history: {}
 };
 
+/**
+ * Params to create an iOS app
+ */
 export interface CreateAppIOSParams extends CreateAppParams {
+
+  /**
+   * APNS key id
+   */
+  ios_apns_key_id: string | null;
+
+  /**
+   * App ID number autogenerated by Apple
+   * 
+   * Example: 154213891
+   */
+  ios_app_id: string;
 
   /**
    * Bundle ID for an ios app.
@@ -5647,15 +6838,28 @@ export interface CreateAppIOSParams extends CreateAppParams {
   ios_bundle_id: string;
 
   /**
+   * App Store Developer Account Team id
+   */
+  ios_team_id: string | null;
+
+}
+
+/**
+ * Params to update an iOS app
+ */
+export interface UpdateAppIOSParams extends UpdateAppParams {
+
+  /**
+   * APNS key id
+   */
+  ios_apns_key_id?: string | null;
+
+  /**
    * App ID number autogenerated by Apple
    * 
    * Example: 154213891
    */
-  ios_app_id: string;
-
-}
-
-export interface UpdateAppIOSParams extends UpdateAppParams {
+  ios_app_id?: string;
 
   /**
    * Bundle ID for an iOS app.
@@ -5665,11 +6869,9 @@ export interface UpdateAppIOSParams extends UpdateAppParams {
   ios_bundle_id?: string;
 
   /**
-   * App ID number autogenerated by Apple
-   * 
-   * Example: 154213891
+   * App Store Developer Account Team id
    */
-  ios_app_id?: string;
+  ios_team_id?: string | null;
 
 }
 
@@ -5683,6 +6885,17 @@ export interface AppWeb extends App, CreateAppWebParams {
    */
   platform: 'web';
 
+  /**
+   * Released versions
+   * 
+   * Key is version ID.
+   */
+  version_history: {
+
+    [key: string]: Version;
+
+  };
+
 }
 
 export const DEFAULT_WEB_APP: AppWeb = {
@@ -5695,7 +6908,8 @@ export const DEFAULT_WEB_APP: AppWeb = {
   name: '',
   object: 'app',
   platform: 'web',
-  project_id: ''
+  project_id: '',
+  version_history: {}
 };
 
 /**
@@ -5782,7 +6996,12 @@ export interface AppConfig extends AppConfigBase {
    * 
    * We recommend using semantic versioning (semver), but this can be any string.
    */
-  version_id: string;
+  version_name: string;
+
+  /**
+   * @deprecated
+   */
+  version_id?: string;
 
 }
 
@@ -5825,7 +7044,7 @@ export const DEFAULT_APP_CONFIG: AppConfig = {
   project_id: '',
   platform: '',
   template_version_id: '',
-  version_id: ''
+  version_name: ''
 };
 
 /**
@@ -5874,12 +7093,14 @@ export type APIRequestBodyData =
   AuthenticateUserParams |
   AttachOrderPromoParams |
   ConfirmOrderParams |
+  CreateAppParams |
   CreateCardParams |
   CreateChargeParams |
   CreateEntityParams |
   CreateInAppPurchaseParams |
   CreateOrderParams |
   CreatePostParams |
+  CreateProjectTemplateParams |
   CreateProjectParams |
   CreatePromoParams |
   CreateRefundParams |
@@ -5893,14 +7114,16 @@ export type APIRequestBodyData =
   SendPasswordResetEmailParams |
   SendPasswordResetVerificationCodeParams |
   SyncPrintfulProductsParams |
+  UpdateAppParams |
   UpdateInAppPurchaseParams |
+  UpdateEntityParams |
   UpdateOrderParams |
   UpdatePostParams |
+  UpdateProjectTemplateParams |
   UpdatePromoParams |
   UpdateRemoteAssetParams |
   UpdateSubscriptionParams |
   UpdateThreadParams |
-  UpdateEntityParams |
   UpdateUserParams;
 
 /**
@@ -6105,7 +7328,7 @@ export type AsyncErrorBody = CreateCustomerParams;
 /**
  * Async Error types
  */
-export type AsyncErrorType = 'customer-write-failed';
+export type AsyncErrorType = 'customer_write_failed';
 
 /**
  * Data to correct an async error. Used async tasks such as stripe customer creation.
@@ -6211,11 +7434,32 @@ export async function handleSuccess(
       status_code: 200
     };
     await db.collection('api_requests').doc(api_request_id).set(api_request);
-    console.log(`${method} ${endpoint} success`);
+    /*
+    const _: APIRequestEndpoint = 'v1/push/apiRequests/:apiRequestId';
+    const push_method: APIRequestMethod = 'POST';
+    const {
+      app_config: cleansed_request_body_app_config,
+      livemode: cleansed_request_body_livemode,
+      data: cleansed_request_body_data,
+    } = cleansed_request_body;
+    const push_request_body: APIRequestBody = {
+      app_config: cleansed_request_body_app_config,
+      livemode: cleansed_request_body_livemode,
+      data: cleansed_request_body_data
+    };
+    await fetch(`${APIRequestBase}/v1/push/apiRequests/${api_request_id}`, {
+      headers: {
+        "Authorization": `Basic ${btoa(cleansed_request_body_app_config.api_key)}`,
+        "Content-Type": 'text/plain'
+      },
+      body: JSON.stringify(push_request_body),
+      method: push_method
+    });
+    */
     return;
   }
   catch (error) {
-    console.log('handleSuccessError');
+    console.log('handleSuccess error', JSON.stringify(error, null, '\t'));
     return;
   }
 }
@@ -6223,50 +7467,50 @@ export async function handleSuccess(
 /**
  * Updates array objects
  */
- export function handleArrayUpdates(admin: any, params_: any, prevObj: any) {
+export function handleArrayUpdates(admin: any, params_: any, prevObj: any) {
   Object.keys(params_)
-  .forEach(f => {
-    if (
-      params_[f] !== null
-      && typeof params_[f] === 'object'
-    ) {
-      if (['append', 'remove'].includes(Object.keys(params_[f])[0])) {
-        if (params_[f]['append']) {
-          const append_arr = [...params_[f]['append']];
-          if (append_arr.length > 0) {
-            params_[f] = admin.firestore.FieldValue.arrayUnion(
-              ...append_arr
-            );
-            for (const _a of append_arr) {
-              if (!prevObj[f].includes(_a)) {
-                prevObj[f].push(_a);
+    .forEach(f => {
+      if (
+        params_[f] !== null
+        && typeof params_[f] === 'object'
+      ) {
+        if (['append', 'remove'].includes(Object.keys(params_[f])[0])) {
+          if (params_[f]['append']) {
+            const append_arr = [...params_[f]['append']];
+            if (append_arr.length > 0) {
+              params_[f] = admin.firestore.FieldValue.arrayUnion(
+                ...append_arr
+              );
+              for (const _a of append_arr) {
+                if (!prevObj[f].includes(_a)) {
+                  prevObj[f].push(_a);
+                }
               }
             }
           }
-        }
-        else if (params_[f]['remove']) {
-          const remove_arr = [...params_[f]['remove']];
-          if (remove_arr.length > 0) {
-            params_[f] = admin.firestore.FieldValue.arrayRemove(
-              ...remove_arr
-            );
-            const next_arr = [...prevObj[f]
-            .filter((_r: string) => !remove_arr.includes(_r))];
-            prevObj[f] = next_arr;
+          else if (params_[f]['remove']) {
+            const remove_arr = [...params_[f]['remove']];
+            if (remove_arr.length > 0) {
+              params_[f] = admin.firestore.FieldValue.arrayRemove(
+                ...remove_arr
+              );
+              const next_arr = [...prevObj[f]
+                .filter((_r: string) => !remove_arr.includes(_r))];
+              prevObj[f] = next_arr;
+            }
           }
+          return;
         }
-        return;
-      }
-      else if (!Array.isArray(params_[f])) {
-        prevObj[f] = {
-          ...prevObj[f],
-          ...params_[f]
+        else if (!Array.isArray(params_[f])) {
+          prevObj[f] = {
+            ...prevObj[f],
+            ...params_[f]
+          };
+          return;
         }
-        return;
       }
-    }
-    prevObj[f] = params_[f];
-  });
+      prevObj[f] = params_[f];
+    });
 }
 
 /**
@@ -6298,6 +7542,7 @@ export async function handleError(
   db: any,
   endpoint: APIRequestEndpoint,
   error: ErrorType,
+  message: string|null,
   method: APIRequestMethod,
   req: any,
   res: any
@@ -6309,6 +7554,9 @@ export async function handleError(
     const error_response = ERROR_RESPONSES[error_type] ?
       ERROR_RESPONSES[error_type] :
       ERROR_RESPONSES['unknown-error'];
+    if (message !== null) {
+      error_response.message = message;
+    }
     const error_response_body = {
       error: error_response
     };
@@ -6423,7 +7671,10 @@ export type APIRequestEndpoint =
   'v1/projects/:projectId/users/:userId/orders/:orderId/cancel' |
   'v1/projects/:projectId/users/:userId/orders/:orderId/confirm' |
   'v1/projectTemplates' |
-  'v1/projectTemplates/:projectTemplateId';
+  'v1/projectTemplates/:projectTemplateId' |
+  'v1/push/apiRequests/:apiRequestId' |
+  'v1/push/debug' |
+  'v1/push/debug/:debugId';
 
 /**
  * Type of stripe customer
@@ -6457,7 +7708,8 @@ export interface InitAppParams {
 export interface InitAppResponseBody {
 
   /**
-   * App information. Critical for constructing the share url and review url 
+   * App information. Critical for template mods and for 
+   * constructing the share url and review url 
    * from the app id / package name.
    */
   app: App;
@@ -6466,6 +7718,11 @@ export interface InitAppResponseBody {
    * Project information. Critical for copyright and support email.
    */
   project: Project;
+
+  /**
+   * Project template
+   */
+  template: ProjectTemplate;
 
   /**
    * Minted project users. Key is ID
@@ -6652,6 +7909,7 @@ export const DEFAULT_ECOMMERCE_PROJECT: ECommerceProject = {
   asset_ids: [],
   copyright: '',
   created_at: null,
+  custom_user_properties: {},
   deleted_product_ids: [],
   deleted_sync_variant_ids: [],
   email_signups: [],
@@ -6884,7 +8142,7 @@ export const DEFAULT_ECOMMERCE_USER: ECommerceProjectUser = {
   password_salt: '',
   phone: '',
   project_id: '',
-  signed_in_devices_fcm_tokens: {},
+  signed_in_devices: {},
   timezone: DEFAULT_TIMEZONE
 };
 
@@ -7153,6 +8411,7 @@ export const DEFAULT_MARKETPLACE_PROJECT: MarketplaceProject = {
   creator_name_plural: 'businesses',
   consumer_name_singular: 'user',
   consumer_name_plural: 'users',
+  custom_user_properties: {},
   email_signups: [],
   google_web_client_id: '',
   google_geocoding_api_key: '',
@@ -7415,7 +8674,7 @@ export interface CreateInterestParams {
     type: string;
     tags: string[];
     [key: string]: any;
-  }
+  };
 
 }
 
@@ -7442,11 +8701,11 @@ export interface UpdateInterestParams {
   /**
    * Metadata.
    */
-   metadata: {
-    type: string;
-    tags: string[];
+  metadata?: {
+    type?: string;
+    tags?: string[];
     [key: string]: any;
-  }
+  };
 
 }
 
@@ -7496,7 +8755,7 @@ export interface UpdateProjectInAppPurchaseParams {
    * 
    * Key is the `id` of the IAP
    */
-  in_app_purchases: {
+  in_app_purchases?: {
 
     [key: string]: UpdateInAppPurchaseParams;
 
@@ -7568,6 +8827,21 @@ export interface UpdateInAppPurchaseParams {
    */
   active?: boolean;
 
+  /**
+   * Type of IAP
+   */
+  iap_type?: InAppPurchaseType;
+
+  /**
+   * Cost of IAP
+   */
+  price_cents?: number;
+
+  /**
+   * Renewal period
+   */
+  renews?: 'monthly' | 'quarterly' | 'annually' | null;
+
 }
 
 /**
@@ -7626,7 +8900,7 @@ export const DEFAULT_MARKETPLACE_USER: MarketplaceProjectUser = {
   password_salt: '',
   phone: '',
   project_id: '',
-  signed_in_devices_fcm_tokens: {},
+  signed_in_devices: {},
   timezone: DEFAULT_TIMEZONE,
   username: ''
 };
@@ -7639,6 +8913,8 @@ export interface CreateMarketplaceProjectUserParams extends
   ContainsSocial, CreateProjectUserParams {
 
   /**
+   * Fix this: metadata
+   * 
    * String with the days of the week this user is interested in events
    * 
    * `'035'` means Sunday, Wednesday and Friday
@@ -8032,11 +9308,11 @@ export interface ContainsDates {
    * 
    * `all_day` if all day event
    */
-  end_time: Timestamped|'all_day';
-  
-   /**
-    * Start time of the event. Valid timestamp is required.
-    */
+  end_time: Timestamped | 'all_day';
+
+  /**
+   * Start time of the event. Valid timestamp is required.
+   */
   start_time: Timestamped;
 
 }
@@ -8117,11 +9393,11 @@ export interface UpdateContainsDateParams {
    * 
    * `all_day` if all day event
    */
-  end_time?: Timestamped|'all_day';
-  
-   /**
-    * Start time of the event. Valid timestamp is required.
-    */
+  end_time?: Timestamped | 'all_day';
+
+  /**
+   * Start time of the event. Valid timestamp is required.
+   */
   start_time?: Timestamped;
 
 }
@@ -8659,6 +9935,148 @@ export interface InitMarketplaceAppResponseBody extends InitAppResponseBody {
 /**
 * 
 * **************
+* Push
+* **************
+* 
+*/
+
+
+/**
+ * Notification settings
+ */
+ export interface NotificationSettings extends UpdateNotificationSettingsParams {
+
+  /**
+   * Endpoints that trigger a notification for this app
+   */
+   endpoint_notifications: {
+
+    /**
+     * Endpoint
+     */
+    [key in APIRequestEndpoint]?: {
+
+      /**
+       * `null` or `undefined` defaults to false, i.e. should not trigger a notification
+       */
+      [key in PushType]?: NotificationCriteria | null;
+
+    };
+
+  };
+
+  /**
+   * Topics that trigger a notification for this app
+   */
+  topic_notifications: {
+
+    /**
+     * Topic name e.g. `reminders`
+     */
+    [key: string]: {
+
+      /**
+       * `null` or `undefined` defaults to false, i.e. should not trigger a notification
+       */
+      [key in PushType]?: NotificationCriteria | null;
+
+    };
+
+  };
+
+}
+
+/**
+ * Notification settings
+ */
+export interface UpdateNotificationSettingsParams {
+
+  /**
+   * Endpoints that trigger a notification for this app
+   */
+   endpoint_notifications?: {
+
+    [key in APIRequestEndpoint]?: {
+
+      [key in PushType]?: UpdateNotificationCriteriaParams | null;
+
+    };
+
+  };
+
+  /**
+   * Topics that trigger a notification for this app
+   */
+  topic_notifications?: {
+
+    [key: string]: {
+
+      [key in PushType]?: UpdateNotificationCriteriaParams | null;
+
+    };
+
+  };
+
+}
+
+/**
+ * Types of push notifications
+ */
+export type PushType =
+  'email' |
+  'mobile_app_topic' |
+  'mobile_app_directed' |
+  'sms';
+
+/**
+ * Criteria to send a notification
+ */
+export interface NotificationCriteria extends Criteria, UpdateNotificationCriteriaParams {
+
+  /**
+   * Criteria
+   */
+  criteria: {
+    field_path: string[];
+    op: CriteriaOp;
+    value: any;
+  }[];
+
+  /**
+   * Number of seconds this notification should delay.
+   */
+  delay: number | null;
+
+}
+
+/**
+ * Params to update notification criteria
+ */
+export interface UpdateNotificationCriteriaParams extends UpdateCriteriaParams {
+
+  /**
+   * Number of seconds this notification should delay.
+   */
+  delay?: number | null;
+
+}
+
+
+export type CriteriaOp =
+  | '<'
+  | '<='
+  | '=='
+  | '!='
+  | '>='
+  | '>'
+  | 'array-contains'
+  | 'in'
+  | 'not-in'
+  | 'array-contains-any';
+
+/**
+* 
+* **************
 * Utils
 * **************
 * 
@@ -8682,7 +10100,7 @@ export function randString(l = -1) {
 /**
  * Returns true if the `s` param is a valid string
  */
- export const validString = (s: string | null | undefined, requires_letters: boolean) => {
+export const validString = (s: string | null | undefined, requires_letters: boolean) => {
   return (
     s !== null &&
     s !== undefined &&
@@ -8755,7 +10173,7 @@ export function secToTime(s: number) {
 /**
  * Date formats
  */
-export type DateFormat = 'full'|'mm/dd/yy';
+export type DateFormat = 'full' | 'mm/dd/yy';
 
 /**
  * Accepts a unix timestamp in seconds and returns the date.
@@ -8776,7 +10194,7 @@ export function secToDate(s: number, f: DateFormat) {
     return `${dayMap(day_num, true)}, ${monthMap(month_num, false)}. ${date_num}`;
   }
   else if (f === 'mm/dd/yy') {
-    return `${month_num + 1}/${date_num}/${year_num.toString().slice(2,4)}`;
+    return `${month_num + 1}/${date_num}/${year_num.toString().slice(2, 4)}`;
   }
 };
 
