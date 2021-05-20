@@ -7502,6 +7502,7 @@ export function handleArrayUpdates(admin: any, params_: any, prevObj: any) {
           return;
         }
         else if (!Array.isArray(params_[f])) {
+          // Fix this: nested objects have data loss e.g. signed_in.abc.authenticated is only field left after sign out
           prevObj[f] = {
             ...prevObj[f],
             ...params_[f]
@@ -9256,8 +9257,8 @@ export const DEFAULT_EVENT_POST: EventPost = {
   id: '',
   interest_ids: [],
   lat: DEFAULT_LATITUDE,
-  livemode: true,
   long: DEFAULT_LONGITUDE,
+  livemode: true,
   object: 'post',
   post_type: 'event',
   project_id: '',
@@ -10167,7 +10168,7 @@ export function dayMap(n: number, long: boolean) {
  * Accepts a unix timestamp in seconds and returns the time. Example: 6:28 AM
  */
 export function secToTime(s: number) {
-  return new Date(s * 1000).toLocaleTimeString('en', { hour: 'numeric', minute: '2-digit' });
+  return new Date(s * 1000).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
 };
 
 /**
