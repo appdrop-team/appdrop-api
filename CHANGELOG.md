@@ -5,6 +5,21 @@ All notable changes to the `appdrop-api` package will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this package adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.2.108] - 2021-05-31
+
+### Removed
+
+- `APIRequestBase` constant
+- `secToTime`
+
+### Added
+
+- `getAPIRequestBase` function
+
+### Changed
+
+- Migrates endpoints to v2
+
 ## [4.2.107] - 2021-05-20
 
 ### Changed

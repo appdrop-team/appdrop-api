@@ -6210,6 +6210,7 @@ export const DEFAULT_PROJECT: Project = {
   copyright: '',
   created_at: null,
   custom_user_properties: {},
+  data_center: 'us1',
   email_signups: [],
   id: '',
   logo_asset_id: '',
@@ -6263,6 +6264,13 @@ export interface CreateProjectParams extends
   custom_user_properties: {
     [key: string]: any;
   };
+
+  /**
+   * Data center for project e.g. `us1`
+   * 
+   * Not editable once project is created
+   */
+  data_center: string;
 
   /**
    * Email data of interested users
@@ -7027,6 +7035,11 @@ export interface AppConfigBase
   app_name: string;
 
   /**
+   * Data center for project e.g. `us1`
+   */
+  data_center: string;
+
+  /**
    * Platform
    */
   platform: PlatformType | '';
@@ -7041,6 +7054,7 @@ export const DEFAULT_APP_CONFIG: AppConfig = {
   app_name: '',
   app_id: '',
   build_id: '',
+  data_center: '',
   project_id: '',
   platform: '',
   template_version_id: '',
@@ -7094,6 +7108,7 @@ export type APIRequestBodyData =
   AttachOrderPromoParams |
   ConfirmOrderParams |
   CreateAppParams |
+  CreateBankAccountParams |
   CreateCardParams |
   CreateChargeParams |
   CreateEntityParams |
@@ -7368,17 +7383,30 @@ export interface AsyncError extends
 }
 
 /**
+ * Params for `handleSuccess` function
+ */
+export interface HandleSuccessParams {
+  admin: any;
+  db: any;
+  endpoint: APIRequestEndpoint;
+  method: APIRequestMethod;
+  response_body: APIResponseBody;
+  req: any;
+  res: any;
+}
+
+/**
  * API response and logging for success cases.
  */
-export async function handleSuccess(
-  admin: any,
-  db: any,
-  endpoint: APIRequestEndpoint,
-  method: APIRequestMethod,
-  response_body: APIResponseBody,
-  req: any,
-  res: any
-): Promise<void> {
+export async function handleSuccess({
+  admin,
+  db,
+  endpoint,
+  method,
+  response_body,
+  req,
+  res
+}: HandleSuccessParams): Promise<void> {
   try {
     res.header('Content-Type', 'application/json');
     res.status(200).send(JSON.stringify(response_body));
@@ -7391,35 +7419,23 @@ export async function handleSuccess(
     ) as unknown as APIRequestBody;
     const cleansed_request_body: APIRequestBody = {} as unknown as APIRequestBody;
     Object.assign(cleansed_request_body, request_body);
-    //@ts-ignore
-    if (validString(cleansed_request_body['password'], true)) {
-      //@ts-ignore
-      cleansed_request_body['password'] = '*******';
+    const cleansed_request_body_auth_data = (cleansed_request_body as {data:AuthenticateUserParams}).data;
+    if (validString(cleansed_request_body_auth_data['password'], true)) {
+      cleansed_request_body_auth_data['password'] = '*******';
     }
-    //@ts-ignore
-    if (validString(cleansed_request_body['account_number'], true)) {
-      //@ts-ignore
-      cleansed_request_body['account_number'] = '*******';
+    const cleansed_request_body_bank_data = (cleansed_request_body as {data:CreateBankAccountParams}).data;
+    if (validString(cleansed_request_body_bank_data['account_number'], true)) {
+      cleansed_request_body_bank_data['account_number'] = '*******';
     }
-    //@ts-ignore
-    if (validString(cleansed_request_body['routing_number'], true)) {
-      //@ts-ignore
-      cleansed_request_body['routing_number'] = '*******';
+    if (validString(cleansed_request_body_bank_data['routing_number'], true)) {
+      cleansed_request_body_bank_data['routing_number'] = '*******';
     }
-    //@ts-ignore
-    if (validString(cleansed_request_body['cvc'], true)) {
-      //@ts-ignore
-      cleansed_request_body['cvc'] = '*******';
+    const cleansed_request_body_card_data = (cleansed_request_body as {data:CreateCardParams}).data;
+    if (validString(cleansed_request_body_card_data['cvc'], true)) {
+      cleansed_request_body_card_data['cvc'] = '*******';
     }
-    //@ts-ignore
-    if (validString(cleansed_request_body['number'], true)) {
-      //@ts-ignore
-      cleansed_request_body['number'] = '*******';
-    }
-    //@ts-ignore
-    if (validString(cleansed_request_body['security_answer'], true)) {
-      //@ts-ignore
-      cleansed_request_body['security_answer'] = '*******';
+    if (validString(cleansed_request_body_card_data['number'], true)) {
+      cleansed_request_body_card_data['number'] = '*******';
     }
     const api_request: APIRequest = {
       created_at: admin.firestore.Timestamp.fromDate(new Date()),
@@ -7434,28 +7450,6 @@ export async function handleSuccess(
       status_code: 200
     };
     await db.collection('api_requests').doc(api_request_id).set(api_request);
-    /*
-    const _: APIRequestEndpoint = 'v1/push/apiRequests/:apiRequestId';
-    const push_method: APIRequestMethod = 'POST';
-    const {
-      app_config: cleansed_request_body_app_config,
-      livemode: cleansed_request_body_livemode,
-      data: cleansed_request_body_data,
-    } = cleansed_request_body;
-    const push_request_body: APIRequestBody = {
-      app_config: cleansed_request_body_app_config,
-      livemode: cleansed_request_body_livemode,
-      data: cleansed_request_body_data
-    };
-    await fetch(`${APIRequestBase}/v1/push/apiRequests/${api_request_id}`, {
-      headers: {
-        "Authorization": `Basic ${btoa(cleansed_request_body_app_config.api_key)}`,
-        "Content-Type": 'text/plain'
-      },
-      body: JSON.stringify(push_request_body),
-      method: push_method
-    });
-    */
     return;
   }
   catch (error) {
@@ -7593,6 +7587,11 @@ export async function handleError(
   }
 }
 
+/**
+ * Returns auth header of request
+ * @param req 
+ * @returns 
+ */
 export function getDecodedAuthHeader(req: any) {
   if (validString(req.header('Authorization'), true)) {
     if ((req.header('Authorization') as string).startsWith('Basic ')) {
@@ -7603,7 +7602,7 @@ export function getDecodedAuthHeader(req: any) {
 }
 
 /**
- * 
+ * Params to create an API Request
  */
 export interface CreateAPIRequest {
 
@@ -7625,57 +7624,59 @@ export interface CreateAPIRequest {
 }
 
 /**
- * Base endpoint
+ * 
+ * @param data_center e.g. `us1`
+ * @returns api request url base e.g. `https://us1.appdrop.com`
  */
-export const APIRequestBase = 'https://api.appdrop.com';
+export const getAPIRequestBase = (data_center: string) => `https://${data_center}.appdrop.com`;
 
 /**
  * Identifies which endpoint this request targeted.
  */
 export type APIRequestEndpoint =
-  'v1/customers/:stripeCustomerId/bankAccounts/:stripeCustomerType' |
-  'v1/customers/:stripeCustomerId/cards/:stripeCustomerType' |
-  'v1/customers/:stripeCustomerId/orders/:orderId/charges/:stripeCustomerType' |
-  'v1/customers/:stripeCustomerId/orders/:orderId/refunds' |
-  'v1/customers/:stripeCustomerId/subscriptions/:stripeCustomerType' |
-  'v1/customers/:stripeCustomerId/subscriptions/:subscriptionId/:stripeCustomerType' |
-  'v1/customers/:stripeCustomerId/verifyBankAccount/:stripeCustomerType' |
-  'v1/entities/:entityId' |
-  'v1/initAppState/cloud' |
-  'v1/initAppState/ecommerce' |
-  'v1/initAppState/marketplace' |
-  'v1/projects' |
-  'v1/projects/:projectId' |
-  'v1/projects/:projectId/apps' |
-  'v1/projects/:projectId/apps/:appId' |
-  'v1/projects/:projectId/apps/:appId/config' |
-  'v1/projects/:projectId/inAppPurchases' |
-  'v1/projects/:projectId/inAppPurchases/:inAppPurchaseId' |
-  'v1/projects/:projectId/posts' |
-  'v1/projects/:projectId/posts/:postId' |
-  'v1/projects/:projectId/promos' |
-  'v1/projects/:projectId/promos/:promoId' |
-  'v1/projects/:projectId/remoteAssets' |
-  'v1/projects/:projectId/remoteAssets/:remoteAssetId' |
-  'v1/projects/:projectId/retrieveUserSecurityQuestion' |
-  'v1/projects/:projectId/syncPrintfulProducts' |
-  'v1/projects/:projectId/threads' |
-  'v1/projects/:projectId/threads/:threadId' |
-  'v1/projects/:projectId/tickets' |
-  'v1/projects/:projectId/users' |
-  'v1/projects/:projectId/users/:userId' |
-  'v1/projects/:projectId/users/:userId/sendPasswordResetEmail' |
-  'v1/projects/:projectId/users/:userId/sendPasswordResetVerificationCode' |
-  'v1/projects/:projectId/users/:userId/authenticateUser' |
-  'v1/projects/:projectId/users/:userId/orders' |
-  'v1/projects/:projectId/users/:userId/orders/:orderId' |
-  'v1/projects/:projectId/users/:userId/orders/:orderId/cancel' |
-  'v1/projects/:projectId/users/:userId/orders/:orderId/confirm' |
-  'v1/projectTemplates' |
-  'v1/projectTemplates/:projectTemplateId' |
-  'v1/push/apiRequests/:apiRequestId' |
-  'v1/push/debug' |
-  'v1/push/debug/:debugId';
+  'v2/customers/:stripeCustomerId/bankAccounts/:stripeCustomerType' |
+  'v2/customers/:stripeCustomerId/cards/:stripeCustomerType' |
+  'v2/customers/:stripeCustomerId/orders/:orderId/charges/:stripeCustomerType' |
+  'v2/customers/:stripeCustomerId/orders/:orderId/refunds' |
+  'v2/customers/:stripeCustomerId/subscriptions/:stripeCustomerType' |
+  'v2/customers/:stripeCustomerId/subscriptions/:subscriptionId/:stripeCustomerType' |
+  'v2/customers/:stripeCustomerId/verifyBankAccount/:stripeCustomerType' |
+  'v2/entities/:entityId' |
+  'v2/initAppState/cloud' |
+  'v2/initAppState/ecommerce' |
+  'v2/initAppState/marketplace' |
+  'v2/projects' |
+  'v2/projects/:projectId' |
+  'v2/projects/:projectId/apps' |
+  'v2/projects/:projectId/apps/:appId' |
+  'v2/projects/:projectId/apps/:appId/config' |
+  'v2/projects/:projectId/inAppPurchases' |
+  'v2/projects/:projectId/inAppPurchases/:inAppPurchaseId' |
+  'v2/projects/:projectId/posts' |
+  'v2/projects/:projectId/posts/:postId' |
+  'v2/projects/:projectId/promos' |
+  'v2/projects/:projectId/promos/:promoId' |
+  'v2/projects/:projectId/remoteAssets' |
+  'v2/projects/:projectId/remoteAssets/:remoteAssetId' |
+  'v2/projects/:projectId/retrieveUserSecurityQuestion' |
+  'v2/projects/:projectId/syncPrintfulProducts' |
+  'v2/projects/:projectId/threads' |
+  'v2/projects/:projectId/threads/:threadId' |
+  'v2/projects/:projectId/tickets' |
+  'v2/projects/:projectId/users' |
+  'v2/projects/:projectId/users/:userId' |
+  'v2/projects/:projectId/users/:userId/sendPasswordResetEmail' |
+  'v2/projects/:projectId/users/:userId/sendPasswordResetVerificationCode' |
+  'v2/projects/:projectId/users/:userId/authenticateUser' |
+  'v2/projects/:projectId/users/:userId/orders' |
+  'v2/projects/:projectId/users/:userId/orders/:orderId' |
+  'v2/projects/:projectId/users/:userId/orders/:orderId/cancel' |
+  'v2/projects/:projectId/users/:userId/orders/:orderId/confirm' |
+  'v2/projectTemplates' |
+  'v2/projectTemplates/:projectTemplateId' |
+  'v2/push/apiRequests/:apiRequestId' |
+  'v2/push/debug' |
+  'v2/push/debug/:debugId';
 
 /**
  * Type of stripe customer
@@ -7911,6 +7912,7 @@ export const DEFAULT_ECOMMERCE_PROJECT: ECommerceProject = {
   copyright: '',
   created_at: null,
   custom_user_properties: {},
+  data_center: 'us1',
   deleted_product_ids: [],
   deleted_sync_variant_ids: [],
   email_signups: [],
@@ -8413,6 +8415,7 @@ export const DEFAULT_MARKETPLACE_PROJECT: MarketplaceProject = {
   consumer_name_singular: 'user',
   consumer_name_plural: 'users',
   custom_user_properties: {},
+  data_center: 'us1',
   email_signups: [],
   google_web_client_id: '',
   google_geocoding_api_key: '',
@@ -10163,13 +10166,6 @@ export function dayMap(n: number, long: boolean) {
     default: throw new Error('invalid day number');
   }
 }
-
-/**
- * Accepts a unix timestamp in seconds and returns the time. Example: 6:28 AM
- */
-export function secToTime(s: number) {
-  return new Date(s * 1000).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
-};
 
 /**
  * Date formats
