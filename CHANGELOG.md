@@ -10,7 +10,7 @@ and this package adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - `APIRequestBase` constant
-- `secToTime`
+- `secToTime` function
 
 ### Added
 
