@@ -1,5 +1,8 @@
 import FirebaseFirestore from '@google-cloud/firestore';
 import atob from 'atob';
+// @ts-ignore
+import dot from 'dot-object';
+dot.keepArray = true;
 
 /**
  * 
@@ -97,7 +100,7 @@ export interface CreateRemoteAssetParams extends
   /**
    * Base of the storage ref
    * 
-   * Ex. `'user_avatars/user_001/asset_0002.jpg'`
+   * Ex. `user_avatars/user_001/asset_0002.jpg`
    */
   storage_ref: string;
 
@@ -941,6 +944,61 @@ export interface SendPasswordResetVerificationCodeParams {
   verification_code: string;
 
 }
+
+/**
+ * Auth errors
+ */
+export type AuthErrorCode =
+'auth/email-already-in-use'|
+'auth/weak-password'|
+'auth/user-disabled'|
+'auth/user-not-found'|
+'auth/incorrect-password'|
+'auth/error-sending-password-reset-verification-code'|
+'auth/incorrect-password-reset-verification-code';
+
+/**
+ * Auth Error response map
+ */
+export const AUTH_ERROR_RESPONSES: {
+  [key in AuthErrorCode]: APIRequestError;
+} = {
+  'auth/email-already-in-use': {
+    error_code: 'auth/email-already-in-use',
+    message: 'That email is already in use. Please try signing in.',
+    status_code: 401
+  },
+  'auth/weak-password': {
+    error_code: 'auth/weak-password',
+    message: 'Please select a stronger password.',
+    status_code: 401
+  },
+  'auth/user-disabled': {
+    error_code: 'auth/user-disabled',
+    message: 'Your account has been deactivated.',
+    status_code: 401
+  },
+  'auth/user-not-found': {
+    error_code: 'auth/user-not-found',
+    message: 'Sorry, there is no account at that email. Please try signing up.',
+    status_code: 401
+  },
+  'auth/incorrect-password': {
+    error_code: 'auth/incorrect-password',
+    message: 'Your password is incorrect.',
+    status_code: 401
+  },
+  'auth/error-sending-password-reset-verification-code': {
+    error_code: 'auth/error-sending-password-reset-verification-code',
+    message: 'There was an error sending your password reset email.',
+    status_code: 401
+  },
+  'auth/incorrect-password-reset-verification-code': {
+    error_code: 'auth/incorrect-password-reset-verification-code',
+    message: 'That verification code is incorrect. Please try again.',
+    status_code: 401
+  },
+};
 
 
 /**
@@ -5882,10 +5940,12 @@ export interface AppdropUIObjectSettings extends Criteria, UpdateAppdropUIObject
    * Criteria
    */
   criteria: {
-    field_path: string[];
-    op: CriteriaOp;
-    value: any;
-  }[];
+    [key: string]: {
+      field_path: string[];
+      op: CriteriaOp;
+      value: any;
+    } | null;
+  };
 
   /**
   * Array of objects to render if all criteria true
@@ -5915,10 +5975,12 @@ export interface AppdropUIStyleSettings extends Criteria, UpdateAppdropUIStyleSe
    * Criteria
    */
   criteria: {
-    field_path: string[];
-    op: CriteriaOp;
-    value: any;
-  }[];
+    [key: string]: {
+      field_path: string[];
+      op: CriteriaOp;
+      value: any;
+    } | null;
+  };
 
   /**
   * Array of Nativestrap styles to render if all criteria true
@@ -5942,16 +6004,19 @@ export interface UpdateAppdropUIStyleSettingsParams extends UpdateCriteriaParams
 export interface Criteria extends UpdateCriteriaParams {
 
   /**
-   * Empty array defaults to true, i.e. should trigger a notificaiton
+   * Empty object defaults to true, i.e. should trigger a notificaiton / render
+   * an object
    * 
    * Otherwise check each field value pair using the op
    * 
    */
   criteria: {
-    field_path: string[];
-    op: CriteriaOp;
-    value: any;
-  }[];
+    [key: string]: {
+      field_path: string[];
+      op: CriteriaOp;
+      value: any;
+    } | null;
+  };
 
   /**
    * Id of the criteria:
@@ -5975,13 +6040,14 @@ export interface UpdateCriteriaParams {
    * Empty array defaults to true, i.e. should trigger a notificaiton
    * 
    * Otherwise check each field value pair using the op
-   * 
    */
   criteria?: {
-    field_path: string[];
-    op: CriteriaOp;
-    value: any;
-  }[];
+    [key: string]: {
+      field_path: string[];
+      op: CriteriaOp;
+      value: any;
+    } | null;
+  };
 
 }
 
@@ -6101,10 +6167,12 @@ export interface UpdateAppdropUIValuesMapParams {
    * Criteria
    */
   criteria: {
-    field_path: string[];
-    op: CriteriaOp;
-    value: any;
-  }[];
+    [key: string]: {
+      field_path: string[];
+      op: CriteriaOp;
+      value: any;
+    } | null;
+  };
 
   /**
   * Array of Nativestrap values to render if all criteria true
@@ -6731,7 +6799,7 @@ export interface AppAndroid extends App, CreateAppAndroidParams {
 }
 
 export const DEFAULT_ANDROID_APP: AppAndroid = {
-  android_package_name: '',
+  android_package_name: null,
   config_url: '',
   created_at: null,
   id: '',
@@ -6752,7 +6820,7 @@ export interface CreateAppAndroidParams extends CreateAppParams {
    * 
    * Example: com.example
    */
-  android_package_name: string;
+  android_package_name: string | null;
 
   /**
    * SHA-1 and SHA-256 keys
@@ -6769,7 +6837,7 @@ export interface UpdateAppAndroidParams extends UpdateAppParams {
    * 
    * Example: com.example
    */
-  android_package_name?: string;
+  android_package_name?: string | null;
 
   /**
    * SHA-1 and SHA-256 keys
@@ -6808,10 +6876,12 @@ export const DEFAULT_IOS_APP: AppIOS = {
   config_url: '',
   created_at: null,
   id: '',
-  ios_apns_key_id: '',
-  ios_app_id: '',
-  ios_bundle_id: '',
-  ios_team_id: '',
+  ios_apns_auth_key_id: null,
+  ios_apns_auth_key_storage_ref: null,
+  ios_apns_jwt_auth_token: null,
+  ios_app_id: null,
+  ios_bundle_id: null,
+  ios_team_id: null,
   livemode: true,
   minimum_version_id: '',
   name: '',
@@ -6827,26 +6897,38 @@ export const DEFAULT_IOS_APP: AppIOS = {
 export interface CreateAppIOSParams extends CreateAppParams {
 
   /**
-   * APNS key id
+   * APNS key id e.g. 2K55P9H5FY
    */
-  ios_apns_key_id: string | null;
+  ios_apns_auth_key_id: string | null;
+
+  /**
+   * Storage ref
+   * 
+   * Ex. `teams/team_001/AuthKey_2K55P9H5FY.p8`
+   */
+  ios_apns_auth_key_storage_ref: string | null;
+
+  /**
+   * APNS auth token, refreshed every 30 minutes
+   */
+  ios_apns_jwt_auth_token: string | null;
 
   /**
    * App ID number autogenerated by Apple
    * 
    * Example: 154213891
    */
-  ios_app_id: string;
+  ios_app_id: string | null;
 
   /**
    * Bundle ID for an ios app.
    * 
    * Example: com.example.app
    */
-  ios_bundle_id: string;
+  ios_bundle_id: string | null;
 
   /**
-   * App Store Developer Account Team id
+   * App Store Developer Account Team id e.g. PD0CPAWS5J
    */
   ios_team_id: string | null;
 
@@ -6860,21 +6942,33 @@ export interface UpdateAppIOSParams extends UpdateAppParams {
   /**
    * APNS key id
    */
-  ios_apns_key_id?: string | null;
+  ios_apns_auth_key_id?: string | null;
+
+  /**
+   * Storage ref
+   * 
+   * Ex. `teams/team_001/AuthKey_2K55P9H5FY.p8`
+   */
+  ios_apns_auth_key_storage_ref?: string | null;
+
+  /**
+   * APNS auth token, refreshed every 30 minutes
+   */
+  ios_apns_jwt_auth_token?: string | null;
 
   /**
    * App ID number autogenerated by Apple
    * 
    * Example: 154213891
    */
-  ios_app_id?: string;
+  ios_app_id?: string | null;
 
   /**
    * Bundle ID for an iOS app.
    * 
    * Example: com.example.app
    */
-  ios_bundle_id?: string;
+  ios_bundle_id?: string | null;
 
   /**
    * App Store Developer Account Team id
@@ -6909,7 +7003,7 @@ export interface AppWeb extends App, CreateAppWebParams {
 export const DEFAULT_WEB_APP: AppWeb = {
   config_url: '',
   created_at: null,
-  domain_name: '',
+  domain_name: null,
   id: '',
   livemode: true,
   minimum_version_id: '',
@@ -6930,7 +7024,7 @@ export interface CreateAppWebParams extends CreateAppParams {
    * 
    * Example: dashboard.example.com
    */
-  domain_name: string;
+  domain_name: string | null;
 
 }
 
@@ -6944,7 +7038,7 @@ export interface UpdateAppWebParams extends UpdateAppParams {
    * 
    * Example: dashboard.example.com
    */
-  domain_name?: string;
+  domain_name?: string | null;
 
 }
 
@@ -7211,176 +7305,32 @@ export type APIResponseBody =
   };
 
 /**
- * An object with information about why an API Call failed.
+ * Helper function to clean sensitive data from an API request
  */
-export interface APIRequestError {
-
-  /**
-   * Type of error.
-   */
-  error_type: ErrorType;
-
-  /**
-   * A detailed message describing the error.
-   */
-  message: string;
-
-  /**
-   * The HTTP status codes for the Error
-   */
-  status_code: ErrorStatusCode;
-
-}
-
-/**
- * The HTTP status codes for Errors
- * 
- * `400`: BAD_REQUEST
- * `401`: UNAUTHORIZED
- * `403`: FORBIDDEN
- * `429`: TOO_MANY_REQUESTS
- * `500`: INTERNAL_SERVER_ERROR
- * `503`: SERVICE_UNAVAILABLE
- */
-export type ErrorStatusCode =
-  400 |
-  401 |
-  403 |
-  429 |
-  500 |
-  503;
-
-/**
- * Type of error.
- */
-export type ErrorType =
-  'app-config-error' |
-  'app-id-error' |
-  'api-key-invalid' |
-  'api-key-missing' |
-  'api-key-revoked' |
-  'incorrect-auth-credentials' |
-  'internal-server-error' |
-  'invalid-data-property' |
-  'invalid-endpoint' |
-  'rate-limit-surpassed' |
-  'unknown-error' |
-  'user-id-invalid';
-
-/**
- * Error response map
- */
-export const ERROR_RESPONSES: {
-  [key in ErrorType]: APIRequestError;
-} = {
-  "app-config-error": {
-    error_type: 'app-config-error',
-    message: 'The request did not include a valid app config object',
-    status_code: 401
-  },
-  "app-id-error": {
-    error_type: 'app-id-error',
-    message: 'The app id included in this request is not associated with your API key',
-    status_code: 401
-  },
-  "api-key-invalid": {
-    error_type: 'api-key-invalid',
-    message: 'The included API key is not associated with an active Appdrop account',
-    status_code: 403
-  },
-  "api-key-missing": {
-    error_type: 'api-key-missing',
-    message: 'The request did not include an API key',
-    status_code: 401
-  },
-  "api-key-revoked": {
-    error_type: 'api-key-revoked',
-    message: 'The included API key has been revoked',
-    status_code: 403
-  },
-  "incorrect-auth-credentials": {
-    error_type: 'incorrect-auth-credentials',
-    message: 'The credentials provided are invalid.',
-    status_code: 400
-  },
-  "internal-server-error": {
-    error_type: 'internal-server-error',
-    message: 'Our server encountered a run-time error when processing your request',
-    status_code: 500
-  },
-  "invalid-data-property": {
-    error_type: 'invalid-data-property',
-    message: 'Your data property was undefined or formatted incorrectly. Please refer to our docs to correct this issue.',
-    status_code: 400
-  },
-  "invalid-endpoint": {
-    error_type: 'invalid-endpoint',
-    message: 'Your endpoint was not formed properly.',
-    status_code: 400
-  },
-  "rate-limit-surpassed": {
-    error_type: 'rate-limit-surpassed',
-    message: 'You have reached the rate limit for the API',
-    status_code: 429
-  },
-  "unknown-error": {
-    error_type: 'unknown-error',
-    message: 'Our server encountered an unknown error when processing your request',
-    status_code: 400
-  },
-  "user-id-invalid": {
-    error_type: 'user-id-invalid',
-    message: 'There is no user in your project with this id.',
-    status_code: 400
+function cleanRequestBody(request_body: APIRequestBody) {
+  const cleansed_request_body: APIRequestBody = {} as unknown as APIRequestBody;
+  Object.assign(cleansed_request_body, request_body);
+  const cleansed_request_body_auth_data = (cleansed_request_body as {data:AuthenticateUserParams}).data;
+  if (validString(cleansed_request_body_auth_data['password'], true)) {
+    cleansed_request_body_auth_data['password'] = '*******';
   }
-};
-
-/**
- * Body of Async Errors
- */
-export type AsyncErrorBody = CreateCustomerParams;
-
-/**
- * Async Error types
- */
-export type AsyncErrorType = 'customer_write_failed';
-
-/**
- * Data to correct an async error. Used async tasks such as stripe customer creation.
- */
-export interface AsyncError extends
-  Identifiable, ProjectScoped {
-
-  /**
-   * Body of data
-   */
-  body: AsyncErrorBody;
-
-  /**
-   * Message
-   */
-  message: string;
-
-  /**
-   * Object name
-   */
-  object: 'async_error';
-
-  /**
-   * Number of attempts at correcting error.
-   */
-  num_retries: number;
-
-  /**
-   * Name of project where error occurred for convenience
-   */
-  project_name: string;
-
-  /**
-   * Type of error
-   */
-  type: AsyncErrorType;
+  const cleansed_request_body_bank_data = (cleansed_request_body as {data:CreateBankAccountParams}).data;
+  if (validString(cleansed_request_body_bank_data['account_number'], true)) {
+    cleansed_request_body_bank_data['account_number'] = '*******';
+  }
+  if (validString(cleansed_request_body_bank_data['routing_number'], true)) {
+    cleansed_request_body_bank_data['routing_number'] = '*******';
+  }
+  const cleansed_request_body_card_data = (cleansed_request_body as {data:CreateCardParams}).data;
+  if (validString(cleansed_request_body_card_data['cvc'], true)) {
+    cleansed_request_body_card_data['cvc'] = '*******';
+  }
+  if (validString(cleansed_request_body_card_data['number'], true)) {
+    cleansed_request_body_card_data['number'] = '*******';
+  }
+  return cleansed_request_body;
 }
+
 
 /**
  * Params for `handleSuccess` function
@@ -7417,26 +7367,7 @@ export async function handleSuccess({
       typeof req.body === 'string' ?
         JSON.parse(req.body) : req.body
     ) as unknown as APIRequestBody;
-    const cleansed_request_body: APIRequestBody = {} as unknown as APIRequestBody;
-    Object.assign(cleansed_request_body, request_body);
-    const cleansed_request_body_auth_data = (cleansed_request_body as {data:AuthenticateUserParams}).data;
-    if (validString(cleansed_request_body_auth_data['password'], true)) {
-      cleansed_request_body_auth_data['password'] = '*******';
-    }
-    const cleansed_request_body_bank_data = (cleansed_request_body as {data:CreateBankAccountParams}).data;
-    if (validString(cleansed_request_body_bank_data['account_number'], true)) {
-      cleansed_request_body_bank_data['account_number'] = '*******';
-    }
-    if (validString(cleansed_request_body_bank_data['routing_number'], true)) {
-      cleansed_request_body_bank_data['routing_number'] = '*******';
-    }
-    const cleansed_request_body_card_data = (cleansed_request_body as {data:CreateCardParams}).data;
-    if (validString(cleansed_request_body_card_data['cvc'], true)) {
-      cleansed_request_body_card_data['cvc'] = '*******';
-    }
-    if (validString(cleansed_request_body_card_data['number'], true)) {
-      cleansed_request_body_card_data['number'] = '*******';
-    }
+    const cleansed_request_body = cleanRequestBody(request_body);
     const api_request: APIRequest = {
       created_at: admin.firestore.Timestamp.fromDate(new Date()),
       livemode: cleansed_request_body.livemode,
@@ -7459,52 +7390,76 @@ export async function handleSuccess({
 }
 
 /**
+ * Converts array of strings into append syntax.
+ */
+export function appendArrayItems(arr: string[]) {
+  return {
+    append: arr
+  };
+}
+
+/**
+ * Converts array into append syntax
+ */
+export function removeArrayItems(arr: string[]) {
+  return {
+    remove: arr
+  };
+}
+
+/**
+ * Params for `handleObjectUpdate`
+ */
+export interface HandleObjectUpdateParams {
+  admin: any;
+  params_dot_syntax: any;
+  prevObj: any;
+}
+
+/**
  * Updates array objects
  */
-export function handleArrayUpdates(admin: any, params_: any, prevObj: any) {
-  Object.keys(params_)
+export function handleObjectUpdate({
+  admin,
+  params_dot_syntax,
+  prevObj
+}: HandleObjectUpdateParams) {
+  Object.keys(params_dot_syntax)
     .forEach(f => {
       if (
-        params_[f] !== null
-        && typeof params_[f] === 'object'
+        params_dot_syntax[f] !== null
+        && typeof params_dot_syntax[f] === 'object'
+        && Array.isArray(params_dot_syntax[f])
+        && ['append', 'remove'].includes(Object.keys(params_dot_syntax[f])[0])
       ) {
-        if (['append', 'remove'].includes(Object.keys(params_[f])[0])) {
-          if (params_[f]['append']) {
-            const append_arr = [...params_[f]['append']];
-            if (append_arr.length > 0) {
-              params_[f] = admin.firestore.FieldValue.arrayUnion(
-                ...append_arr
-              );
-              for (const _a of append_arr) {
-                if (!prevObj[f].includes(_a)) {
-                  prevObj[f].push(_a);
-                }
+        if (params_dot_syntax[f]['append']) {
+          const append_arr = [...params_dot_syntax[f]['append']];
+          if (append_arr.length > 0) {
+            params_dot_syntax[f] = admin.firestore.FieldValue.arrayUnion(
+              ...append_arr
+            );
+            for (const _a of append_arr) {
+              if (!prevObj[f].includes(_a)) {
+                prevObj[f].push(_a);
               }
             }
           }
-          else if (params_[f]['remove']) {
-            const remove_arr = [...params_[f]['remove']];
-            if (remove_arr.length > 0) {
-              params_[f] = admin.firestore.FieldValue.arrayRemove(
-                ...remove_arr
-              );
-              const next_arr = [...prevObj[f]
-                .filter((_r: string) => !remove_arr.includes(_r))];
-              prevObj[f] = next_arr;
-            }
-          }
-          return;
         }
-        else if (!Array.isArray(params_[f])) {
-          // Fix this: nested objects have data loss e.g. signed_in.abc.authenticated is only field left after sign out
-          prevObj[f] = {
-            ...prevObj[f],
-            ...params_[f]
-          };
-          return;
+        else if (params_dot_syntax[f]['remove']) {
+          const remove_arr = [...params_dot_syntax[f]['remove']];
+          if (remove_arr.length > 0) {
+            params_dot_syntax[f] = admin.firestore.FieldValue.arrayRemove(
+              ...remove_arr
+            );
+            const next_arr = [...prevObj[f]
+              .filter((_r: string) => !remove_arr.includes(_r))];
+            prevObj[f] = next_arr;
+          }
         }
       }
-      prevObj[f] = params_[f];
+      else {
+        dot.copy(f, f, params_dot_syntax, prevObj);
+      }
     });
 }
 
@@ -7526,64 +7481,6 @@ export async function queryOrganizationByAPIKey(db: any, decodedAPIKey: string) 
   catch (error) {
     console.log('matchOrganization error', error);
     return null;
-  }
-}
-
-/**
- * API response and logging for error cases.
- */
-export async function handleError(
-  admin: any,
-  db: any,
-  endpoint: APIRequestEndpoint,
-  error: ErrorType,
-  message: string|null,
-  method: APIRequestMethod,
-  req: any,
-  res: any
-): Promise<void> {
-  try {
-    console.log(`${method} ${endpoint} error`, error);
-    const error_type = (!!error && typeof error === 'string') ?
-      error as ErrorType : 'unknown-error';
-    const error_response = ERROR_RESPONSES[error_type] ?
-      ERROR_RESPONSES[error_type] :
-      ERROR_RESPONSES['unknown-error'];
-    if (message !== null) {
-      error_response.message = message;
-    }
-    const error_response_body = {
-      error: error_response
-    };
-    res.header("Content-Type", 'application/json');
-    res.status(error_response.status_code).send(JSON.stringify(error_response_body));
-    if (error !== 'app-config-error') {
-      const request_body = (
-        typeof req.body === 'string' ?
-          JSON.parse(req.body) : req.body
-      ) as unknown as APIRequestBody;
-      const api_request_id = randString();
-      const ip_address_obj = req.headers['x-forwarded-for'] || req.connection.remoteAddress || '';
-      const ip_address = typeof ip_address_obj === 'string' ? ip_address_obj : ip_address_obj[0];
-      const api_request: APIRequest = {
-        created_at: admin.firestore.Timestamp.fromDate(new Date()),
-        livemode: true,
-        endpoint: endpoint,
-        id: api_request_id,
-        ip_address: ip_address,
-        method: method,
-        object: 'api_request',
-        request_body: request_body,
-        response_body: error_response_body,
-        status_code: error_response.status_code,
-      };
-      await db.collection('api_requests').doc(api_request_id).set(api_request);
-      return;
-    }
-  }
-  catch (error) {
-    console.log('handleError error', error);
-    return;
   }
 }
 
@@ -7691,6 +7588,111 @@ export type APIRequestMethod = 'DELETE' |
   'PATCH' |
   'POST' |
   'PUT';
+
+/**
+ * Validate query params or data properties
+ */
+type RequestValidation = ({
+  field: string;
+  value: string[]|'validString'|'truthy';
+})[];
+
+/**
+ * Params for `isValidRequest`
+ */
+interface IsValidRequestParams {
+  adminRequired: boolean;
+  adminAPIKey: string;
+  dataRequired: boolean;
+  dataValidation: RequestValidation;
+  queryParamValidation: RequestValidation;
+  req: any;
+}
+
+/**
+ * Generic request validator.
+ * 
+ * Returns `200` if valid, returns `error_code` otherwise
+ */
+export function isValidRequest({
+  adminRequired,
+  adminAPIKey,
+  dataRequired,
+  dataValidation,
+  queryParamValidation,
+  req
+}: IsValidRequestParams) {
+  let error_code: ErrorCode = 'base/unknown-error';
+  const request_body = (
+    typeof req.body === 'string' ?
+      JSON.parse(req.body) : req.body
+  ) as unknown as APIRequestBody;
+  const { app_config, data, livemode } = request_body;
+  if (!app_config || !validConfig(app_config)) {
+    error_code = 'base/app-config-error';
+    return error_code;
+  }
+  const decoded_api_key = getDecodedAuthHeader(req);
+  if (adminRequired) {
+    if (decoded_api_key !== adminAPIKey) {
+      error_code = 'base/api-key-invalid';
+      return error_code;
+    }
+  }
+  else {
+    if (!validString(decoded_api_key, true)) {
+      error_code = 'base/api-key-missing';
+      return error_code;
+    }
+  }
+  const params = data as any;
+  if (!params && dataRequired) {
+    error_code = 'base/invalid-data-property';
+    return error_code;
+  }
+  const unmet_data_validation_criteria_index = dataValidation.length > 0
+    ? dataValidation.findIndex(dataValidationCriteria => {
+      const {field, value} = dataValidationCriteria;
+      const check_value = params[field];
+      if (value === 'truthy') {
+        return !check_value;
+      }
+      else if (value === 'validString') {
+        return !validString(check_value as string, true);
+      }
+      return !value.includes(check_value);
+    })
+    : -1;
+  if (unmet_data_validation_criteria_index !== -1) {
+    error_code = 'base/invalid-data-property';
+    return error_code;
+  }
+  const unmet_query_param_validation_criteria_index = queryParamValidation.length > 0
+    ? queryParamValidation.findIndex(queryParamValidationCriteria => {
+      const {field, value} = queryParamValidationCriteria;
+      const check_value = req.params[field];
+      if (value === 'truthy') {
+        return !check_value;
+      }
+      else if (value === 'validString') {
+        return !validString(check_value as string, true);
+      }
+      return !value.includes(check_value);
+    })
+    : -1;
+  if (unmet_query_param_validation_criteria_index !== -1) {
+    error_code = 'base/invalid-query-params';
+    return error_code;
+  }
+  return 200;
+}
+
+/**
+ * @deprecated
+ */
+ export function handleArrayUpdates() {
+  console.error('handleArrayUpdates is deprecated');
+}
 
 /**
  * Request Data for for App Initialization
@@ -10041,10 +10043,12 @@ export interface NotificationCriteria extends Criteria, UpdateNotificationCriter
    * Criteria
    */
   criteria: {
-    field_path: string[];
-    op: CriteriaOp;
-    value: any;
-  }[];
+    [key: string]: {
+      field_path: string[];
+      op: CriteriaOp;
+      value: any;
+    } | null;
+  };
 
   /**
    * Number of seconds this notification should delay.
@@ -10077,6 +10081,434 @@ export type CriteriaOp =
   | 'in'
   | 'not-in'
   | 'array-contains-any';
+
+/**
+ * Params to create an iOS push notification
+ */
+export interface RemoteMessageRequestIOS extends RemoteMessage {
+  
+  /**
+   * APS
+   */
+  aps: {
+    
+    /**
+     * Alert object
+     */
+    alert: {
+      
+      /**
+       * A short string describing the purpose of the
+       * notification. Apple Watch displays this string
+       * as part of the notification interface. This
+       * string is displayed only briefly and should
+       * be crafted so that it can be understood quickly.
+       * This key was added in iOS 8.2.
+       */
+      title: string;
+
+      /**
+       * The text of the alert message.
+       */
+      body: string;
+    },
+
+    /**
+     * Provide this key with a string value that
+     * represents the app-specific identifier for
+     * grouping notifications.
+     * 
+     * If you provide a Notification Content app extension,
+     * you can use this value to group your notifications
+     * together.
+     * 
+     * For local notifications, this key corresponds to
+     * the threadIdentifier property of
+     * the UNNotificationContent object.
+     */
+    'thread-id'?: string;
+
+  };
+
+}
+
+
+// Payload mechanics
+export type WriteType = 'set' | 'update';
+export interface Write {
+  document_path: string;
+  write_type: WriteType;
+}
+// Create, overwrite or nullify at the provided path.
+export interface SetWrite extends Write {
+  doc: any | null;
+  write_type: 'set';
+}
+// Update a specific field on the existing doc at the provided path.
+export type FieldUpdateType = 'field_overwrite' | 'field_transform';
+export interface FieldUpdate {
+  field_path: string[];
+  field_update_type: FieldUpdateType;
+}
+type FieldValue = string | number | boolean | string[] | null;
+export interface FieldOverwriteUpdate extends FieldUpdate {
+  field_update_type: 'field_overwrite';
+  value: FieldValue | { [key: string]: FieldValue; }
+}
+export type FieldTransformType = 'append_missing_elements' | 'remove_all_from_array';
+export interface FieldTransformUpdate extends FieldUpdate {
+  field_transform_type: FieldTransformType;
+  values: string[];
+}
+export interface UpdateWrite extends Write {
+  updates: FieldUpdate[];
+  write_type: 'update';
+}
+
+/**
+ * Stringified reducer action
+ */
+export interface RemoteMessageAppReducerAction {
+  type: 'write',
+  payload: {
+    writes: (SetWrite | UpdateWrite)[];
+  };
+}
+
+/**
+ * Stringified state reset
+ */
+export interface RemoteMessageResetState {
+
+  /**
+   * route index
+   */
+  index: number;
+
+  /**
+   * routes
+   */
+  routes: {
+
+    /**
+     * Route name
+     */
+    name: string;
+
+    /**
+     * Params
+     */
+    params?: {
+      [key: string]: any;
+    };
+
+  }[];
+  
+}
+
+/**
+ * Remote message
+ */
+export interface RemoteMessage {
+    
+  /**
+   * Remote message data
+   */
+  data: {
+  
+    /**
+     * Context update or empty string
+     */
+    app_reduer_action_str?: string;
+
+    /**
+     * Navigation update or empty string
+     */
+    reset_state_str?: string;
+  
+  };
+
+}
+
+/**
+* 
+* **************
+* Errors
+* **************
+* 
+*/
+
+/**
+ * An object with information about why an API Call failed.
+ */
+ export interface APIRequestError {
+
+  /**
+   * Error code
+   */
+  error_code: ErrorCode;
+
+  /**
+   * A detailed message describing the error
+   * meant to be displayed to users
+   */
+  message: string;
+  
+  /**
+   * The HTTP status codes for the Error
+   */
+  status_code: ErrorStatusCode;
+  
+  /**
+   * @deprecated
+   * Type of error.
+   */
+  error_type?: ErrorType;
+
+}
+
+/**
+ * Base Error codes
+ */
+export type BaseErrorCode = 
+'base/app-config-error' |
+'base/app-id-error' |
+'base/api-key-invalid' |
+'base/api-key-missing' |
+'base/api-key-revoked' |
+'base/internal-server-error' |
+'base/invalid-data-property' |
+'base/invalid-query-params' |
+'base/rate-limit-surpassed' |
+'base/unknown-error';
+
+/**
+ * Base Error response map
+ */
+ export const BASE_ERROR_RESPONSES: {
+  [key in BaseErrorCode]: APIRequestError;
+} = {
+  "base/app-config-error": {
+    error_code: 'base/app-config-error',
+    message: 'The request did not include a valid app config object',
+    status_code: 401
+  },
+  "base/app-id-error": {
+    error_code: 'base/app-id-error',
+    message: 'The app id included in this request is not associated with your API key',
+    status_code: 401
+  },
+  "base/api-key-invalid": {
+    error_code: 'base/api-key-invalid',
+    message: 'The included API key is not associated with an active Appdrop account',
+    status_code: 403
+  },
+  "base/api-key-missing": {
+    error_code: 'base/api-key-missing',
+    message: 'The request did not include an API key',
+    status_code: 401
+  },
+  "base/api-key-revoked": {
+    error_code: 'base/api-key-revoked',
+    message: 'The included API key has been revoked',
+    status_code: 403
+  },  
+  "base/internal-server-error": {
+    error_code: 'base/internal-server-error',
+    message: 'Our server encountered a run-time error when processing your request',
+    status_code: 500
+  },
+  "base/invalid-data-property": {
+    error_code: 'base/invalid-data-property',
+    message: 'Your data property is missing or invalid. Please check our API reference https://appdrop.com/guides',
+    status_code: 500
+  },
+  "base/invalid-query-params": {
+    error_code: 'base/invalid-query-params',
+    message: 'Your query params are missing or invalid. Please check our API reference https://appdrop.com/guides',
+    status_code: 500
+  },
+  "base/rate-limit-surpassed": {
+    error_code: 'base/rate-limit-surpassed',
+    message: 'You have reached the rate limit for the API',
+    status_code: 429
+  },
+  "base/unknown-error": {
+    error_code: 'base/unknown-error',
+    message: 'Our server encountered an unknown error when processing your request',
+    status_code: 400
+  }
+};
+
+/**
+ * Aggregates Error codes
+ */
+export type ErrorCode = 
+AuthErrorCode|
+BaseErrorCode;
+
+/**
+ * The HTTP status codes for Errors
+ * 
+ * `400`: BAD_REQUEST
+ * `401`: UNAUTHORIZED
+ * `403`: FORBIDDEN
+ * `429`: TOO_MANY_REQUESTS
+ * `500`: INTERNAL_SERVER_ERROR
+ * `503`: SERVICE_UNAVAILABLE
+ */
+export type ErrorStatusCode =
+  400 |
+  401 |
+  403 |
+  429 |
+  500 |
+  503;
+
+/**
+ * Error response map
+ */
+export const ERROR_RESPONSES: {
+  [key in ErrorCode]: APIRequestError;
+} = {
+  ...BASE_ERROR_RESPONSES,
+  ...AUTH_ERROR_RESPONSES
+};
+
+/**
+ * @deprecated
+ * Error types
+ */
+ export type ErrorType =
+ 'app-config-error' |
+ 'app-id-error' |
+ 'api-key-invalid' |
+ 'api-key-missing' |
+ 'api-key-revoked' |
+ 'incorrect-auth-credentials' |
+ 'internal-server-error' |
+ 'invalid-data-property' |
+ 'invalid-endpoint' |
+ 'rate-limit-surpassed' |
+ 'unknown-error' |
+ 'user-id-invalid';
+
+/**
+ * Body of Async Errors
+ */
+export type AsyncErrorBody = CreateCustomerParams;
+
+/**
+ * Async Error types
+ */
+export type AsyncErrorType = 'customer_write_failed';
+
+/**
+ * Data to correct an async error. Used async tasks such as stripe customer creation.
+ */
+export interface AsyncError extends
+  Identifiable, ProjectScoped {
+
+  /**
+   * Body of data
+   */
+  body: AsyncErrorBody;
+
+  /**
+   * Message
+   */
+  message: string;
+
+  /**
+   * Object name
+   */
+  object: 'async_error';
+
+  /**
+   * Number of attempts at correcting error.
+   */
+  num_retries: number;
+
+  /**
+   * Name of project where error occurred for convenience
+   */
+  project_name: string;
+
+  /**
+   * Type of error
+   */
+  type: AsyncErrorType;
+  
+}
+
+/**
+ * Params for `handleError` function
+ */
+export interface HandleErrorParams {
+  admin: any;
+  db: any;
+  endpoint: APIRequestEndpoint;
+  error: ErrorCode;
+  method: APIRequestMethod;
+  req: any;
+  res: any;
+}
+
+/**
+ * API response and logging for error cases.
+ */
+ export async function handleError({
+   admin,
+   db,
+   endpoint,
+   error,
+   method,
+   req,
+   res
+ }: HandleErrorParams): Promise<void> {
+  try {
+    console.log(`${method} ${endpoint} error`, error);
+    const error_code = (!!error && typeof error === 'string') ?
+      error as ErrorCode : 'base/unknown-error';
+    const error_response = ERROR_RESPONSES[error_code] ?
+      ERROR_RESPONSES[error_code] :
+      ERROR_RESPONSES['base/unknown-error'];
+    const error_response_body = {
+      error: error_response
+    };
+    res.header("Content-Type", 'application/json');
+    res.status(error_response.status_code).send(JSON.stringify(error_response_body));
+    if (error !== 'base/app-config-error') {
+      const request_body = (
+        typeof req.body === 'string' ?
+          JSON.parse(req.body) : req.body
+      ) as unknown as APIRequestBody;
+      const cleansed_request_body = cleanRequestBody(request_body);
+      const api_request_id = randString();
+      const ip_address_obj = req.headers['x-forwarded-for'] || req.connection.remoteAddress || '';
+      const ip_address = typeof ip_address_obj === 'string' ? ip_address_obj : ip_address_obj[0];
+      const api_request: APIRequest = {
+        created_at: admin.firestore.Timestamp.fromDate(new Date()),
+        livemode: true,
+        endpoint: endpoint,
+        id: api_request_id,
+        ip_address: ip_address,
+        method: method,
+        object: 'api_request',
+        request_body: cleansed_request_body,
+        response_body: error_response_body,
+        status_code: error_response.status_code,
+      };
+      await db.collection('api_requests').doc(api_request_id).set(api_request);
+      return;
+    }
+  }
+  catch (error) {
+    console.log('handleError error', error);
+    return;
+  }
+}
+
 
 /**
 * 

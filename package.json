@@ -1,6 +1,6 @@
 {
   "name": "appdrop-api",
-  "version": "4.2.108",
+  "version": "4.2.109",
   "description": "Type definitions for client and server applications built on Appdrop",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -14,7 +14,8 @@
   },
   "dependencies": {
     "@google-cloud/firestore": "^4.9.4",
-    "atob": "^2.1.2"
+    "atob": "^2.1.2",
+    "dot-object": "^2.1.4"
   },
   "author": "Appdrop Inc.",
   "repository": {
