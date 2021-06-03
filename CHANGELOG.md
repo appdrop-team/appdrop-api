@@ -5,6 +5,13 @@ All notable changes to the `appdrop-api` package will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this package adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.2.110] - 2021-06-02
+
+### Changed
+
+- `Criteria` now has comparison
+- `UpdateMarketplaceProjectParams` deprecates api_base_url
+
 ## [4.2.109] - 2021-06-01
 
 ### Added

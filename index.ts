@@ -2461,18 +2461,55 @@ export interface FinancialDetails extends CreateFinancialDetailsParams { }
 export interface CreateFinancialDetailsParams extends UpdateFinancialDetailsParams {
 
   /**
-   * The entity's credit card on file.
+   * Bank account
    */
-  card: Card | null;
+  bank_accounts: {
+    [key: string]: BankAccount | null;
+  };
+
+  /**
+   * The user or entity's credit cards on file.
+   */
+  cards: {
+    [key: string]: Card | null;
+  };
+
+  /**
+   * Map of credit card or bank charges charged to
+   * the user or entity
+   */
+  charge_receipts: {
+    [key: string]: Charge | null;
+  }
 
   /**
    * A map of the IAP receipts for this user.
+   * 
+   * Key is the InAppPurchaseReceipt `id`
    */
   in_app_purchase_receipts: {
-
-    [key: string]: InAppPurchaseReceipt;
-
+    [key: string]: InAppPurchaseReceipt | null;
   };
+
+  /**
+   * Net Sales accumulated during the current 
+   * payout period scheduled to be remitted.
+   * 
+   * The unit is the cents.
+   * 
+   * Example: 10050 indicates $100.50
+   */
+  payout_balance: number;
+
+  /**
+   * The id of the entity's Stripe subscription object.
+   * 
+   * Note – Pro plan organizations with add-ons get a wildcard Stripe
+   * price following their selections during strategy session calls.
+   */
+  subscriptions: {
+    [key: string]: UpdateSubscriptionParams | null;
+  }
 
 }
 
@@ -2482,9 +2519,18 @@ export interface CreateFinancialDetailsParams extends UpdateFinancialDetailsPara
 export interface UpdateFinancialDetailsParams {
 
   /**
-   * The user or entity's credit card on file.
+   * Bank account
    */
-  card?: Card | null;
+  bank_accounts?: {
+    [key: string]: UpdateBankAccountParams | null;
+  };
+
+  /**
+   * The user or entity's credit cards on file.
+   */
+  cards?: {
+    [key: string]: CreateCardParams | null;
+  };
 
   /**
    * A map of the IAP receipts for this user.
@@ -2492,10 +2538,28 @@ export interface UpdateFinancialDetailsParams {
    * Key is the InAppPurchaseReceipt `id`
    */
   in_app_purchase_receipts?: {
-
-    [key: string]: UpdateInAppPurchaseReceiptParams;
-
+    [key: string]: UpdateInAppPurchaseReceiptParams | null;
   };
+
+  /**
+   * Net Sales accumulated during the current 
+   * payout period scheduled to be remitted.
+   * 
+   * The unit is the cents.
+   * 
+   * Example: 10050 indicates $100.50
+   */
+  payout_balance?: number;
+
+  /**
+   * The id of the entity's Stripe subscription object.
+   * 
+   * Note – Pro plan organizations with add-ons get a wildcard Stripe
+   * price following their selections during strategy session calls.
+   */
+  subscriptions?: {
+    [key: string]: UpdateSubscriptionParams | null;
+  }
 
 }
 
@@ -2600,140 +2664,6 @@ export type CurrencyCode = 'aed' | 'afn' | 'all' | 'amd' | 'ang' | 'aoa' | 'ars'
   'uah' | 'ugx' | 'usd' | 'uyu' | 'uzs' | 'vnd' | 'vuv' | 'wst' |
   'xaf' | 'xcd' | 'xof' | 'xpf' | 'yer' | 'zar' | 'zmw';
 
-
-/**
- * Financial details for Appdrop Entities
- */
-export interface EntityFinancialDetails extends CreateEntityFinancialDetailsParams, FinancialDetails { }
-
-/**
- * Params to create financial details for an entity.
- */
-export interface CreateEntityFinancialDetailsParams extends CreateFinancialDetailsParams {
-
-  /**
-   * Bank account
-   */
-  bank_account: CreateBankAccountParams | null;
-
-  /**
-   * Invoice payment method
-   */
-  billing_method: BillingMethod;
-
-  /**
-   * Type of account credit. Used to calculate free trial
-   */
-  credit_type: CreditType | null;
-
-  /**
-   * A map of the invoices for Business organizations & Enterprises
-   */
-  invoices: {
-
-    [key: string]: Invoice;
-
-  };
-
-  /**
-   * Net Sales that the Organization has accumulated during the current 
-   * payout period scheduled to be remitted by Appdrop on the first day of the 
-   * month. The unit is the smallest unit of the Organization's currency.
-   * 
-   * USD Example: 10050 indicates $100.50
-   */
-  payout_balance: number;
-
-  /**
-   * The entity's Stripe subscription object.
-   */
-  subscription: Subscription | null;
-
-  /**
-   * Tier
-   */
-  tier: OrganizationTier;
-
-  /**
-   * @deprecated
-   */
-  stripe_subscription?: any;
-
-}
-
-/**
- * Params to update a nested field in an entity's finacial details.
- */
-export interface UpdateEntityFinancialDetailsParams extends UpdateFinancialDetailsParams {
-
-  /**
-   * Bank account
-   */
-  bank_account?: UpdateBankAccountParams;
-
-  /**
-   * Invoice payment method
-   */
-  billing_method?: BillingMethod;
-
-  /**
-   * Type of account credit. Used to calculate free trial
-   */
-  credit_type?: CreditType | null;
-
-  /**
-   * A map of the invoices for Business organizations & Enterprises
-   */
-  invoices?: {
-
-    [key: string]: UpdateInvoiceParams;
-
-  };
-
-  /**
-   * Net Sales that the Organization has accumulated during the current 
-   * payout period scheduled to be remitted by Appdrop on the first day of the 
-   * month. The unit is the smallest unit of the Organization's currency.
-   * 
-   * USD Example: 10050 indicates $100.50
-   */
-  payout_balance?: number;
-
-  /**
-   * The id of the entity's Stripe subscription object.
-   * 
-   * Note – Pro plan organizations with add-ons get a wildcard Stripe
-   * price following their selections during strategy session calls.
-   */
-  subscription?: Subscription | null;
-
-  /**
-   * Tier
-   */
-  tier?: OrganizationTier;
-
-}
-
-/**
- * Invoice payment method.
- * 
- * Note: Enterprises and Organizations paying for Appdrop plans using a credit
- * card incur an additional 5% processing fee.
- */
-export type BillingMethod = 'card' | 'wire';
-
-/**
- * Types of account credits: $200 in Appdrop credits
- * 
- * Equates to 2 free months of Appdrop Pro
- */
-export type CreditType = 200|300;
-
-/**
- * Organization tier.
- */
-export type OrganizationTier = 'business' | 'enterprise' | 'pro' | 'starter';
-
 /**
  * Invoice
  */
@@ -2749,7 +2679,7 @@ export interface Invoice extends CreateInvoiceParams, Identifiable {
 /**
  * Params to create an invoice
  */
-export interface CreateInvoiceParams extends Price, UpdateInvoiceParams {
+export interface CreateInvoiceParams extends UpdateInvoiceParams {
 
   /**
    * Description of each line item covered in the invoice
@@ -2771,29 +2701,12 @@ export interface CreateInvoiceParams extends Price, UpdateInvoiceParams {
    */
   paid: Timestamped;
 
-  /**
-   * Price of product. The unit is the smallest unit of the Organization's currency.
-   * 
-   * USD Example: 10050 indicates $100.50
-   */
-  price: number;
-   
-  /**
-   * Product sold
-   */
-  product: AppdropProduct | null;
-
-  /**
-   * Price Id in Stripe dashboard
-   */
-  stripe_price_id: string | null;
-
 }
 
 /**
  * Params to update an invoice
  */
-export interface UpdateInvoiceParams extends UpdatePriceParams {
+export interface UpdateInvoiceParams {
 
   /**
    * ID of the charge
@@ -2815,71 +2728,7 @@ export interface UpdateInvoiceParams extends UpdatePriceParams {
    */
   paid?: Timestamped;
 
-  /**
-   * Product sold
-   */
-  product?: UpdateAppdropProductParams | null;
-
 }
-
-/**
- * Price of Appdrop services.
- */
-export interface Price extends UpdatePriceParams {
-
-  /**
-   * Price of product. The unit is the smallest unit of the Organization's currency.
-   * 
-   * USD Example: 10050 indicates $100.50
-   */
-  price: number;
-
-  /**
-   * Price Id in Stripe dashboard
-   */
-  stripe_price_id: string | null;
-
-}
-
-/**
- * Price of Appdrop services.
- */
-export interface UpdatePriceParams {
-
-  /**
-   * Price of product. The unit is the smallest unit of the Organization's currency.
-   * 
-   * USD Example: 10050 indicates $100.50
-   */
-  price?: number;
-
-  /**
-   * Price Id in Stripe dashboard
-   */
-  stripe_price_id?: string | null;
-
-}
-
-/**
- * Map of the Stripe price ids for each organization tier.
- */
-export const ORGANIZATION_PRICE_MAP: {
-  [key in OrganizationTier]?: {
-    [key in BillingInterval]: Price;
-  }
-} = {
-  pro: {
-    monthly: {
-      price: 9900,
-      stripe_price_id: 'organization_pro_monthly'
-    }
-  }
-};
-
-/**
- * Invoice renewal interval.
- */
-export type BillingInterval = 'monthly';
 
 /**
  * Stripe customer
@@ -3256,6 +3105,13 @@ export interface Subscription extends CreateSubscriptionParams {
   cancel_at_period_end: boolean;
 
   /**
+   * Id of the payment method. Must belong to customer.
+   * 
+   * `null` if not passed with the subscription create operation
+   */
+  default_payment_method: string;
+
+  /**
    * Timestamp
    */
   created: number;
@@ -3340,6 +3196,11 @@ export interface UpdateSubscriptionParams {
    * Boolean indicating whether this subscription should cancel at the end of the current period.
    */
   cancel_at_period_end?: boolean;
+
+  /**
+   * Id of the payment method. Must belong to customer.
+   */
+  default_payment_method?: string;
 
 }
 
@@ -3730,7 +3591,7 @@ export interface Entity extends CreateEntityParams, Identifiable {
   /**
    * Financial details for this Appdrop Entity
    */
-  financial_details: EntityFinancialDetails;
+  financial_details: FinancialDetails;
 
   /**
    * Object name.
@@ -3752,7 +3613,7 @@ export interface CreateEntityParams extends UpdateEntityParams {
   /**
    * Financial details for this Appdrop Entity
    */
-  financial_details: CreateEntityFinancialDetailsParams;
+  financial_details: CreateFinancialDetailsParams;
 
   /**
    * The legal name of this Entity.
@@ -3852,15 +3713,12 @@ export const DEFAULT_ENTERPRISE: Enterprise = {
   },
   entity_type: 'enterprise',
   financial_details: {
-    bank_account: null,
-    billing_method: 'wire',
-    credit_type: null,
-    card: null,
+    bank_accounts: {},
+    cards: {},
+    charge_receipts: {},
     in_app_purchase_receipts: {},
-    invoices: {},
     payout_balance: 0,
-    subscription: null,
-    tier: 'enterprise'
+    subscriptions: {}
   },
   id: '',
   livemode: true,
@@ -3951,15 +3809,12 @@ export const DEFAULT_ORGANIZATION: Organization = {
   },
   entity_type: 'organization',
   financial_details: {
-    bank_account: null,
-    billing_method: 'card',
-    credit_type: null,
-    card: null,
+    bank_accounts: {},
+    cards: {},
+    charge_receipts: {},
     in_app_purchase_receipts: {},
-    invoices: {},
     payout_balance: 0,
-    subscription: null,
-    tier: 'pro'
+    subscriptions: {}
   },
   id: '',
   livemode: true,
@@ -5211,7 +5066,7 @@ UpdateProjectTemplateParams {
   /**
    * Download Url for the template code.
    */
-  git_repo: string;
+  git_repo: string | null;
 
   /**
    * Name of the template
@@ -5540,7 +5395,9 @@ export type ProjectType =
   'marketplace' |
   'social_network' |
   'streaming_service' |
-  'media';
+  'media'|
+  'root'|
+  'super_root';
 
 /**
  * Params to update a project template
@@ -5562,6 +5419,11 @@ UpdateVersionHistoryParams {
    * Description of template
    */
   description?: string;
+
+  /**
+   * Download Url for the template code.
+   */
+  git_repo?: string | null;
 
   /**
    * Name of the template
@@ -5653,7 +5515,7 @@ export interface Version extends CreateVersionParams, Identifiable {
  * Params to create a version
  */
 export interface CreateVersionParams extends 
-NotificationSettings, Price, UpdateVersionParams {
+NotificationSettings, UpdateVersionParams {
 
   /**
    * Canvas, screen and object model
@@ -5677,27 +5539,13 @@ NotificationSettings, Price, UpdateVersionParams {
    */
   endpoint_notifications: {
     [key in APIRequestEndpoint]?: {
-      [key in PushType]?: NotificationCriteria | null;
+      email?: EmailNotificationCriteria | null;
+      mobile_app_directed?: PushNotificationCriteria | null;
+      mobile_app_topic?: PushNotificationCriteria | null;
+      sms?: null;
     };
   };
 
-  /**
-   * Price of product. The unit is the smallest unit of the Organization's currency.
-   * 
-   * USD Example: 10050 indicates $100.50
-   */
-  price: number;
-
-  /**
-   * Product sold
-   */
-  product: AppdropProduct | null;
-
-  /**
-   * Price Id in Stripe dashboard
-   */
-  stripe_price_id: string | null;
-  
   /**
    * Topics that trigger a notification for this app
    */
@@ -6001,6 +5849,9 @@ export interface UpdateAppdropUIStyleSettingsParams extends UpdateCriteriaParams
 
 }
 
+/**
+ * Criteria API
+ */
 export interface Criteria extends UpdateCriteriaParams {
 
   /**
@@ -6017,17 +5868,6 @@ export interface Criteria extends UpdateCriteriaParams {
       value: any;
     } | null;
   };
-
-  /**
-   * Id of the criteria:
-   * 
-   * Endpoint notification: key in APIRequestEndpoint
-   * 
-   * Topic notification: topic name e.g. `reminders`
-   * 
-   * Style: rand string
-   */
-  criteria_id: string;
 
 }
 
@@ -6218,7 +6058,7 @@ export interface UpdateAppdropUIParams {
 }
 
 export interface UpdateVersionParams extends 
-UpdateNotificationSettingsParams, UpdatePriceParams {
+UpdateNotificationSettingsParams {
 
   /**
    * Canvas, screen and object model
@@ -6236,11 +6076,6 @@ UpdateNotificationSettingsParams, UpdatePriceParams {
    * Url of the zip file
    */
   download_url?: string;
-
-  /**
-   * Product sold
-   */
-  product?: UpdateAppdropProductParams | null;
 
   /**
    * Brief description of the features and functionality introduced in this version.
@@ -7892,6 +7727,69 @@ export interface InitCloudAppResponseBody extends InitAppResponseBody {
 
 }
 
+/**
+ * SuperRoot Appdrop Project containing the Dashboard
+ * web apps and Studio mobile apps
+ */
+export interface SuperRootProject extends CreateSuperRootProjectParams, Project {}
+
+/**
+ * Params to create the SuperRoot project
+ */
+export interface CreateSuperRootProjectParams extends CreateProjectParams {}
+
+/**
+ * Params to update the SuperRoot project
+ */
+export interface UpdateSuperRootProjectParams extends UpdateProjectParams {}
+
+/**
+ * SuperRoot Appdrop Project User who can use the Dashboard
+ * web apps and Studio mobile apps
+ */
+export interface SuperRootProjectUser extends CreateSuperRootProjectUserParams, ProjectUser {}
+
+/**
+ * Params to create a SuperRoot Project User
+ */
+export interface CreateSuperRootProjectUserParams extends CreateProjectUserParams {}
+
+/**
+ * Params to update a SuperRoot Project User
+ */
+export interface UpdateSuperRootProjectUserParams extends UpdateProjectUserParams {}
+
+/**
+ * Root Appdrop Project containing the Dashboard
+ * web apps and Studio mobile apps
+ */
+export interface RootProject extends CreateRootProjectParams, Project {}
+
+/**
+ * Params to create the Root project
+ */
+export interface CreateRootProjectParams extends CreateProjectParams {}
+
+/**
+ * Params to update the Root project
+ */
+export interface UpdateRootProjectParams extends UpdateProjectParams {}
+
+/**
+ * Root Appdrop Project User who can use the Dashboard
+ * web apps and Studio mobile apps
+ */
+export interface RootProjectUser extends CreateRootProjectUserParams, ProjectUser {}
+
+/**
+ * Params to create a Root Project User
+ */
+export interface CreateRootProjectUserParams extends CreateProjectUserParams {}
+
+/**
+ * Params to update a Root Project User
+ */
+export interface UpdateRootProjectUserParams extends UpdateProjectUserParams {}
 
 /**
  * E-Commerce Project supporting a store of products
@@ -8125,8 +8023,12 @@ export const DEFAULT_ECOMMERCE_USER: ECommerceProjectUser = {
   email: '',
   favorite_product_ids: [],
   financial_details: {
-    card: null,
-    in_app_purchase_receipts: {}
+    bank_accounts: {},
+    cards: {},
+    charge_receipts: {},
+    in_app_purchase_receipts: {},
+    payout_balance: 0,
+    subscriptions: {}
   },
   id: '',
   lat: DEFAULT_LATITUDE,
@@ -8408,7 +8310,6 @@ export interface MarketplaceProject extends
 
 export const DEFAULT_MARKETPLACE_PROJECT: MarketplaceProject = {
   app_ids: [],
-  api_base_url: '',
   asset_ids: [],
   copyright: '',
   created_at: null,
@@ -8456,13 +8357,6 @@ export interface CreateMarketplaceProjectParams extends
   CreateProjectParams,
   CreateProjectInAppPurchasesParams,
   CreateProjectInterestsParams {
-
-  /**
-   * Base API for FCM fetch. No trailing slash.
-   * 
-   * Example: `https://api.example.co`
-   */
-  api_base_url: string;
 
   /**
    * How to refer to a creator in this marketplace
@@ -8532,13 +8426,6 @@ export interface UpdateMarketplaceProjectParams extends
   UpdateProjectInterestsParams {
 
   /**
-   * Base API for FCM fetch. No trailing slash.
-   * 
-   * Example: `https://api.example.co`
-   */
-  api_base_url?: string;
-
-  /**
    * How to refer to a creator in this marketplace
    * 
    * Example: 'host', 'business', 'organizer'
@@ -8584,6 +8471,15 @@ export interface UpdateMarketplaceProjectParams extends
    * Google geocoding API Key
    */
   google_geocoding_api_key?: string;
+
+  /**
+   * @deprecated
+   * 
+   * Base API for FCM fetch. No trailing slash.
+   * 
+   * Example: `https://api.example.co`
+   */
+   api_base_url?: string;
 
 }
 
@@ -8762,9 +8658,7 @@ export interface UpdateProjectInAppPurchaseParams {
    * Key is the `id` of the IAP
    */
   in_app_purchases?: {
-
     [key: string]: UpdateInAppPurchaseParams;
-
   };
 
 }
@@ -8780,6 +8674,22 @@ export interface InAppPurchase extends CreateInAppPurchaseParams, Identifiable {
   object: 'in_app_purchase';
 
 }
+
+/**
+ * Default IAP
+ */
+export const DEFAULT_IN_APP_PURCHASE: InAppPurchase = {
+  active: true,
+  object: 'in_app_purchase',
+  iap_type: 'nonconsumable',
+  platform: 'android',
+  price_cents: 100,
+  product_id: '',
+  renews: 'monthly',
+  id: '',
+  livemode: true,
+  created_at: null
+};
 
 /**
  * Params to create an IAP
@@ -8868,7 +8778,6 @@ export const DEFAULT_MARKETPLACE_USER: MarketplaceProjectUser = {
     state_code: ''
   },
   authenticated_at: null,
-  available_days: '0123456',
   avatar_asset_id: '',
   bio: '',
   blocked_member_ids: [],
@@ -8881,8 +8790,12 @@ export const DEFAULT_MARKETPLACE_USER: MarketplaceProjectUser = {
   display_name: '',
   email: '',
   financial_details: {
-    card: null,
+    bank_accounts: {},
+    cards: {},
+    charge_receipts: {},
     in_app_purchase_receipts: {},
+    payout_balance: 0,
+    subscriptions: {}
   },
   id: '',
   interest_ids: [],
@@ -8897,7 +8810,6 @@ export const DEFAULT_MARKETPLACE_USER: MarketplaceProjectUser = {
     family_name: '',
     name_suffix: ''
   },
-  num_miles_filter: null,
   object: 'user',
   role: 'consumer',
   password: '',
@@ -8919,25 +8831,11 @@ export interface CreateMarketplaceProjectUserParams extends
   ContainsSocial, CreateProjectUserParams {
 
   /**
-   * Fix this: metadata
-   * 
-   * String with the days of the week this user is interested in events
-   * 
-   * `'035'` means Sunday, Wednesday and Friday
-   */
-  available_days: string;
-
-  /**
    * User's Financial details.
    * 
    * Typically, Marketplace users utilize IAPs.
    */
   financial_details: FinancialDetails;
-
-  /**
-   * Number of miles for the map filter to expand or null if no filter
-   */
-  num_miles_filter: number | null;
 
   /**
    * Role of user
@@ -9124,21 +9022,9 @@ export interface UpdateMarketplaceProjectUserParams extends
   UpdateContainsSocialParams, UpdateProjectUserParams {
 
   /**
-   * String with the days of the week this user is interested in events
-   * 
-   * `'035'` means Sunday, Wednesday and Friday
-   */
-  available_days?: string;
-
-  /**
    * User's Financial details.
    */
   financial_details?: UpdateFinancialDetailsParams;
-
-  /**
-    * Number of miles for the map filter to expand or null if no filter
-    */
-  num_miles_filter?: number | null;
 
   /**
    * Role of user
@@ -9959,14 +9845,14 @@ export interface InitMarketplaceAppResponseBody extends InitAppResponseBody {
 
     /**
      * Endpoint
+     * 
+     * `null` or `undefined` defaults to false, i.e. should not trigger a notification
      */
     [key in APIRequestEndpoint]?: {
-
-      /**
-       * `null` or `undefined` defaults to false, i.e. should not trigger a notification
-       */
-      [key in PushType]?: NotificationCriteria | null;
-
+      email?: EmailNotificationCriteria | null;
+      mobile_app_directed?: PushNotificationCriteria | null;
+      mobile_app_topic?: PushNotificationCriteria | null;
+      sms?: null;
     };
 
   };
@@ -10055,7 +9941,71 @@ export interface NotificationCriteria extends Criteria, UpdateNotificationCriter
    */
   delay: number | null;
 
+  /**
+   * Whom to notify
+   */
+  notify: NotificationTarget[];
+
 }
+
+/**
+ * Email notification
+ */
+export interface EmailNotificationCriteria extends NotificationCriteria {
+
+  /**
+   * Email body
+   */
+  email_body: string;
+  
+   /**
+    * Email link for CTA
+    */
+  email_link: string;
+   
+   /**
+    * Email subject
+    */
+  email_subject: string;
+
+}
+
+/**
+ * Push notification
+ */
+export interface PushNotificationCriteria extends NotificationCriteria {
+
+  /**
+   * Push notification body
+   */
+  push_body: string;
+
+  /**
+   * Push notification title
+   */
+  push_title: string;
+
+  /**
+   * Context update or `null`
+   */
+  push_app_reduer_action_str: string | null;
+
+  /**
+   * Navigation update or `null`
+   */
+  push_reset_state_str: string | null;
+
+}
+
+/**
+ * Whom to notify
+ */
+export type NotificationTarget = 
+'project_admins'|
+'thread_members'|
+'post_admins'|
+'affected_users';
+
 
 /**
  * Params to update notification criteria
@@ -10063,12 +10013,62 @@ export interface NotificationCriteria extends Criteria, UpdateNotificationCriter
 export interface UpdateNotificationCriteriaParams extends UpdateCriteriaParams {
 
   /**
+   * Criteria
+   */
+   criteria?: {
+    [key: string]: {
+      field_path: string[];
+      op: CriteriaOp;
+      value: any;
+    } | null;
+  };
+  
+  /**
    * Number of seconds this notification should delay.
    */
   delay?: number | null;
 
-}
+  /**
+   * Email body
+   */
+  email_body?: string;
+  
+  /**
+   * Email link for CTA
+   */
+  email_link?: string;
+  
+  /**
+   * Email subject
+   */
+  email_subject?: string;
+  
+  /**
+   * Push notification body
+   */
+  push_body?: string;
+  
+  /**
+   * Push notification title
+   */
+  push_title?: string;
 
+  /**
+   * Context update or `null`
+   */
+  push_app_reduer_action_str?: string | null;
+
+  /**
+   * Navigation update or `null`
+   */
+  push_reset_state_str?: string | null;
+  
+  /**
+   * Whom to notify
+   */
+  notify?: ArrayUpdateOperation;
+
+}
 
 export type CriteriaOp =
   | '<'
@@ -10081,6 +10081,21 @@ export type CriteriaOp =
   | 'in'
   | 'not-in'
   | 'array-contains-any';
+
+/**
+ * Special value for comparing an API key to the admin key
+ */
+export const COMPARE_APPDROP_ADMIN_API_KEY = 'COMPARE_APPDROP_ADMIN_API_KEY';
+
+/**
+ * Special value for checking array append operations
+ */
+export const COMPARE_ARRAY_APPEND_OPERATION = 'COMPARE_ARRAY_APPEND_OPERATION';
+
+/**
+ * Special value for checking array remove operations
+ */
+export const COMPARE_ARRAY_REMOVE_OPERATION = 'COMPARE_ARRAY_REMOVE_OPERATION';
 
 /**
  * Params to create an iOS push notification
@@ -10161,7 +10176,7 @@ export interface FieldTransformUpdate extends FieldUpdate {
   values: string[];
 }
 export interface UpdateWrite extends Write {
-  updates: FieldUpdate[];
+  updates: (FieldOverwriteUpdate|FieldTransformUpdate)[];
   write_type: 'update';
 }
 
