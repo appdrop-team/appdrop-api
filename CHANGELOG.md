@@ -5,7 +5,14 @@ All notable changes to the `appdrop-api` package will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this package adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [4.2.110] - 2021-06-02
+## [4.2.111] - 2021-06-03
+
+### Changed
+
+- `push_app_reducer_action_str` typo
+
+
+## [4.2.110] - 2021-06-03
 
 ### Changed
 

@@ -9988,7 +9988,7 @@ export interface PushNotificationCriteria extends NotificationCriteria {
   /**
    * Context update or `null`
    */
-  push_app_reduer_action_str: string | null;
+  push_app_reducer_action_str: string | null;
 
   /**
    * Navigation update or `null`
@@ -10056,7 +10056,7 @@ export interface UpdateNotificationCriteriaParams extends UpdateCriteriaParams {
   /**
    * Context update or `null`
    */
-  push_app_reduer_action_str?: string | null;
+  push_app_reducer_action_str?: string | null;
 
   /**
    * Navigation update or `null`
@@ -10234,7 +10234,7 @@ export interface RemoteMessage {
     /**
      * Context update or empty string
      */
-    app_reduer_action_str?: string;
+    app_reducer_action_str?: string;
 
     /**
      * Navigation update or empty string
