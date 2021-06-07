@@ -10747,3 +10747,14 @@ export const capitalizeFirstLetter = (s: string) => s.length === 0 ? '' : (
 
 export const getArticle = (s: string, capitalize: boolean) => ['a', 'e', 'i', 'o', 'u'].includes(s[0]) ?
   (capitalize ? 'An' : 'an') : (capitalize ? 'A' : 'a');
+
+/**
+ * Gets the user's full name
+ */
+export const getUserFullName = (user: User) => {
+  return (validString(user.name.given_name, true) || validString(user.name.family_name, true))
+    ? `${user.name.given_name} ${user.name.family_name}`
+    : (validString(user.display_name, true)
+      ? user.display_name
+      : null);
+}
