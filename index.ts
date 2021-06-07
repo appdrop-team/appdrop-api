@@ -10224,7 +10224,46 @@ export interface RemoteMessageResetState {
 /**
  * Remote message
  */
-export interface RemoteMessage {
+export interface RemoteMessage extends RemoteMessageData {
+
+  /**
+   * Notification
+   */
+   notification: {
+
+    /**
+     * Title
+     */
+    title: string;
+
+    /**
+     * Body
+     */
+    body: string;
+
+  };
+  
+  /**
+   * Push token
+   */
+  push_token: string;
+  
+  /**
+   * Type of notification
+   */
+  push_type: PushType;
+  
+  /**
+   * Topic
+   */
+  topic: string;
+
+}
+
+/**
+ * Remote message data
+ */
+export interface RemoteMessageData {
     
   /**
    * Remote message data
@@ -10234,12 +10273,12 @@ export interface RemoteMessage {
     /**
      * Context update or empty string
      */
-    app_reducer_action_str?: string;
+    app_reducer_action_str: string;
 
     /**
      * Navigation update or empty string
      */
-    reset_state_str?: string;
+    reset_state_str: string;
   
   };
 
