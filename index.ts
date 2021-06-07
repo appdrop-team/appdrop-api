@@ -1,1037 +1,7 @@
-import FirebaseFirestore from '@google-cloud/firestore';
 import atob from 'atob';
 // @ts-ignore
 import dot from 'dot-object';
 dot.keepArray = true;
-
-/**
- * 
- * **************
- * Assets
- * **************
- * 
- */
-
-/**
- * An Asset uploaded to Appdrop Cloud Storage
- */
-export interface RemoteAsset extends CreateRemoteAssetParams, Identifiable {
-
-  /**
-   * Object name
-   */
-  object: 'remote_asset';
-
-  /**
-   * Last update timestamp.
-   */
-  updated_at: Timestamped;
-
-}
-
-/**
- * Default remote asset
- */
-export const DEFAULT_REMOTE_ASSET: RemoteAsset = {
-  asset_type: 'avatar',
-  bytes: 0,
-  created_at: null,
-  creator_id: '',
-  id: '',
-  index: 0,
-  livemode: true,
-  mime: 'image/jpg',
-  native_asset_height: 1,
-  native_asset_width: 1,
-  object: 'remote_asset',
-  project_id: '',
-  remote_url: '',
-  remote_url_thumbnail: '',
-  storage_ref: '',
-  updated_at: null,
-};
-
-/**
- * Params to create a remote asset
- */
-export interface CreateRemoteAssetParams extends
-  ProjectScoped, Publishable, UpdateRemoteAssetParams {
-
-  /**
-   * Type of asset
-   */
-  asset_type: AssetType;
-
-  /**
-   * Number of bytes. `1024` means `1KB`
-   */
-  bytes: number;
-
-  /**
-   * Index of the asset in a collage
-   */
-  index: number;
-
-  /**
-   * Mime
-   */
-  mime: MimeType;
-
-  /**
-   * Height in px.
-   */
-  native_asset_height: number;
-
-  /**
-   * Width in px.
-   */
-  native_asset_width: number;
-
-  /**
-   * Asset download url
-   */
-  remote_url: string;
-
-  /**
-   * Compressed asset download url
-   */
-  remote_url_thumbnail: string;
-
-  /**
-   * Base of the storage ref
-   * 
-   * Ex. `user_avatars/user_001/asset_0002.jpg`
-   */
-  storage_ref: string;
-
-}
-
-/**
- * Props for objects scoped to an Appdrop project
- */
-export interface ProjectScoped {
-
-  /**
-   * Id of the Appdrop project
-   */
-  project_id: string;
-
-}
-
-/**
- * Type of asset
- */
-export type AssetType = 'avatar' | 'cover' | 'logo' | 'post';
-
-/**
- * Mime
- */
-export type MimeType =
-  'application/zip' |
-  'audio/mpeg' |
-  'image/jpg' |
-  'image/png' |
-  'text/html' |
-  'text/plain' |
-  'video/mp4';
-
-/**
- * Default val for thumbnail url
- */
-export const REMOTE_ASSET_THUMBNAIL_URL_PENDING = 'REMOTE_ASSET_THUMBNAIL_URL_PENDING';
-
-/**
- * Fallback image
- */
-export const FALLBACK_IMAGE_URL = 'https://firebasestorage.googleapis.com/v0/b/appdrop-v1.appspot.com/o/templates%2FqnAkvmAZnGQFtI7i7CfZbKQUrLNB4ITgz%2Fimage-fallback.png?alt=media&token=952d9528-0009-46c7-876e-ac5d8409e219';
-
-/**
- * Params to update a remote asset 
- */
-export interface UpdateRemoteAssetParams {
-
-  /**
-   * Number of bytes. `1024` means `1KB`
-   */
-  bytes?: number;
-
-  /**
-   * Index of the asset in a collage
-   */
-  index?: number;
-
-}
-
-/**
- * Remote asset properties
- */
-export interface ContainsRemoteAssets {
-
-  /**
-   * Ordered array of remote asset ids
-   */
-  asset_ids: string[];
-
-}
-
-/**
- * Updates to the `` array
- */
-
-/**
- * Params to update remote assets
- */
-export interface UpdateContainsRemoteAssetsParams {
-
-  /**
-   * Updates to the `asset_ids` array
-   */
-  asset_ids?: ArrayUpdateOperation;
-
-  /**
-   * @deprecated
-   */
-  append_asset_ids?: string[];
-
-  /**
-   * @deprecated
-   */
-  remove_asset_ids?: string[];
-
-}
-
-/**
- * Append operation
- */
-export interface ArrayAppendOperation {
-
-  /**
-   * Items to append
-   */
-  append: (string | number)[];
-
-}
-
-/**
- * Remove operation
- */
-export interface ArrayRemoveOperation {
-
-  /**
-   * Items to remove
-   */
-  remove: (string | number)[];
-
-}
-
-/**
- * Reset, append or remove array operation
- */
-export type ArrayUpdateOperation = (string | number)[] | ArrayAppendOperation | ArrayRemoveOperation;
-
-export const DEFAULT_MAX_NUM_ASSETS: {
-  [key: string]: number | null;
-} = {
-  'post_message': 8,
-  'post_listing': 10,
-  project: null
-};
-
-/**
- * 
- * **************
- * Auth
- * **************
- * 
- */
-
-/**
- * Generic User object.
- */
-export interface User extends CreateUserParams, Identifiable, Mappable {
-
-  /**
-   * String representing the object's type. Objects of the same type share the same value.
-   */
-  object: 'user';
-
-}
-
-/**
- * @deprecated
- */
-export const SECURITY_QUESTIONS_ARR = [
-  'What was the house number and street name you lived in as a child?',
-  'What were the last four digits of your childhood telephone number?',
-  'What is the first name of your closest childhood friend?',
-  'What primary school did you attend?',
-  'In what town or city was your first full time job?',
-  'In what town or city did you meet your spouse or partner?',
-  'What is the middle name of your oldest child?',
-  'What are the last five digits of your driver\'s license number?',
-  'What is your grandmother\'s (on your mother\'s side) maiden name?',
-  'What is your spouse or partner\'s mother\'s maiden name?',
-  'In what town or city did your parents meet?',
-];
-
-/**
- * Params to create a user.
- */
-export interface CreateUserParams extends CreateMappableParams, UpdateUserParams {
-
-  /**
-   * The user's address.
-   */
-  address: Address;
-
-  /**
-   * Timestamp that the user's account was created
-   */
-  authenticated_at: Timestamped;
-
-  /**
-   * Name displayed on profile
-   */
-  display_name: string;
-
-  /**
-   * The user's email address.
-   */
-  email: string;
-
-  /**
-   * Id of the user.
-   */
-  id: string;
-
-  /**
-   * Latitude
-   */
-  lat: number;
-
-  /**
-  * Longitude
-  */
-  long: number;
-
-  /**
-   * Set of [key-value pairs] that you can attach to an object. 
-   * This can be useful for storing additional information about the 
-   * object in a structured format.
-   */
-  metadata: {
-
-    [key: string]: any;
-
-  };
-
-  /**
-   * The user's name
-   */
-  name: PersonName;
-
-  /**
-   * The user's password or an empty string. Encrypted before storage.
-   */
-  password: string;
-
-  /**
-   * The user's password encrypted or an empty string.
-   */
-  password_hash: string;
-
-  /**
-   * The user's password salt or an empty string.
-   */
-  password_salt: string;
-
-  /**
-   * Id of the user's password reset or an empty string.
-   */
-  password_reset_id: string;
-
-  /**
-   * The user's phone number.
-   */
-  phone: string;
-
-  /**
-   * Map of the data for the device(s) where the user is signed in
-   * 
-   * Key is the device id with the dot (.) characters purged
-   */
-  signed_in_devices: {
-    [key: string]: SignedInDeviceData;
-  };
-
-  /**
-   * Timezone of the user
-   */
-  timezone: Timezone;
-
-  /**
-   * @deprecated
-   * 
-   * Security answer for password resets or an empty string. Encrypted before storage.
-   */
-  security_answer?: string;
-
-  /**
-   * @deprecated
-   * 
-   * Security answer encrypted for password resets encrypted or an empty string.
-   */
-  security_answer_hash?: string;
-
-  /**
-   * @deprecated
-   * 
-   * Security answer salt for password resets or an empty string.
-   */
-  security_answer_salt?: string;
-
-  /**
-   * @deprecated
-   * 
-   * Security question for password resets or an empty string.
-   */
-  security_question?: string;
-
-}
-
-/**
- * Data for each signed in device
- */
-export interface SignedInDeviceData extends UpdateSignedInDeviceDataParams {
-
-  /**
-   * Whether user is logged in
-   */
-  authenticated: boolean;
-
-  /**
-   * Unique device id
-   */
-  device_id: string;
-
-  /**
-   * Name of the device e.g. `iPhone 8`
-   */
-  device_name: string;
-
-  /**
-   * Push token
-   */
-  push_token: string;
-
-  /**
-   * Platform
-   */
-  platform: PlatformType;
-
-  /**
-   * Permissions
-   */
-  permissions: {
-
-    /**
-    * Camera access
-    */
-    camera: PermissionsStatus;
-
-    /**
-    * Camera roll access
-    */
-    camera_roll: PermissionsStatus;
-
-    /**
-    * Contacts access
-    */
-    contacts: PermissionsStatus;
-
-    /**
-    * Location access
-    */
-    location: PermissionsStatus;
-
-    /**
-    * Microphone access
-    */
-    microphone: PermissionsStatus;
-
-    /**
-    * Push access
-    */
-    push: PermissionsStatus;
-
-  };
-
-}
-
-export const DEFAULT_SIGNED_IN_DEVICE_DATA: SignedInDeviceData = {
-  authenticated: false,
-  device_id: '',
-  device_name: '',
-  permissions: {
-    camera: 'not_requested',
-    camera_roll: 'not_requested',
-    microphone: 'not_requested',
-    contacts: 'not_requested',
-    push: 'not_requested',
-    location: 'not_requested',
-  },
-  platform: 'ios',
-  push_token: '',
-};
-
-/**
- * Data for each signed in device
- */
-export interface UpdateSignedInDeviceDataParams {
-
-  /**
-   * Whether user is logged in
-   */
-  authenticated?: boolean;
-
-  /**
-   * Unique device id
-   */
-  device_id?: string;
-
-  /**
-   * Name of the device e.g. `iPhone 8`
-   */
-  device_name?: string;
-
-  /**
-   * Push token
-   */
-  push_token?: string;
-
-  /**
-   * Platform
-   */
-  platform?: PlatformType;
-
-  /**
-   * Permissions
-   */
-  permissions?: {
-
-    /**
-     * Camera access
-     */
-    camera?: PermissionsStatus;
-
-    /**
-     * Camera roll access
-     */
-    camera_roll?: PermissionsStatus;
-
-    /**
-     * Contacts access
-     */
-    contacts?: PermissionsStatus;
-
-    /**
-     * Location access
-     */
-    location?: PermissionsStatus;
-
-    /**
-     * Microphone access
-     */
-    microphone?: PermissionsStatus;
-
-    /**
-     * Push access
-     */
-    push?: PermissionsStatus;
-
-  };
-
-}
-
-/**
- * Status of device permission
- */
-export type PermissionsStatus = 'not_requested' | 'denied' | 'approved';
-
-/**
- * Name
- */
-export interface PersonName extends UpdatePersonNameParams {
-
-  /**
-   * Prefix: e.g. `Mr.`
-   */
-  name_prefix: string;
-
-  /**
-   * Given name: e.g. `Kamar`
-   */
-  given_name: string;
-
-  /**
-   * Middle name: e.g. `Robert Allen`
-   */
-  middle_name: string;
-
-  /**
-   * Family name: e.g. `Mack`
-   */
-  family_name: string;
-
-  /**
-   * Suffix: e.g. `Esq.`
-   */
-  name_suffix: string;
-
-}
-
-/**
- * Params to update a name
- */
-export interface UpdatePersonNameParams {
-
-  /**
-   * Prefix: e.g. `Mr.`
-   */
-  name_prefix?: string;
-
-  /**
-   * Given name: e.g. `Kamar`
-   */
-  given_name?: string;
-
-  /**
-   * Middle name: e.g. `Robert Allen`
-   */
-  middle_name?: string;
-
-  /**
-   * Family name: e.g. `Mack`
-   */
-  family_name?: string;
-
-  /**
-   * Suffix: e.g. `Esq.`
-   */
-  name_suffix?: string;
-
-}
-
-/**
- * Properties for objects that can interact with a map.
- */
-export interface Mappable extends CreateMappableParams { }
-
-/**
- * Params to create a mappable object
- */
-export interface CreateMappableParams {
-
-  /**
-   * Latitude
-   */
-  lat: number;
-
-  /**
-  * Longitude
-  */
-  long: number;
-
-}
-
-export const DEFAULT_LATITUDE = 37.78825;
-export const DEFAULT_LONGITUDE = -122.4324;
-export const DEFAULT_LATITUDE_DELTA = 0.0922;
-export const DEFAULT_LONGITUDE_DELTA = 0.0421;
-
-export type Timezone =
-  'America/New_York' |
-  'America/Chicago' |
-  'America/Denver' |
-  'America/Los_Angeles';
-export const DEFAULT_TIMEZONE: Timezone = 'America/Los_Angeles';
-
-/**
- * Params to update a user.
- * 
- * Note that the properties `id` and `livemode` are missing as these are 
- * not editable.
- */
-export interface UpdateUserParams extends UpdateMappableParams {
-
-  /**
-   * The user's address.
-   */
-  address?: Address;
-
-  /**
-   * Name displayed on profile
-   */
-  display_name?: string;
-
-  /**
-   * The user's email address.
-   */
-  email?: string;
-
-  /**
-   * Set of [key-value pairs] that you can attach to an object. 
-   * This can be useful for storing additional information about the 
-   * object in a structured format.
-   */
-  metadata?: {
-
-    [key: string]: any;
-
-  };
-
-  /**
-   * The user's name.
-   */
-  name?: UpdatePersonNameParams;
-
-  /**
-   * The user's password. Encrypted before storage.
-   */
-  password?: string;
-
-  /**
-   * The user's password encrypted or an empty string.
-   */
-  password_hash?: string;
-
-  /**
-   * The user's phone number.
-   */
-  phone?: string;
-
-  /**
-   * Map of the push notification tokens of the device(s) where the user is signed in. `null` if logged out.
-   * 
-   * Key is the device id with the dot (.) characters purged
-   */
-  signed_in_devices?: {
-
-    [key: string]: UpdateSignedInDeviceDataParams;
-
-  };
-
-  /**
-   * @deprecated
-   */
-  fcm_token?: string;
-
-  /**
-   * @deprecated
-   * 
-   * Map of the FCM tokens of the device(s) where the user is signed in. `null` if logged out.
-   * 
-   * Key is the device id with the dot (.) characters purged
-   */
-  signed_in_devices_fcm_tokens?: {
-    [key: string]: string | null;
-  };
-
-  /**
-   * @deprecated
-   * 
-   * Security answer for password resets or an empty string. Encrypted before storage.
-   */
-  security_answer?: string;
-
-  /**
-   * @deprecated
-   * 
-   * Security answer for password resets encrypted or an empty string.
-   */
-  security_answer_hash?: string;
-
-  /**
-   * @deprecated
-   * 
-   * Security question for password resets or an empty string.
-   */
-  security_question?: string;
-
-}
-
-export interface UpdateMappableParams {
-
-  /**
-   * Latitude
-   */
-  lat?: number;
-
-  /**
-   * Longitude
-   */
-  long?: number;
-}
-
-/**
- * Params to authenticate a user.
- */
-export interface AuthenticateUserParams {
-
-  /**
-   * Auth type
-   */
-  authentication_type: AuthenticationType;
-
-  /**
-   * Email address
-   */
-  email: string;
-
-  /**
-   * Raw password if Appdrop Auth
-   * 
-   * Auth Provider constant value if Firebase Auth
-   */
-  password: string;
-
-  /**
-   * Id of the password reset
-   */
-  reset_pass_id?: string;
-
-  /**
-   * Role for marketplace
-   */
-  role?: MarketplaceProjectUserRole;
-
-}
-
-/**
- * Params to authenticate a marketplace user.
- */
-export interface AuthenticateMarketplaceUserParams {
-
-  /**
-   * Role for marketplace
-   */
-  role: MarketplaceProjectUserRole;
-
-}
-
-/**
- * Auth operations
- */
-export type AuthenticationType = 'sign_in' | 'sign_up' | 'reset_pass' | 'firebase_auth';
-export const FIREBASE_EMAIL_AUTH = 'FIREBASE_EMAIL_AUTH';
-export const FIREBASE_APPLE_AUTH = 'FIREBASE_APPLE_AUTH';
-export const FIREBASE_GOOGLE_AUTH = 'FIREBASE_GOOGLE_AUTH';
-export const FIREBASE_FACEBOOK_AUTH = 'FIREBASE_FACEBOOK_AUTH';
-export const FIREBASE_PHONE_AUTH = 'FIREBASE_PHONE_AUTH';
-
-/**
- * Password reset object
- */
-export interface PasswordReset extends CreatePasswordResetParams, Identifiable {
-
-  /**
-   * Object name
-   */
-  object: 'password_reset';
-
-}
-
-/**
- * Password reset
- */
-export const DEFAULT_PASSWORD_RESET: PasswordReset = {
-  created_at: null,
-  expires: null,
-  id: '',
-  livemode: true,
-  object: 'password_reset',
-  project_id: '',
-  user_id: '',
-  verification_code: ''
-};
-
-/**
- * Params to create a password reset
- */
-export interface CreatePasswordResetParams extends UpdatePasswordResetParams {
-
-  /**
-   * Time the reset expires
-   */
-  expires: Timestamped;
-
-  /**
-   * Project id
-   */
-  project_id: string;
-
-  /**
-   * User id
-   */
-  user_id: string;
-
-  /**
-   * 6-digit reset code
-   */
-  verification_code: string;
-
-}
-
-/**
- * Params to update a password reset
- */
-export interface UpdatePasswordResetParams {
-
-  /**
-   * Time the reset expires
-   */
-  expires?: Timestamped;
-
-}
-
-/**
- * Params to send a password reset email
- */
-export interface SendPasswordResetEmailParams {
-
-  /**
-   * Email recipient
-   */
-  email: string;
-
-  /**
-   * Project Id
-   */
-  project_id: string;
-
-  /**
-   * Role for marketplace
-   */
-  role?: string;
-
-}
-
-/**
- * Params to send a password reset email
- */
-export interface SendMarketplacePasswordResetEmailParams extends SendPasswordResetEmailParams {
-
-  /**
-   * Role for marketplace
-   */
-  role: string;
-
-}
-
-/**
- * Params to send a password reset verification code
- */
-export interface SendPasswordResetVerificationCodeParams {
-
-  /**
-   * Id of the password reset
-   */
-  password_reset_id: string;
-
-  /**
-   * Verification code from email
-   */
-  verification_code: string;
-
-}
-
-/**
- * Auth errors
- */
-export type AuthErrorCode =
-'auth/email-already-in-use'|
-'auth/weak-password'|
-'auth/user-disabled'|
-'auth/user-not-found'|
-'auth/incorrect-password'|
-'auth/error-sending-password-reset-verification-code'|
-'auth/incorrect-password-reset-verification-code';
-
-/**
- * Auth Error response map
- */
-export const AUTH_ERROR_RESPONSES: {
-  [key in AuthErrorCode]: APIRequestError;
-} = {
-  'auth/email-already-in-use': {
-    error_code: 'auth/email-already-in-use',
-    message: 'That email is already in use. Please try signing in.',
-    status_code: 401
-  },
-  'auth/weak-password': {
-    error_code: 'auth/weak-password',
-    message: 'Please select a stronger password.',
-    status_code: 401
-  },
-  'auth/user-disabled': {
-    error_code: 'auth/user-disabled',
-    message: 'Your account has been deactivated.',
-    status_code: 401
-  },
-  'auth/user-not-found': {
-    error_code: 'auth/user-not-found',
-    message: 'Sorry, there is no account at that email. Please try signing up.',
-    status_code: 401
-  },
-  'auth/incorrect-password': {
-    error_code: 'auth/incorrect-password',
-    message: 'Your password is incorrect.',
-    status_code: 401
-  },
-  'auth/error-sending-password-reset-verification-code': {
-    error_code: 'auth/error-sending-password-reset-verification-code',
-    message: 'There was an error sending your password reset email.',
-    status_code: 401
-  },
-  'auth/incorrect-password-reset-verification-code': {
-    error_code: 'auth/incorrect-password-reset-verification-code',
-    message: 'That verification code is incorrect. Please try again.',
-    status_code: 401
-  },
-};
-
-
-/**
- * @deprecated
- * 
- * Params to exchange an email address for a User object which includes 
- * the `security_question` and `security_answer_hash` property to display 
- * to the resetting user. If either of these properties is an 
- * empty string, then the user skipped this security section step and must contact support 
- * who can set a temporary answer to the security question for the user.
- */
-export interface RetrieveUserSecurityQuestionParams {
-
-  /**
-   * The user's email address.
-   */
-  email: string;
-
-}
-
-/**
- * @deprecated
- * 
- * Params to exchange a security answer for authentication
- */
-export interface RequestUserPasswordResetParams {
-
-  /**
-   * Security answer for password resets or an empty string.
-   */
-  security_answer: string;
-
-}
 
 /**
  * 
@@ -1044,7 +14,7 @@ export interface RequestUserPasswordResetParams {
 /**
  * Physical Address
  */
-export interface Address {
+ export interface Address {
 
   /**
    * Address line 1
@@ -2379,18 +1349,13 @@ export const COUNTRIES: {
     label: "Zimbabwe",
     id: "ZW",
     dialCode: "+263"
-  },
-  // AX: {
-  //     label: "Åland Islands",
-  //     id: "AX",
-  //     dialCode: "+358"
-  // }
+  }
 };
 
 /**
  * Time object
  */
-export interface SimpleTimestamp {
+export interface Timestamped {
 
   /**
    * Nanoseconds since the Unix epoch (UTC+0)
@@ -2405,9 +1370,12 @@ export interface SimpleTimestamp {
 }
 
 /**
- * Time mechanics
+ * Time object
  */
-export type Timestamped = FirebaseFirestore.Timestamp | SimpleTimestamp | null;
+export const DEFAULT_TIMESTAMP: Timestamped = {
+  _nanoseconds: 0,
+  _seconds: 0,
+};
 
 /**
  * Identity mechanics
@@ -2438,6 +1406,1036 @@ export interface Identifiable {
    * Object name.
    */
   object: string;
+
+}
+
+
+/**
+ * 
+ * **************
+ * Assets
+ * **************
+ * 
+ */
+
+/**
+ * An Asset uploaded to Appdrop Cloud Storage
+ */
+export interface RemoteAsset extends CreateRemoteAssetParams, Identifiable {
+
+  /**
+   * Object name
+   */
+  object: 'remote_asset';
+
+  /**
+   * Last update timestamp.
+   */
+  updated_at: Timestamped;
+
+}
+
+/**
+ * Default remote asset
+ */
+export const DEFAULT_REMOTE_ASSET: RemoteAsset = {
+  asset_type: 'avatar',
+  bytes: 0,
+  created_at: DEFAULT_TIMESTAMP,
+  creator_id: '',
+  id: '',
+  index: 0,
+  livemode: true,
+  mime: 'image/jpg',
+  native_asset_height: 1,
+  native_asset_width: 1,
+  object: 'remote_asset',
+  project_id: '',
+  remote_url: '',
+  remote_url_thumbnail: '',
+  storage_ref: '',
+  updated_at: DEFAULT_TIMESTAMP,
+};
+
+/**
+ * Params to create a remote asset
+ */
+export interface CreateRemoteAssetParams extends
+  ProjectScoped, Publishable, UpdateRemoteAssetParams {
+
+  /**
+   * Type of asset
+   */
+  asset_type: AssetType;
+
+  /**
+   * Number of bytes. `1024` means `1KB`
+   */
+  bytes: number;
+
+  /**
+   * Index of the asset in a collage
+   */
+  index: number;
+
+  /**
+   * Mime
+   */
+  mime: MimeType;
+
+  /**
+   * Height in px.
+   */
+  native_asset_height: number;
+
+  /**
+   * Width in px.
+   */
+  native_asset_width: number;
+
+  /**
+   * Asset download url
+   */
+  remote_url: string;
+
+  /**
+   * Compressed asset download url
+   */
+  remote_url_thumbnail: string;
+
+  /**
+   * Base of the storage ref
+   * 
+   * Ex. `user_avatars/user_001/asset_0002.jpg`
+   */
+  storage_ref: string;
+
+}
+
+/**
+ * Props for objects scoped to an Appdrop project
+ */
+export interface ProjectScoped {
+
+  /**
+   * Id of the Appdrop project
+   */
+  project_id: string;
+
+}
+
+/**
+ * Type of asset
+ */
+export type AssetType = 'avatar' | 'cover' | 'logo' | 'post';
+
+/**
+ * Mime
+ */
+export type MimeType =
+  'application/zip' |
+  'audio/mpeg' |
+  'image/jpg' |
+  'image/png' |
+  'text/html' |
+  'text/plain' |
+  'video/mp4';
+
+/**
+ * Default val for thumbnail url
+ */
+export const REMOTE_ASSET_THUMBNAIL_URL_PENDING = 'REMOTE_ASSET_THUMBNAIL_URL_PENDING';
+
+/**
+ * Fallback image
+ */
+export const FALLBACK_IMAGE_URL = 'https://firebasestorage.googleapis.com/v0/b/appdrop-v1.appspot.com/o/templates%2FqnAkvmAZnGQFtI7i7CfZbKQUrLNB4ITgz%2Fimage-fallback.png?alt=media&token=952d9528-0009-46c7-876e-ac5d8409e219';
+
+/**
+ * Params to update a remote asset 
+ */
+export interface UpdateRemoteAssetParams {
+
+  /**
+   * Number of bytes. `1024` means `1KB`
+   */
+  bytes?: number;
+
+  /**
+   * Index of the asset in a collage
+   */
+  index?: number;
+
+}
+
+/**
+ * Remote asset properties
+ */
+export interface ContainsRemoteAssets {
+
+  /**
+   * Ordered array of remote asset ids
+   */
+  asset_ids: string[];
+
+}
+
+/**
+ * Updates to the `` array
+ */
+
+/**
+ * Params to update remote assets
+ */
+export interface UpdateContainsRemoteAssetsParams {
+
+  /**
+   * Updates to the `asset_ids` array
+   */
+  asset_ids?: ArrayUpdateOperation;
+
+  /**
+   * @deprecated
+   */
+  append_asset_ids?: string[];
+
+  /**
+   * @deprecated
+   */
+  remove_asset_ids?: string[];
+
+}
+
+/**
+ * Append operation
+ */
+export interface ArrayAppendOperation {
+
+  /**
+   * Items to append
+   */
+  append: (string | number)[];
+
+}
+
+/**
+ * Remove operation
+ */
+export interface ArrayRemoveOperation {
+
+  /**
+   * Items to remove
+   */
+  remove: (string | number)[];
+
+}
+
+/**
+ * Reset, append or remove array operation
+ */
+export type ArrayUpdateOperation = (string | number)[] | ArrayAppendOperation | ArrayRemoveOperation;
+
+export const DEFAULT_MAX_NUM_ASSETS: {
+  [key: string]: number | null;
+} = {
+  'post_message': 8,
+  'post_listing': 10,
+  project: null
+};
+
+/**
+ * 
+ * **************
+ * Auth
+ * **************
+ * 
+ */
+
+/**
+ * Generic User object.
+ */
+export interface User extends CreateUserParams, Identifiable, Mappable {
+
+  /**
+   * String representing the object's type. Objects of the same type share the same value.
+   */
+  object: 'user';
+
+}
+
+/**
+ * @deprecated
+ */
+export const SECURITY_QUESTIONS_ARR = [
+  'What was the house number and street name you lived in as a child?',
+  'What were the last four digits of your childhood telephone number?',
+  'What is the first name of your closest childhood friend?',
+  'What primary school did you attend?',
+  'In what town or city was your first full time job?',
+  'In what town or city did you meet your spouse or partner?',
+  'What is the middle name of your oldest child?',
+  'What are the last five digits of your driver\'s license number?',
+  'What is your grandmother\'s (on your mother\'s side) maiden name?',
+  'What is your spouse or partner\'s mother\'s maiden name?',
+  'In what town or city did your parents meet?',
+];
+
+/**
+ * Params to create a user.
+ */
+export interface CreateUserParams extends CreateMappableParams, UpdateUserParams {
+
+  /**
+   * The user's address.
+   */
+  address: Address;
+
+  /**
+   * Timestamp that the user's account was created
+   */
+  authenticated_at: Timestamped;
+
+  /**
+   * Name displayed on profile
+   */
+  display_name: string;
+
+  /**
+   * The user's email address.
+   */
+  email: string;
+
+  /**
+   * Id of the user.
+   */
+  id: string;
+
+  /**
+   * Latitude
+   */
+  lat: number;
+
+  /**
+  * Longitude
+  */
+  long: number;
+
+  /**
+   * Set of [key-value pairs] that you can attach to an object. 
+   * This can be useful for storing additional information about the 
+   * object in a structured format.
+   */
+  metadata: {
+
+    [key: string]: any;
+
+  };
+
+  /**
+   * The user's name
+   */
+  name: PersonName;
+
+  /**
+   * The user's password or an empty string. Encrypted before storage.
+   */
+  password: string;
+
+  /**
+   * The user's password encrypted or an empty string.
+   */
+  password_hash: string;
+
+  /**
+   * The user's password salt or an empty string.
+   */
+  password_salt: string;
+
+  /**
+   * Id of the user's password reset or an empty string.
+   */
+  password_reset_id: string;
+
+  /**
+   * The user's phone number.
+   */
+  phone: string;
+
+  /**
+   * Map of the data for the device(s) where the user is signed in
+   * 
+   * Key is the device id with the dot (.) characters purged
+   */
+  signed_in_devices: {
+    [key: string]: SignedInDeviceData;
+  };
+
+  /**
+   * Timezone of the user
+   */
+  timezone: Timezone;
+
+  /**
+   * @deprecated
+   * 
+   * Security answer for password resets or an empty string. Encrypted before storage.
+   */
+  security_answer?: string;
+
+  /**
+   * @deprecated
+   * 
+   * Security answer encrypted for password resets encrypted or an empty string.
+   */
+  security_answer_hash?: string;
+
+  /**
+   * @deprecated
+   * 
+   * Security answer salt for password resets or an empty string.
+   */
+  security_answer_salt?: string;
+
+  /**
+   * @deprecated
+   * 
+   * Security question for password resets or an empty string.
+   */
+  security_question?: string;
+
+}
+
+/**
+ * Data for each signed in device
+ */
+export interface SignedInDeviceData extends UpdateSignedInDeviceDataParams {
+
+  /**
+   * Whether user is logged in
+   */
+  authenticated: boolean;
+
+  /**
+   * Unique device id
+   */
+  device_id: string;
+
+  /**
+   * Name of the device e.g. `iPhone 8`
+   */
+  device_name: string;
+
+  /**
+   * Push token
+   */
+  push_token: string;
+
+  /**
+   * Platform
+   */
+  platform: PlatformType;
+
+  /**
+   * Permissions
+   */
+  permissions: {
+
+    /**
+    * Camera access
+    */
+    camera: PermissionsStatus;
+
+    /**
+    * Camera roll access
+    */
+    camera_roll: PermissionsStatus;
+
+    /**
+    * Contacts access
+    */
+    contacts: PermissionsStatus;
+
+    /**
+    * Location access
+    */
+    location: PermissionsStatus;
+
+    /**
+    * Microphone access
+    */
+    microphone: PermissionsStatus;
+
+    /**
+    * Push access
+    */
+    push: PermissionsStatus;
+
+  };
+
+}
+
+export const DEFAULT_SIGNED_IN_DEVICE_DATA: SignedInDeviceData = {
+  authenticated: false,
+  device_id: '',
+  device_name: '',
+  permissions: {
+    camera: 'not_requested',
+    camera_roll: 'not_requested',
+    microphone: 'not_requested',
+    contacts: 'not_requested',
+    push: 'not_requested',
+    location: 'not_requested',
+  },
+  platform: 'ios',
+  push_token: '',
+};
+
+/**
+ * Data for each signed in device
+ */
+export interface UpdateSignedInDeviceDataParams {
+
+  /**
+   * Whether user is logged in
+   */
+  authenticated?: boolean;
+
+  /**
+   * Unique device id
+   */
+  device_id?: string;
+
+  /**
+   * Name of the device e.g. `iPhone 8`
+   */
+  device_name?: string;
+
+  /**
+   * Push token
+   */
+  push_token?: string;
+
+  /**
+   * Platform
+   */
+  platform?: PlatformType;
+
+  /**
+   * Permissions
+   */
+  permissions?: {
+
+    /**
+     * Camera access
+     */
+    camera?: PermissionsStatus;
+
+    /**
+     * Camera roll access
+     */
+    camera_roll?: PermissionsStatus;
+
+    /**
+     * Contacts access
+     */
+    contacts?: PermissionsStatus;
+
+    /**
+     * Location access
+     */
+    location?: PermissionsStatus;
+
+    /**
+     * Microphone access
+     */
+    microphone?: PermissionsStatus;
+
+    /**
+     * Push access
+     */
+    push?: PermissionsStatus;
+
+  };
+
+}
+
+/**
+ * Status of device permission
+ */
+export type PermissionsStatus = 'not_requested' | 'denied' | 'approved';
+
+/**
+ * Name
+ */
+export interface PersonName extends UpdatePersonNameParams {
+
+  /**
+   * Prefix: e.g. `Mr.`
+   */
+  name_prefix: string;
+
+  /**
+   * Given name: e.g. `Kamar`
+   */
+  given_name: string;
+
+  /**
+   * Middle name: e.g. `Robert Allen`
+   */
+  middle_name: string;
+
+  /**
+   * Family name: e.g. `Mack`
+   */
+  family_name: string;
+
+  /**
+   * Suffix: e.g. `Esq.`
+   */
+  name_suffix: string;
+
+}
+
+/**
+ * Params to update a name
+ */
+export interface UpdatePersonNameParams {
+
+  /**
+   * Prefix: e.g. `Mr.`
+   */
+  name_prefix?: string;
+
+  /**
+   * Given name: e.g. `Kamar`
+   */
+  given_name?: string;
+
+  /**
+   * Middle name: e.g. `Robert Allen`
+   */
+  middle_name?: string;
+
+  /**
+   * Family name: e.g. `Mack`
+   */
+  family_name?: string;
+
+  /**
+   * Suffix: e.g. `Esq.`
+   */
+  name_suffix?: string;
+
+}
+
+/**
+ * Properties for objects that can interact with a map.
+ */
+export interface Mappable extends CreateMappableParams { }
+
+/**
+ * Params to create a mappable object
+ */
+export interface CreateMappableParams {
+
+  /**
+   * Latitude
+   */
+  lat: number;
+
+  /**
+  * Longitude
+  */
+  long: number;
+
+}
+
+export const DEFAULT_LATITUDE = 37.78825;
+export const DEFAULT_LONGITUDE = -122.4324;
+export const DEFAULT_LATITUDE_DELTA = 0.0922;
+export const DEFAULT_LONGITUDE_DELTA = 0.0421;
+
+export type Timezone =
+  'America/New_York' |
+  'America/Chicago' |
+  'America/Denver' |
+  'America/Los_Angeles';
+export const DEFAULT_TIMEZONE: Timezone = 'America/Los_Angeles';
+
+/**
+ * Params to update a user.
+ * 
+ * Note that the properties `id` and `livemode` are missing as these are 
+ * not editable.
+ */
+export interface UpdateUserParams extends UpdateMappableParams {
+
+  /**
+   * The user's address.
+   */
+  address?: Address;
+
+  /**
+   * Name displayed on profile
+   */
+  display_name?: string;
+
+  /**
+   * The user's email address.
+   */
+  email?: string;
+
+  /**
+   * Set of [key-value pairs] that you can attach to an object. 
+   * This can be useful for storing additional information about the 
+   * object in a structured format.
+   */
+  metadata?: {
+
+    [key: string]: any;
+
+  };
+
+  /**
+   * The user's name.
+   */
+  name?: UpdatePersonNameParams;
+
+  /**
+   * The user's password. Encrypted before storage.
+   */
+  password?: string;
+
+  /**
+   * The user's password encrypted or an empty string.
+   */
+  password_hash?: string;
+
+  /**
+   * The user's phone number.
+   */
+  phone?: string;
+
+  /**
+   * Map of the push notification tokens of the device(s) where the user is signed in. `null` if logged out.
+   * 
+   * Key is the device id with the dot (.) characters purged
+   */
+  signed_in_devices?: {
+
+    [key: string]: UpdateSignedInDeviceDataParams;
+
+  };
+
+  /**
+   * @deprecated
+   */
+  fcm_token?: string;
+
+  /**
+   * @deprecated
+   * 
+   * Map of the FCM tokens of the device(s) where the user is signed in. `null` if logged out.
+   * 
+   * Key is the device id with the dot (.) characters purged
+   */
+  signed_in_devices_fcm_tokens?: {
+    [key: string]: string | null;
+  };
+
+  /**
+   * @deprecated
+   * 
+   * Security answer for password resets or an empty string. Encrypted before storage.
+   */
+  security_answer?: string;
+
+  /**
+   * @deprecated
+   * 
+   * Security answer for password resets encrypted or an empty string.
+   */
+  security_answer_hash?: string;
+
+  /**
+   * @deprecated
+   * 
+   * Security question for password resets or an empty string.
+   */
+  security_question?: string;
+
+}
+
+export interface UpdateMappableParams {
+
+  /**
+   * Latitude
+   */
+  lat?: number;
+
+  /**
+   * Longitude
+   */
+  long?: number;
+}
+
+/**
+ * Params to authenticate a user.
+ */
+export interface AuthenticateUserParams {
+
+  /**
+   * Auth type
+   */
+  authentication_type: AuthenticationType;
+
+  /**
+   * Email address
+   */
+  email: string;
+
+  /**
+   * Raw password if Appdrop Auth
+   * 
+   * Auth Provider constant value if Firebase Auth
+   */
+  password: string;
+
+  /**
+   * Id of the password reset
+   */
+  reset_pass_id?: string;
+
+  /**
+   * Role for marketplace
+   */
+  role?: MarketplaceProjectUserRole;
+
+}
+
+/**
+ * Params to authenticate a marketplace user.
+ */
+export interface AuthenticateMarketplaceUserParams {
+
+  /**
+   * Role for marketplace
+   */
+  role: MarketplaceProjectUserRole;
+
+}
+
+/**
+ * Auth operations
+ */
+export type AuthenticationType = 'sign_in' | 'sign_up' | 'reset_pass' | 'firebase_auth';
+export const FIREBASE_EMAIL_AUTH = 'FIREBASE_EMAIL_AUTH';
+export const FIREBASE_APPLE_AUTH = 'FIREBASE_APPLE_AUTH';
+export const FIREBASE_GOOGLE_AUTH = 'FIREBASE_GOOGLE_AUTH';
+export const FIREBASE_FACEBOOK_AUTH = 'FIREBASE_FACEBOOK_AUTH';
+export const FIREBASE_PHONE_AUTH = 'FIREBASE_PHONE_AUTH';
+
+/**
+ * Password reset object
+ */
+export interface PasswordReset extends CreatePasswordResetParams, Identifiable {
+
+  /**
+   * Object name
+   */
+  object: 'password_reset';
+
+}
+
+/**
+ * Password reset
+ */
+export const DEFAULT_PASSWORD_RESET: PasswordReset = {
+  created_at: DEFAULT_TIMESTAMP,
+  expires: DEFAULT_TIMESTAMP,
+  id: '',
+  livemode: true,
+  object: 'password_reset',
+  project_id: '',
+  user_id: '',
+  verification_code: ''
+};
+
+/**
+ * Params to create a password reset
+ */
+export interface CreatePasswordResetParams extends UpdatePasswordResetParams {
+
+  /**
+   * Time the reset expires
+   */
+  expires: Timestamped;
+
+  /**
+   * Project id
+   */
+  project_id: string;
+
+  /**
+   * User id
+   */
+  user_id: string;
+
+  /**
+   * 6-digit reset code
+   */
+  verification_code: string;
+
+}
+
+/**
+ * Params to update a password reset
+ */
+export interface UpdatePasswordResetParams {
+
+  /**
+   * Time the reset expires
+   */
+  expires?: Timestamped;
+
+}
+
+/**
+ * Params to send a password reset email
+ */
+export interface SendPasswordResetEmailParams {
+
+  /**
+   * Email recipient
+   */
+  email: string;
+
+  /**
+   * Project Id
+   */
+  project_id: string;
+
+  /**
+   * Role for marketplace
+   */
+  role?: string;
+
+}
+
+/**
+ * Params to send a password reset email
+ */
+export interface SendMarketplacePasswordResetEmailParams extends SendPasswordResetEmailParams {
+
+  /**
+   * Role for marketplace
+   */
+  role: string;
+
+}
+
+/**
+ * Params to send a password reset verification code
+ */
+export interface SendPasswordResetVerificationCodeParams {
+
+  /**
+   * Id of the password reset
+   */
+  password_reset_id: string;
+
+  /**
+   * Verification code from email
+   */
+  verification_code: string;
+
+}
+
+/**
+ * Auth errors
+ */
+export type AuthErrorCode =
+'auth/email-already-in-use'|
+'auth/weak-password'|
+'auth/user-disabled'|
+'auth/user-not-found'|
+'auth/incorrect-password'|
+'auth/error-sending-password-reset-verification-code'|
+'auth/incorrect-password-reset-verification-code';
+
+/**
+ * Auth Error response map
+ */
+export const AUTH_ERROR_RESPONSES: {
+  [key in AuthErrorCode]: APIRequestError;
+} = {
+  'auth/email-already-in-use': {
+    error_code: 'auth/email-already-in-use',
+    message: 'That email is already in use. Please try signing in.',
+    status_code: 401
+  },
+  'auth/weak-password': {
+    error_code: 'auth/weak-password',
+    message: 'Please select a stronger password.',
+    status_code: 401
+  },
+  'auth/user-disabled': {
+    error_code: 'auth/user-disabled',
+    message: 'Your account has been deactivated.',
+    status_code: 401
+  },
+  'auth/user-not-found': {
+    error_code: 'auth/user-not-found',
+    message: 'Sorry, there is no account at that email. Please try signing up.',
+    status_code: 401
+  },
+  'auth/incorrect-password': {
+    error_code: 'auth/incorrect-password',
+    message: 'Your password is incorrect.',
+    status_code: 401
+  },
+  'auth/error-sending-password-reset-verification-code': {
+    error_code: 'auth/error-sending-password-reset-verification-code',
+    message: 'There was an error sending your password reset email.',
+    status_code: 401
+  },
+  'auth/incorrect-password-reset-verification-code': {
+    error_code: 'auth/incorrect-password-reset-verification-code',
+    message: 'That verification code is incorrect. Please try again.',
+    status_code: 401
+  },
+};
+
+
+/**
+ * @deprecated
+ * 
+ * Params to exchange an email address for a User object which includes 
+ * the `security_question` and `security_answer_hash` property to display 
+ * to the resetting user. If either of these properties is an 
+ * empty string, then the user skipped this security section step and must contact support 
+ * who can set a temporary answer to the security question for the user.
+ */
+export interface RetrieveUserSecurityQuestionParams {
+
+  /**
+   * The user's email address.
+   */
+  email: string;
+
+}
+
+/**
+ * @deprecated
+ * 
+ * Params to exchange a security answer for authentication
+ */
+export interface RequestUserPasswordResetParams {
+
+  /**
+   * Security answer for password resets or an empty string.
+   */
+  security_answer: string;
 
 }
 
@@ -3926,8 +3924,8 @@ export const DEFAULT_ECOMMERCE_ORDER: Order = {
     total: '2.00',
     vat: '0.00'
   },
-  created_at: null,
-  confirmed_at: null,
+  created_at: DEFAULT_TIMESTAMP,
+  confirmed_at: DEFAULT_TIMESTAMP,
   external_id: '',
   gift: null,
   has_discontinued_items: false,
@@ -3956,14 +3954,14 @@ export const DEFAULT_ECOMMERCE_ORDER: Order = {
     total: null,
     vat: null
   },
-  requested_return_at: null,
+  requested_return_at: DEFAULT_TIMESTAMP,
   requested_return_data: [],
   requested_return_reason: 'The item has defects.',
   shipping: 'STANDARD',
   status: 'draft',
   store: 0,
   stripe_charge_id: '',
-  updated_at: null,
+  updated_at: DEFAULT_TIMESTAMP,
   user_id: '',
 };
 
@@ -5030,7 +5028,7 @@ export interface ProjectTemplate extends CreateProjectTemplateParams, Identifiab
 export const DEFAULT_PROJECT_TEMPLATE: ProjectTemplate = {
   copyright: '',
   cover_asset: null,
-  created_at: null,
+  created_at: DEFAULT_TIMESTAMP,
   description: '',
   git_repo: '',
   id: '',
@@ -5118,7 +5116,7 @@ export const DEFAULT_APPDROP_PROJECT: AppdropProduct = {
   blocked_member_ids: [],
   caption: '',
   community_status: 'approved',
-  created_at: null,
+  created_at: DEFAULT_TIMESTAMP,
   description: '',
   display_name: '',
   id: '',
@@ -5132,7 +5130,7 @@ export const DEFAULT_APPDROP_PROJECT: AppdropProduct = {
   statement_descriptor: '',
   object: 'product',
   unit_label: '',
-  updated_at: null,
+  updated_at: DEFAULT_TIMESTAMP,
   updated: -1,
   url: '',
   username: '',
@@ -5656,7 +5654,7 @@ AppdropUIObjectMap, UpdateAppdropUIScreenParams {
  */
 export const DEFAULT_APPDROP_UI_SCREEN: AppdropUIScreen = {
   object: 'screen',
-  created_at: null,
+  created_at: DEFAULT_TIMESTAMP,
   id: '',
   index: 0,
   livemode: true,
@@ -5921,7 +5919,7 @@ export interface UpdateCriteriaParams {
 }
 
 export const DEFAULT_APPDROP_UI_OBJECT: AppdropUIObject = {
-  created_at: null,
+  created_at: DEFAULT_TIMESTAMP,
   livemode: true,
   id: '',
   object: 'object',
@@ -6111,7 +6109,7 @@ export const DEFAULT_PROJECT: Project = {
   app_ids: [],
   asset_ids: [],
   copyright: '',
-  created_at: null,
+  created_at: DEFAULT_TIMESTAMP,
   custom_user_properties: {},
   data_center: 'us1',
   email_signups: [],
@@ -6482,7 +6480,7 @@ export const DEFAULT_CLOUD_USER: ProjectUser = {
     zip: '',
     state_code: ''
   },
-  authenticated_at: null,
+  authenticated_at: DEFAULT_TIMESTAMP,
   created_at: {
     _nanoseconds: 0,
     _seconds: 0
@@ -6651,7 +6649,7 @@ export interface AppAndroid extends App, CreateAppAndroidParams {
 export const DEFAULT_ANDROID_APP: AppAndroid = {
   android_package_name: null,
   config_url: '',
-  created_at: null,
+  created_at: DEFAULT_TIMESTAMP,
   id: '',
   livemode: true,
   minimum_version_id: '',
@@ -6724,7 +6722,7 @@ export interface AppIOS extends App, CreateAppIOSParams {
  */
 export const DEFAULT_IOS_APP: AppIOS = {
   config_url: '',
-  created_at: null,
+  created_at: DEFAULT_TIMESTAMP,
   id: '',
   ios_apns_auth_key_id: null,
   ios_apns_auth_key_storage_ref: null,
@@ -6852,7 +6850,7 @@ export interface AppWeb extends App, CreateAppWebParams {
 
 export const DEFAULT_WEB_APP: AppWeb = {
   config_url: '',
-  created_at: null,
+  created_at: DEFAULT_TIMESTAMP,
   domain_name: null,
   id: '',
   livemode: true,
@@ -7825,7 +7823,7 @@ export const DEFAULT_ECOMMERCE_PROJECT: ECommerceProject = {
   app_ids: [],
   asset_ids: [],
   copyright: '',
-  created_at: null,
+  created_at: DEFAULT_TIMESTAMP,
   custom_user_properties: {},
   data_center: 'us1',
   deleted_product_ids: [],
@@ -8030,7 +8028,7 @@ export const DEFAULT_ECOMMERCE_USER: ECommerceProjectUser = {
     zip: '',
     state_code: ''
   },
-  authenticated_at: null,
+  authenticated_at: DEFAULT_TIMESTAMP,
   created_at: {
     _nanoseconds: 0,
     _seconds: 0
@@ -8138,10 +8136,10 @@ export interface Promo extends CreatePromoParams, Identifiable, ProjectScoped {
  * Default Promo
  */
 export const DEFAULT_PROMO: Promo = {
-  created_at: null,
+  created_at: DEFAULT_TIMESTAMP,
   code: '',
   description: '',
-  expires: null,
+  expires: DEFAULT_TIMESTAMP,
   id: '',
   livemode: true,
   max_num_redemptions: null,
@@ -8328,7 +8326,7 @@ export const DEFAULT_MARKETPLACE_PROJECT: MarketplaceProject = {
   app_ids: [],
   asset_ids: [],
   copyright: '',
-  created_at: null,
+  created_at: DEFAULT_TIMESTAMP,
   creator_name_singular: 'business',
   creator_name_plural: 'businesses',
   consumer_name_singular: 'user',
@@ -8705,7 +8703,7 @@ export const DEFAULT_IN_APP_PURCHASE: InAppPurchase = {
   renews: 'monthly',
   id: '',
   livemode: true,
-  created_at: null
+  created_at: DEFAULT_TIMESTAMP
 };
 
 /**
@@ -8794,7 +8792,7 @@ export const DEFAULT_MARKETPLACE_USER: MarketplaceProjectUser = {
     zip: '',
     state_code: ''
   },
-  authenticated_at: null,
+  authenticated_at: DEFAULT_TIMESTAMP,
   avatar_asset_id: '',
   bio: '',
   blocked_member_ids: [],
@@ -9159,9 +9157,9 @@ export const DEFAULT_EVENT_POST: EventPost = {
   blocked_member_ids: [],
   community_status: 'approved',
   cover_asset_id: '',
-  created_at: null,
+  created_at: DEFAULT_TIMESTAMP,
   creator_id: '',
-  end_time: null,
+  end_time: DEFAULT_TIMESTAMP,
   id: '',
   interest_ids: [],
   lat: DEFAULT_LATITUDE,
@@ -9171,7 +9169,7 @@ export const DEFAULT_EVENT_POST: EventPost = {
   post_type: 'event',
   project_id: '',
   status: 'live',
-  start_time: null,
+  start_time: DEFAULT_TIMESTAMP,
   thread_id: '',
   title: '',
   username: ''
@@ -9367,7 +9365,7 @@ export const DEFAULT_LISTING_POST: ListingPost = {
   bio: '',
   community_status: 'approved',
   cover_asset_id: '',
-  created_at: null,
+  created_at: DEFAULT_TIMESTAMP,
   creator_id: '',
   blocked_member_ids: [],
   id: '',
@@ -9419,7 +9417,7 @@ export interface MessagePost extends Post, CreateMessagePostParams {
 export const DEFAULT_MESSAGE_POST: MessagePost = {
   asset_ids: [],
   body: '',
-  created_at: null,
+  created_at: DEFAULT_TIMESTAMP,
   creator_id: '',
   id: '',
   lat: DEFAULT_LATITUDE,
@@ -9497,7 +9495,7 @@ export const DEFAULT_REACTION_POST: ReactionPost = {
   asset_ids: [],
   body: '',
   reaction_type: 'comment',
-  created_at: null,
+  created_at: DEFAULT_TIMESTAMP,
   creator_id: '',
   id: '',
   lat: DEFAULT_LATITUDE,
@@ -9575,7 +9573,7 @@ export interface StatusUpdatePost extends
 export const DEFAULT_STATUS_UPDATE_POST: StatusUpdatePost = {
   asset_ids: [],
   body: '',
-  created_at: null,
+  created_at: DEFAULT_TIMESTAMP,
   creator_id: '',
   id: '',
   lat: DEFAULT_LATITUDE,
@@ -9621,7 +9619,7 @@ export const DEFAULT_THREAD: Thread = {
   bio: '',
   blocked_member_ids: [],
   community_status: 'approved',
-  created_at: null,
+  created_at: DEFAULT_TIMESTAMP,
   creator_id: '',
   cover_asset_id: '',
   id: '',
