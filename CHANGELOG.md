@@ -9,6 +9,12 @@ and this package adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- `Project` API adds push_server_endpoint
+
+## [4.2.113] - 2021-06-07
+
+### Changed
+
 - `RemoteMessage` API
 
 

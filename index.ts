@@ -6123,6 +6123,7 @@ export const DEFAULT_PROJECT: Project = {
   object: 'project',
   organization_id: '',
   pretty_id: '',
+  push_server_endpoint: null,
   support_email: '',
   template_id: '',
   project_type: 'cloud',
@@ -6181,6 +6182,11 @@ export interface CreateProjectParams extends
   email_signups: string[];
 
   /**
+   * The Id of the Project logo Asset.
+   */
+  logo_asset_id: string;
+
+  /**
    * Mailchimp config object
    */
   mailchimp_config: MailchimpConfig | null;
@@ -6189,11 +6195,6 @@ export interface CreateProjectParams extends
    * The name of this Project. Example: My Cool App
    */
   name: string;
-
-  /**
-   * The Id of the Project logo Asset.
-   */
-  logo_asset_id: string;
 
   /**
    * The id of the organization that owns this project.
@@ -6209,6 +6210,13 @@ export interface CreateProjectParams extends
    * Id used for pretty links e.g. mikes-tees used in appdrop.com/company/mikes-tees
    */
   pretty_id: string;
+
+  /**
+   * Push server endpoint
+   * 
+   * e.g. https://us-central1-xyz.cloudfunctions.net/push_api_v2
+   */
+  push_server_endpoint: string | null;
 
   /**
    * Email displayed to end users for Support requests.
@@ -6350,6 +6358,13 @@ export interface UpdateProjectParams extends
    * The name of this Project. Example: My Cool App
    */
   name?: string;
+
+  /**
+   * Push server endpoint
+   * 
+   * e.g. https://us-central1-xyz.cloudfunctions.net/push_api_v2
+   */
+  push_server_endpoint?: string | null;
 
   /**
    * Email displayed to end users for Support requests.
@@ -7828,6 +7843,7 @@ export const DEFAULT_ECOMMERCE_PROJECT: ECommerceProject = {
   pretty_id: '',
   printful_api_key: '',
   project_type: 'ecommerce',
+  push_server_endpoint: null,
   template_id: '',
   organization_id: '',
   support_email: '',
@@ -8333,6 +8349,7 @@ export const DEFAULT_MARKETPLACE_PROJECT: MarketplaceProject = {
   organization_id: '',
   pretty_id: '',
   project_type: 'marketplace',
+  push_server_endpoint: null,
   storage_bucket_base_url: '',
   template_id: '',
   support_email: '',
@@ -8479,7 +8496,7 @@ export interface UpdateMarketplaceProjectParams extends
    * 
    * Example: `https://api.example.co`
    */
-   api_base_url?: string;
+  api_base_url?: string;
 
 }
 
