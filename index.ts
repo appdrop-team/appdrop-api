@@ -7261,7 +7261,6 @@ export function removeArrayItems(arr: string[]) {
 export interface HandleObjectUpdateParams {
   admin: any;
   params_dot_syntax: any;
-  prevObj: any;
 }
 
 /**
@@ -7269,8 +7268,7 @@ export interface HandleObjectUpdateParams {
  */
 export function handleObjectUpdate({
   admin,
-  params_dot_syntax,
-  prevObj
+  params_dot_syntax
 }: HandleObjectUpdateParams) {
   Object.keys(params_dot_syntax)
     .forEach(f => {
@@ -7286,11 +7284,6 @@ export function handleObjectUpdate({
             params_dot_syntax[f] = admin.firestore.FieldValue.arrayUnion(
               ...append_arr
             );
-            for (const _a of append_arr) {
-              if (!prevObj[f].includes(_a)) {
-                prevObj[f].push(_a);
-              }
-            }
           }
         }
         else if (params_dot_syntax[f]['remove']) {
@@ -7299,14 +7292,8 @@ export function handleObjectUpdate({
             params_dot_syntax[f] = admin.firestore.FieldValue.arrayRemove(
               ...remove_arr
             );
-            const next_arr = [...prevObj[f]
-              .filter((_r: string) => !remove_arr.includes(_r))];
-            prevObj[f] = next_arr;
           }
         }
-      }
-      else {
-        dot.copy(f, f, params_dot_syntax, prevObj);
       }
     });
 }
