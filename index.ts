@@ -1,7 +1,4 @@
 import atob from 'atob';
-// @ts-ignore
-import dot from 'dot-object';
-dot.keepArray = true;
 
 /**
  * 
@@ -1474,6 +1471,11 @@ export interface CreateRemoteAssetParams extends
   bytes: number;
 
   /**
+   * Id of creator
+   */
+  creator_id: string;
+
+  /**
    * Index of the asset in a collage
    */
   index: number;
@@ -1554,7 +1556,7 @@ export const FALLBACK_IMAGE_URL = 'https://firebasestorage.googleapis.com/v0/b/a
 /**
  * Params to update a remote asset 
  */
-export interface UpdateRemoteAssetParams {
+export interface UpdateRemoteAssetParams extends UpdatePublishableParams {
 
   /**
    * Number of bytes. `1024` means `1KB`
@@ -9055,6 +9057,11 @@ export interface CreatePostParams extends
   Publishable, UpdatePostParams {
 
   /**
+   * Ids of the user who created the post
+   */
+  creator_id: string;
+
+  /**
    * Latitude
    */
   lat: number;
@@ -9095,6 +9102,18 @@ export interface Publishable {
 }
 
 /**
+ * Update publishable object
+ */
+export interface UpdatePublishableParams {
+
+  /**
+   * Ids of the user who created the post
+   */
+  creator_id?: string;
+
+}
+
+/**
  * Status
  */
 export type PostStatus = 'draft' | 'deleted' | 'live';
@@ -9112,7 +9131,7 @@ export type PostType =
 /**
  * Params to update a Post
  */
-export interface UpdatePostParams extends UpdateMappableParams {
+export interface UpdatePostParams extends UpdateMappableParams, UpdatePublishableParams {
 
   /**
    * Status of post
@@ -9642,6 +9661,11 @@ export interface CreateThreadParams extends
   };
 
   /**
+   * Id of creator
+   */
+  creator_id: string;
+
+  /**
    * Latitude
    */
   lat: number;
@@ -9700,7 +9724,7 @@ export type ThreadType = 'direct_message' | 'group';
 export interface UpdateThreadParams
   extends UpdateContainsAvatarParams, UpdateContainsCoverParams,
   UpdateContainsSocialParams, UpdateManageableParams,
-  UpdateMappableParams, UpdateTitledParams {
+  UpdateMappableParams, UpdatePublishableParams, UpdateTitledParams {
 
   /**
    * Activity in thread
