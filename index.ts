@@ -7274,28 +7274,26 @@ export function handleObjectUpdate({
 }: HandleObjectUpdateParams) {
   Object.keys(params_dot_syntax)
     .forEach(f => {
-      if (
-        params_dot_syntax[f] !== null
-        && typeof params_dot_syntax[f] === 'object'
-        && Array.isArray(params_dot_syntax[f])
-        && ['append', 'remove'].includes(Object.keys(params_dot_syntax[f])[0])
-      ) {
-        if (params_dot_syntax[f]['append']) {
-          const append_arr = [...params_dot_syntax[f]['append']];
-          if (append_arr.length > 0) {
-            params_dot_syntax[f] = admin.firestore.FieldValue.arrayUnion(
-              ...append_arr
-            );
-          }
+      let _f = `${f}`;
+      if (f.endsWith('.append')) {
+        const append_arr = [...params_dot_syntax[f]];
+        _f = f.split('.append')[0];
+        if (append_arr.length > 0) {
+          params_dot_syntax[_f] = admin.firestore.FieldValue.arrayUnion(
+            ...append_arr
+          );
         }
-        else if (params_dot_syntax[f]['remove']) {
-          const remove_arr = [...params_dot_syntax[f]['remove']];
-          if (remove_arr.length > 0) {
-            params_dot_syntax[f] = admin.firestore.FieldValue.arrayRemove(
-              ...remove_arr
-            );
-          }
+        delete params_dot_syntax[f];
+      }
+      else if (f.endsWith('.remove')) {
+        const remove_arr = [...params_dot_syntax[f]];
+        _f = f.split('.remove')[0];
+        if (remove_arr.length > 0) {
+          params_dot_syntax[_f] = admin.firestore.FieldValue.arrayRemove(
+            ...remove_arr
+          );
         }
+        delete params_dot_syntax[f];
       }
     });
 }
