@@ -3505,6 +3505,13 @@ export interface Account extends CreateAccountParams, AppdropObject {
 export interface CreateAccountParams extends UpdateAccountParams {
 
   /**
+   * This array includes the id of each Account that this account owns.
+   * 
+   * @Note Only applicable for Educational license
+   */
+  account_ids: string[];
+
+  /**
    * The minted API Key this Account uses to authenticate its projects.
    */
   api_key: string;
@@ -3518,13 +3525,6 @@ export interface CreateAccountParams extends UpdateAccountParams {
    * The legal name of this Account.
    */
   name: string;
-
-  /**
-   * This array includes the id of each Account that this account owns.
-   * 
-   * @Note Only applicable for Educational license
-   */
-  account_ids: string[];
 
   /**
    * Email addresses of pending team members.
@@ -7010,6 +7010,11 @@ export interface HandleObjectUpdateParams {
 }
 
 /**
+ * Special value for field removals
+ */
+export const REMOVE_OBJECT_FIELD = '____REMOVE_OBJECT_FIELD____';
+
+/**
  * Updates array objects
  */
 export function handleObjectUpdate({
@@ -7037,6 +7042,9 @@ export function handleObjectUpdate({
           );
         }
         delete params_dot_syntax[f];
+      }
+      else if (params_dot_syntax[f] === REMOVE_OBJECT_FIELD) {
+        params_dot_syntax[f] = admin.firestore.FieldValue.delete();
       }
     });
 }
@@ -10147,7 +10155,7 @@ export type AsyncErrorType = 'customer_write_failed';
  * Data to correct an async error. Used async tasks such as stripe customer creation.
  */
 export interface AsyncError extends
-  Identifiable, ProjectScoped {
+  AppdropObject, ProjectScoped {
 
   /**
    * Body of data
